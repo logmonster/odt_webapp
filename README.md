@@ -1,2 +1,4 @@
-# odt_webapp
-on demand training demo webapp(s) repository; contains html5+jQuery app, node.js+express framework app
+# on demand training webapp repository (odt_webapp)
+contains the following webapp(s):
+#html5+jQuery app, 
+#node.js+express framework app
