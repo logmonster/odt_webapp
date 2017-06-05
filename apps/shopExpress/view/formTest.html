@@ -1,0 +1,60 @@
+<html>
+<head>
+  <script>
+  function submitForm() {
+    var _frm=document.getElementById('frm');
+
+    _frm.submit();
+    return true;
+  };
+  function submitBinaryForm() {
+    var _frm=document.getElementById('frm_binary');
+
+    _frm.submit();
+    return true;
+  };
+  </script>
+</head>
+<body>
+  <form id='frm' action="test" method="post">
+    <input type="hidden" name='hType' value='basic' />
+    <table style="border: 0px; width: 100%; ">
+      <tr>
+        <td> name: </td><td> <input type='text' name='tName' id='tName' /> </td>
+      </tr>
+      <tr>
+        <td> age group: </td><td>
+          <select name='sAge' id='sAge'>
+            <<option value="0-10">0 ~ 10</option>
+            <<option value="11-20">11 ~ 20</option>
+            <<option value="21">over 21</option>
+          </select>
+        </td>
+      </tr>
+    </table>
+    <button type="button" onclick="submitForm();">submit form</button>
+  </form>
+
+  <form id='frm_binary' enctype="multipart/form-data" action="test" method="post">
+    <input type="hidden" name='hType' value='binary' />
+    <table style="border: 0px; width: 100%; ">
+      <tr>
+        <td> name: </td><td> <input type='text' name='tName' id='tName' /> </td>
+      </tr>
+      <tr>
+        <td> age group: </td><td>
+          <select name='sAge' id='sAge'>
+            <<option value="0-10">0 ~ 10</option>
+            <<option value="11-20">11 ~ 20</option>
+            <<option value="21">over 21</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td> avatar: </td><td> <input type='file' name='fAvatar' id='fAvatar' /> </td>
+      </tr>
+    </table>
+    <button type="button" onclick="submitBinaryForm();">submit form</button>
+  </form>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "name": "shop_express",
+  "version": "1.0.0",
+  "description": "eCommerce webapp using npm and express; integration with elasticsearch",
+  "main": "pages/shop.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ecommerce",
+    "express",
+    "elasticsearch",
+    "jquery"
+  ],
+  "author": "jason.wong@elastic",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "multer": "^1.3.0",
+    "nodemon": "^1.11.0"
+  }
+}
