@@ -2,7 +2,8 @@
 var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
-var multer = require('multer')();
+// if given { dest: 'upload/' } file contents would be saved directly to the upload folder...
+var multer = require('multer')({ dest: 'upload/tmp' });
 var routerApp = require('./core/router/RouterApp');
 
 
