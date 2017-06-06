@@ -1,0 +1,75 @@
+<html>
+<head>
+  <title>ProjectVA - making html based VIDEO and MTV at your fingertips</title>
+  <!-- [step] set the base url... geee -->
+  <!-- base href="/lab.html" -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel='stylesheet' href='../public/css/style.css'>
+
+  <!-- ################################ -->
+  <!-- using MDB (metal design bootstrap) -->
+  <!-- ################################ -->
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css' >
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.3.1/css/mdb.css">
+
+  <!-- MDB required jscript lib -->
+  <!-- JQuery -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
+  <!-- Bootstrap tooltips -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.js"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/js/bootstrap.js"></script>
+
+  <!-- #################################### -->
+  <!-- the js files for the queryRunner app -->
+  <!-- #################################### -->
+  <script type="text/javascript" src="../core/elasticsearch-js-13_1/elasticsearch.jquery.js"></script>
+  <script type="text/javascript" src="../core/query.js"></script>
+  <script type="text/javascript" src="../core/es.js"></script>
+</head>
+<body>
+  <div class="card query-container mx-auto">
+    <img class="img-fluid" style='width: calc(50%); padding-left: 4px;' src="../public/image/es_title.jpeg" >
+
+    <div class="card-block">
+      <div id='dErr' class='error-box hiding'></div>
+
+      <h4 class="card-title">Query:</h4>
+      <input id='tIndex' placeholder="index-name" class="form-control" style="margin-bottom: 0px;" />
+      <input id='tType' placeholder="document-name" class="form-control" style="margin-bottom: 0px;" />
+      <div>
+        <textarea id='tQuery' class='form-control' style="height: 200px; margin-bottom: 4px;"
+          placeholder='type your query here => { "query": { "match_all": {} } }'></textarea>
+        <button class="btn btn-outline-default waves-effect btn-sm pull-right"
+          style='position: relative; top: -200px;' onclick='prettyJson()' >
+          format</button>
+      </div>
+
+      <div class="">
+        <button class='btn light-blue lighten-1' onclick="runQuery()">run</button>
+        <button class='btn teal lighten-1' onclick='resetTQuery()'>reset query</button>
+      </div>
+
+      <div style="margin-top: 16px;">
+        <h4 class="card-title">Result:</h4>
+      </div>
+
+
+      <div>
+        <br/>
+        <p class="card-text">
+
+        </p>
+        <a href="#" class="btn btn-primary">Button</a>
+      </div>
+    </div>
+    <!--/.Card content-->
+
+  </div>
+  <!--/.Card-->
+
+</body>
+</html>

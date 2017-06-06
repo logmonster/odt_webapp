@@ -1,0 +1,17 @@
+
+.hiding {
+  display: none;
+}
+.showing {
+  display: block;
+}
+.error-box {
+  color: red;
+  margin-bottom: 8px;
+}
+
+.query-container {
+  margin-top: 12px;
+  margin-bottom: 20px;
+  width: 500px;
+}
