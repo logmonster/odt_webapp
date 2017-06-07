@@ -5,7 +5,7 @@ var bodyParser = require('body-parser');
 // if given { dest: 'upload/' } file contents would be saved directly to the upload folder...
 var multer = require('multer')({ dest: 'upload/tmp' });
 var routerApp = require('./core/router/RouterApp');
-
+var favicon = require('serve-favicon');
 
 // ** setup router and routes
 var app = express();
@@ -20,6 +20,8 @@ routerApp.setRoutes(router, app, multer);
 // ** test by issuing http://localhost:10010/image/es.png
 app.use(express.static('public'));
 
+// ** set favicon
+app.use(favicon(__dirname+'/favicon.ico'));
 
 // ** startup of server listening to 10010 port (modify when necessary)
 var server = app.listen(10010, function() {
