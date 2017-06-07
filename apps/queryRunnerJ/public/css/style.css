@@ -15,3 +15,12 @@
   margin-bottom: 20px;
   width: 500px;
 }
+
+.result-container-outer {
+  width: 500px;
+  height: 300px;
+  overflow: scroll;
+}
+.result-container-inner {
+  width: calc(100%);
+}

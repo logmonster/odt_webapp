@@ -42,7 +42,13 @@
       <input id='tType' placeholder="document-name" class="form-control" style="margin-bottom: 0px;" />
       <div>
         <textarea id='tQuery' class='form-control' style="height: 200px; margin-bottom: 4px;"
-          placeholder='type your query here => { "query": { "match_all": {} } }'></textarea>
+          placeholder='type your query here => { "query": { "match_all": {} } }'>
+{
+  "query": {
+    "match_all": {}
+  }
+}
+        </textarea>
         <button class="btn btn-outline-default waves-effect btn-sm pull-right"
           style='position: relative; top: -200px;' onclick='prettyJson()' >
           format</button>
@@ -53,21 +59,24 @@
         <button class='btn teal lighten-1' onclick='resetTQuery()'>reset query</button>
       </div>
 
-      <div style="margin-top: 16px;">
-        <h4 class="card-title">Result:</h4>
+      <div id='dResultPane' class="hiding">
+        <div style="margin-top: 16px;">
+          <h4 class="card-title">Result:</h4>
+        </div>
+        <!--div class='result-container-outer form-control'-->
+        <!--/div-->
+        <textarea class="result-container-outer form-control" id='tResult' readonly="true"></textarea>
+        <textarea style='width: 0px; height: 0px;' class='hiding' id='tOriResult'></textarea>
+
+        <div>
+          <p class="card-text">
+            PS. if you want to have the original result (json response), press the "copy" button.
+          </p>
+          <button class="btn btn-primary" onclick='copyResultToClipboard();'>copy</button>
+        </div>
       </div>
-
-
-      <div>
-        <br/>
-        <p class="card-text">
-
-        </p>
-        <a href="#" class="btn btn-primary">Button</a>
-      </div>
+      <!--/.Card content-->
     </div>
-    <!--/.Card content-->
-
   </div>
   <!--/.Card-->
 

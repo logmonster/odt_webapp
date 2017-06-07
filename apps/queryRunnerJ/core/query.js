@@ -17,6 +17,11 @@ function resetTQuery() {
   if (_e.length>0) {
     _e[0].value='';
   }
+  $('#tIndex').val('');
+  $('#tType').val('');
+
+  // hide the dResultPane
+  $('#dResultPane')[0].className='hiding';
 }
 /**
  *  pretty print (format) the typed in json query
@@ -87,14 +92,16 @@ function runQuery() {
     // can run query... promise approach
     search(getESClientInstance(), _index, _type, _validJson, true,
       function(_body) {
-        console.log('$$$$inside success');
-        console.log(_body);
-        console.log(arguments);
+        _setResult(_body);
       },
       function(_err) {
-        console.log('***inside err');
-        console.log(_err);
-        console.log(arguments);
+        //console.log(arguments);
+        // hide result pane
+        $('#dResultPane')[0].className='hiding';
+        
+        if (_err.message.message.indexOf('Connection Failure')!=-1) {
+          _setErrBox([ 'This could be caused by entering an invalid "index", please check. '+_err.message.stack ]);
+        }
       }
     );
     /* callback approach
@@ -106,6 +113,40 @@ function runQuery() {
       }
     );*/
   }
+}
+
+/**
+ *  set result textarea
+ */
+function _setResult(_body) {
+  console.log(_body);
+
+  var _e=$('#tResult');
+  var _v='';
+
+  // set the original result to a hidden variable
+  $('#tOriResult').html(JSON.stringify(_body));
+
+  // set the results (typically just handle the hits and aggregations part)
+  if (_body.hasOwnProperty('hits')) {
+    _v='hits:\r\n'+JSON.stringify( (_body['hits']['hits']), null, 2);
+  }
+  if (_body.hasOwnProperty('aggregations')) {
+    var _keys=Object.keys(_body['aggregations']);
+
+    _v+='\r\n\r\naggregations:\r\n';
+    for (var _idx=0; _idx<_keys.length; _idx++) {
+      var _key=_keys[_idx];
+
+      _v+='#'+_key+':\r\n';
+      _v+=JSON.stringify( (_body['aggregations'][_key]['buckets']), null, 2);
+    } // end -- for (keys within aggregations)
+  }
+  _e.html(_v);
+
+  // review the dResultPane
+  $('#dResultPane')[0].className='showing';
+  _e.scrollTop(0);
 }
 
 /**
@@ -133,3 +174,37 @@ function _setErrBox(_eArr) {
   _e[0].innerHTML=_content;
   _e[0].className='error-box showing';
 }
+
+/**
+ *  copy the original json to clipboard
+ */
+function copyResultToClipboard() {
+  var _e=$('#tOriResult');
+  var _success=false;
+
+  _e[0].className='showing';
+  _e[0].select();
+  _success=document.execCommand('copy');
+  _e[0].className='hiding';
+
+  if (_success==true) {
+    alert('original json copied to clipboard');
+  } else {
+    alert('something wrong, could not copy the json response to clipboard');
+  }
+}
+
+
+/* example query
+GET musicbrainz-artists/_search
+{
+  "size": 0,
+  "aggs": {
+    "most_popular_areas": {
+      "terms": {
+        "field": "area.name.keyword"
+      }
+    }
+  }
+}
+*/
