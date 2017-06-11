@@ -23,6 +23,9 @@ function createQueryJson(_client, _index, _type, _query) {
   return _queryDoc;
 }
 
+/**
+ *  perform a search (underneath calling createQueryJson method to form the json for query)
+ */
 function search(_client, _index, _type, _query, _usePromise, _successFunction, _errorFunction) {
   var _queryDoc=createQueryJson(_client, _index, _type, _query);
 
@@ -33,4 +36,21 @@ function search(_client, _index, _type, _query, _usePromise, _successFunction, _
       _client.search(_queryDoc, _successFunction);
     } // end -- if (promise)
   } // end -- if (queryDoc)
+}
+
+/**
+ *  query for the indices available within the elasticsearch cluster
+ */
+function queryIndices(_client, _columns, _success, _error) {
+  var _cols=null;
+  if (_columns && _columns.length>0) {
+    _cols = _columns;
+  } else {
+    _cols=["index"];
+  }
+
+  _client.cat.indices({
+    'h': _cols,
+    's': _cols
+  }).then(_success, _error);
 }

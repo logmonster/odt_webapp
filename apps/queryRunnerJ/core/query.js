@@ -98,7 +98,7 @@ function runQuery() {
         //console.log(arguments);
         // hide result pane
         $('#dResultPane')[0].className='hiding';
-        
+
         if (_err.message.message.indexOf('Connection Failure')!=-1) {
           _setErrBox([ 'This could be caused by entering an invalid "index", please check. '+_err.message.stack ]);
         }
@@ -192,6 +192,37 @@ function copyResultToClipboard() {
   } else {
     alert('something wrong, could not copy the json response to clipboard');
   }
+}
+
+function getESIndices() {
+  queryIndices(getESClientInstance(), null,
+    function(_body) {
+      // break by "\n"
+      // ** could be filtered
+      var _e=$('#tResult');
+      var _v='';
+      var _indices=_body.split('\n');
+
+      for (var _i=_indices.length-1; _i>=0; _i--) {
+        if (_indices[_i].trim().length==0) {
+          _indices.splice(_i, 1);
+        } else {
+          if (_v.length>0) _v+='\r\n';
+          _v+=_indices[_i];
+        }
+      } // end -- for (_indices)
+
+      // review the dResultPane
+      $('#tResult').html(_v);
+      $('#tOriResult').html(_v);
+      $('#dResultPane')[0].className='showing';
+      _e.scrollTop(0);
+
+    }, function(_err) {
+      console.log('$$$$ error');
+      console.log(_err);
+    }
+  );
 }
 
 
