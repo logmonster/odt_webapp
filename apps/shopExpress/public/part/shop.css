@@ -1,0 +1,38 @@
+
+#### common
+._s_hiding {
+  display: none;
+}
+._s_showing {
+  display: block;
+}
+._s_pointer {
+  cursor: pointer;
+}
+
+._s_header_bg {
+  background-color: #f2f2f2;
+}
+._s_header_font_color {
+  color: #666;
+}
+._s_header_font_color::after {
+  color: #666;
+}
+._s_svg path {
+  fill: #666;
+}
+._s_home_main_container {
+  margin-top: 66px;
+}
+._s_query_wrench {
+  color: #2BBBAD!important;
+}
+#### common (end)
+
+
+
+#### shop home specific
+
+
+#### shop home specific (end)

@@ -1,5 +1,6 @@
 // ** load dependencies
 var express = require('express');
+var path = require('path');
 var router = express.Router();
 var bodyParser = require('body-parser');
 // if given { dest: 'upload/' } file contents would be saved directly to the upload folder...
@@ -9,6 +10,11 @@ var favicon = require('serve-favicon');
 
 // ** setup router and routes
 var app = express();
+
+// view engine setup
+app.set('views', path.join(__dirname, 'view'));
+app.set('view engine', 'hjs');
+
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json

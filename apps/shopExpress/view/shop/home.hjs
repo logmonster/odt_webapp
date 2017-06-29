@@ -1,0 +1,138 @@
+<html>
+<head>
+  <title>odt approach3 steps app</title>
+  <!-- [step] set the base url... geee -->
+  <!-- base href="/lab.html" -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- ################################ -->
+  <!-- using MDB (metal design bootstrap) -->
+  <!-- ################################ -->
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css' >
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.3.1/css/mdb.css">
+
+  <link rel="stylesheet" href="/part/shop.css">
+
+  <!-- MDB required jscript lib -->
+  <!-- JQuery -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
+  <!-- Bootstrap tooltips -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.js"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/js/bootstrap.js"></script>
+
+  <!-- #################################### -->
+  <!-- the js files for the queryRunner app -->
+  <!-- #################################### -->
+  <script type="text/javascript" src='/part/js/shop.js'></script>
+
+  <!-- test on using "include" approach -->
+  <!-- script>
+    jQuery.get('/part/header.html', {}, function(data, status, xhr) {
+      $('head').append(data);
+    });
+  </script -->
+
+</head>
+
+<body>
+  <!--Navbar green-->
+  <nav class="navbar navbar-toggleable-md navbar-dark fixed-top _s_header_bg">
+    <div class="container">
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNav3" aria-controls="navbarNav3" aria-expanded="false" aria-label="Toggle navigation">
+        <!--span class="navbar-toggler-icon"></span-->
+        <i class="fa fa-gear _s_pointer _s_header_font_color" aria-hidden="true" style="margin-top: 5px;"></i>
+      </button>
+      <!-- ## title and icon ## -->
+      <a class="navbar-brand" href="#">
+        <strong class="_s_header_font_color">shopExpress</strong>
+        <i class="fa fa-shopping-cart _s_header_font_color" aria-hidden="true"></i></a>
+
+      <!-- ### collapsable contents ### -->
+      <div class="collapse navbar-collapse" id="navbarNav3">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle waves-effect waves-light _s_header_font_color"
+              id="navbarDropdownMenuLink" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="true">
+              <i class="fa fa-shopping-bag _s_header_font_color" aria-hidden="true"></i>
+              <i class="fa fa-wrench _s_query_wrench" aria-hidden="true" onclick='return showQuery(event, 0, "_q_categories");'></i>
+              <span class='_s_header_font_color'> Categories</span>
+            </a>
+            <div class="dropdown-menu dropdown-default dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+              <div>
+<!-- ### TODO: get categories ES ### -->
+                {{#categories}}
+                  <a class="dropdown-item waves-effect waves-light" href="#">{{key}}</a>
+                {{/categories}}
+              </div>
+
+            </div>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link waves-effect waves-light"><i class="fa fa-envelope _s_header_font_color"></i><span class='_s_header_font_color'> Promotions</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link waves-effect waves-light"><i class="fa fa-user _s_header_font_color"></i><span class='_s_header_font_color'> Login</span></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <!--/.Navbar green-->
+
+  <!-- ### main area ### -->
+  <div class="_s_home_main_container">
+
+  </div>
+  <!-- ### main area (end) ### -->
+
+  <div id='divQueries' style="display: none;">
+    {{#queries}}
+      {{.}}::
+    {{/queries}}
+    {}
+  </div>
+
+
+
+  <!-- Central Modal Medium Info -->
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#centralModalInfo">Central Modal</button>
+  <div class="modal fade" id="centralModalInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-notify modal-info" role="document">
+      <!--Content-->
+      <div class="modal-content">
+        <!--Header-->
+        <div class="modal-header" style="background-color: #5394ff;">
+<!-- ### TODO change title (divQueryTitle) ### -->
+          <p id='divQueryTitle' class="heading lead" style="margin-bottom: 0px; color: #fff;">Modal Info</p>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true" class="white-text">&times;</span>
+          </button>
+        </div>
+
+        <!--Body-->
+        <div class="modal-body">
+          <div class="text-center">
+            <i class="fa fa-check fa-4x mb-1 animated rotateIn"></i>
+            <p class="color: #616161;">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Impedit iusto nulla aperiam blanditiis ad consequatur in dolores culpa, dignissimos, eius non possimus fugiat. Esse ratione fuga, enim, ab officiis totam.</p>
+          </div>
+        </div>
+
+        <!--Footer-->
+        <div class="modal-footer justify-content-center">
+          <button class="btn btn-primary">Get it now <i class="fa fa-diamond ml-1"></i></button>
+          <button class="btn btn-outline-primary waves-effect" data-dismiss="modal">No, thanks</button>
+        </div>
+      </div>
+      <!--/.Content-->
+    </div>
+  </div>
+  <!-- Central Modal Medium Info-->
+
+
+
+</body>
+</html>
