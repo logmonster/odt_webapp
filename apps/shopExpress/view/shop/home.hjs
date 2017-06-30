@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.3.1/css/mdb.css">
 
-  <link rel="stylesheet" href="/part/shop.css">
+  <link rel="stylesheet" href="/part/css/shop.css">
 
   <!-- MDB required jscript lib -->
   <!-- JQuery -->
@@ -34,6 +34,10 @@
       $('head').append(data);
     });
   </script -->
+  <script>
+    // reactivate if tooltip is required
+    //_initBootstrapTooltip();
+  </script>
 
 </head>
 
@@ -89,25 +93,30 @@
   </div>
   <!-- ### main area (end) ### -->
 
+  <!-- ### queries for display (wrench) ### -->
   <div id='divQueries' style="display: none;">
     {{#queries}}
       {{.}}::
     {{/queries}}
     {}
   </div>
-
+  <!-- ### queries for display (wrench) - end ### -->
 
 
   <!-- Central Modal Medium Info -->
-  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#centralModalInfo">Central Modal</button>
+  <!--button onclick='$("#btnShowQuery").click();' >similate click</button-->
+  <button id='btnShowQuery' type="button" class="btn btn-primary" style='display: none;' data-toggle="modal" data-target="#centralModalInfo">Central Modal</button>
+  <!-- show (sth missing though...) -->
   <div class="modal fade" id="centralModalInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-notify modal-info" role="document">
       <!--Content-->
       <div class="modal-content">
         <!--Header-->
         <div class="modal-header" style="background-color: #5394ff;">
-<!-- ### TODO change title (divQueryTitle) ### -->
-          <p id='divQueryTitle' class="heading lead" style="margin-bottom: 0px; color: #fff;">Modal Info</p>
+          <!-- ### change title (divQueryTitle) ### -->
+          <p class="heading lead" style="margin-bottom: 0px; color: #fff;">
+            <span id='divQueryTitle' >Modal Info</span>
+            <i class="fa fa-check mb-1 animated rotateIn"></i></p>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true" class="white-text">&times;</span>
           </button>
@@ -115,16 +124,25 @@
 
         <!--Body-->
         <div class="modal-body">
-          <div class="text-center">
-            <i class="fa fa-check fa-4x mb-1 animated rotateIn"></i>
-            <p class="color: #616161;">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Impedit iusto nulla aperiam blanditiis ad consequatur in dolores culpa, dignissimos, eius non possimus fugiat. Esse ratione fuga, enim, ab officiis totam.</p>
+          <div class="_s_query_dlg_outer_container">
+            <div class="text-center">
+              <!--i class="fa fa-check fa-4x mb-1 animated rotateIn"></i>
+              <p class="color: #616161;">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Impedit iusto nulla aperiam blanditiis ad consequatur in dolores culpa, dignissimos, eius non possimus fugiat. Esse ratione fuga, enim, ab officiis totam.</p-->
+              <textarea id='txtQueryContent' readonly="true" class="_s_query_dlg_inner_textarea"></textarea>
+            </div>
           </div>
+          <!-- outer container -->
         </div>
 
         <!--Footer-->
         <div class="modal-footer justify-content-center">
-          <button class="btn btn-primary">Get it now <i class="fa fa-diamond ml-1"></i></button>
-          <button class="btn btn-outline-primary waves-effect" data-dismiss="modal">No, thanks</button>
+          <!--button class="btn btn-primary">Get it now <i class="fa fa-diamond ml-1"></i></button>
+          <button class="btn btn-outline-primary waves-effect" data-dismiss="modal">No, thanks</button-->
+          <button class="btn btn-outline-primary waves-effect" data-dismiss="modal">Done <i class="fa fa-hand-peace-o ml-1" aria-hidden="true"></i></button>
+          <button class="btn btn-outline-info waves-effect" onclick='copyQueryToClipboard();'>Copy <i class="fa fa-copy ml-1"></i></button>
+          <i class="fa fa-info-circle fa-lg _s_pointer" id='iInfo'
+            data-toggle="tooltip" data-placement="top" title="copy the query to clipboard"
+            style='color: #0091ea;' aria-hidden="true"></i>
         </div>
       </div>
       <!--/.Content-->

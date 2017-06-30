@@ -20,6 +20,17 @@ function _parseQueriesArray(_refresh) {
   }
   return _qs;
 }
+/**
+ *  ref: https://mdbootstrap.com/javascript/tooltips/
+ */
+function _initBootstrapTooltip() {
+  // Tooltips Initialization
+  $(function () {
+    //$('#iInfo').tooltip();  // if just started a specific tooltip
+    $('[data-toggle="tooltip"]').tooltip()
+  });
+}
+
 // ### common functions (end) ###
 
 function showQuery(_e, _queryIdx, _queryId) {
@@ -29,5 +40,20 @@ function showQuery(_e, _queryIdx, _queryId) {
   var _q=_arr[_queryIdx];
 
   // display
+  $('#divQueryTitle').html('Query Info');
+  $('#txtQueryContent').html(_q);
+  $('#btnShowQuery').click();
+}
 
+function copyQueryToClipboard() {
+  var _t=$('#txtQueryContent');
+  var _success=false;
+
+  // select contents of the textarea
+  _t[0].select();
+  _success=document.execCommand('copy');
+  // deselects all
+  window.getSelection().removeAllRanges();
+
+  if (!_success) console.log('*** cannot copy query to clipboard...');
 }
