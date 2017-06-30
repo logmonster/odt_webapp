@@ -57,3 +57,8 @@ function copyQueryToClipboard() {
 
   if (!_success) console.log('*** cannot copy query to clipboard...');
 }
+
+function runSearchBoxSearch() {
+  var _t = $('#txtSearchBar').val();
+  console.log(_t);
+}
