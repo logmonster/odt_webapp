@@ -64,8 +64,6 @@
           </span>
         </span>
       </span>
-
-
       <!-- ### collapsable contents ### -->
       <div class="collapse navbar-collapse" id="navbarNav3">
         <ul class="navbar-nav ml-auto">
@@ -79,7 +77,7 @@
             </a>
             <div class="dropdown-menu dropdown-default dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
               <div>
-<!-- ### TODO: get categories ES ### -->
+                <!-- ### get categories ES ### -->
                 {{#categories}}
                   <a class="dropdown-item waves-effect waves-light" href="#">{{key}}</a>
                 {{/categories}}
@@ -101,6 +99,85 @@
 
   <!-- ### main area ### -->
   <div class="_s_home_main_container">
+    <!--Carousel Wrapper-->
+    <div class="flex-center" style="max-height: 290px;">
+      <div id="carousel-example-1z" class="carousel slide carousel-fade" data-ride="carousel">
+        <!--Indicators-->
+        <ol class="carousel-indicators">
+          <li data-target="#carousel-example-1z" data-slide-to="0" class="active" ></li>
+          <li data-target="#carousel-example-1z" data-slide-to="1"></li>
+          <li data-target="#carousel-example-1z" data-slide-to="2"></li>
+          <li data-target="#carousel-example-1z" data-slide-to="3"></li>
+        </ol>
+        <!--/.Indicators-->
+        <!--Slides-->
+        <div class="carousel-inner" role="listbox">
+          <!--First slide-->
+          <div class="carousel-item active" onclick="switchToCategoryResult('FASHION');">
+            <div class="view _s_pointer">
+              <img src="/image/carousel01.jpeg" alt="First slide" class="_s_carousel_image_dimen">
+              <div class="mask pattern-4"></div>
+            </div>
+            <!-- ### caption for the carousel -->
+            <div class="carousel-caption">
+              <h3 class="h3-responsive">Fashion and footwear</h3>
+              <p>checkout our latest trendy summer collections</p>
+            </div>
+          </div>
+          <!--/First slide-->
+          <!--Second slide-->
+          <div class="carousel-item" onclick="switchToCategoryResult('FASHION');">
+            <div class="view _s_pointer">
+              <img src="/image/carousel02.jpeg" alt="2nd slide" class="_s_carousel_image_dimen">
+              <div class="mask pattern-4"></div>
+            </div>
+            <div class="carousel-caption">
+              <h3 class="h3-responsive">Bags and accessories</h3>
+              <p>new arrivals for this summer~</p>
+            </div>
+          </div>
+          <!--/Second slide-->
+          <!--Third slide-->
+          <div class="carousel-item" onclick="switchToCategoryResult('FOOD');">
+            <div class="view _s_pointer">
+              <img src="/image/carousel03.jpeg" alt="3rd slide" class="_s_carousel_image_dimen">
+              <div class="mask pattern-2"></div>
+            </div>
+            <div class="carousel-caption">
+              <h3 class="h3-responsive">Food and groceries</h3>
+              <p>grab a basket of the best food in town</p>
+            </div>
+          </div>
+          <!--/Third slide-->
+          <!--4th slide-->
+          <div class="carousel-item" onclick="switchToCategoryResult('FOOD');">
+            <div class="view _s_pointer">
+              <img src="/image/carousel04.jpeg" alt="4th slide" class="_s_carousel_image_dimen">
+              <div class="mask pattern-3"></div>
+            </div>
+            <div class="carousel-caption">
+              <h3 class="h3-responsive">Cakes and pastries</h3>
+              <p>sweet tooth time</p>
+            </div>
+          </div>
+          <!--/4th slide-->
+        </div>
+        <!--/.Slides-->
+        <!--Controls-->
+        <a class="carousel-control-prev" href="#carousel-example-1z" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carousel-example-1z" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+        <!--/.Controls-->
+      </div>
+      <!--/.Carousel Wrapper-->
+    </div>
+
+
 
   </div>
   <!-- ### main area (end) ### -->

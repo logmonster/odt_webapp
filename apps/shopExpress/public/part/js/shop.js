@@ -58,7 +58,15 @@ function copyQueryToClipboard() {
   if (!_success) console.log('*** cannot copy query to clipboard...');
 }
 
+/* ############################################# */
+/* ### TODO: implment the methods of coz...  ### */
+/* ############################################# */
+
 function runSearchBoxSearch() {
   var _t = $('#txtSearchBar').val();
   console.log(_t);
+  alert('inside [runSearchBoxSearch] > '+_t);
+}
+function switchToCategoryResult(_category) {
+  alert('inside [switchToCategoryResult] > '+_category);
 }
