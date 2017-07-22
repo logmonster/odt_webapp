@@ -1,10 +1,7 @@
-
-** Mapping **
-
-
-PUT odt_vehicle_suggestor
+curl -XPUT "localhost:9200/_template/odt_vehicle_suggestor" -d '
 {
-  "settings": {
+	"template": "odt_vehicle_suggestor",
+  	  "settings": {
     "analysis": {
       "normalizer": {
         "lowercase_normalizer": {
@@ -57,7 +54,14 @@ PUT odt_vehicle_suggestor
             }
           }
         },
-        "normal_suggest": {
+        "suggest_model": {
+          "type": "completion",
+          "analyzer": "standard",
+          "preserve_separators": true,
+          "preserve_position_increments": true,
+          "max_input_length": 50
+        },
+        "suggest_color": {
           "type": "completion",
           "analyzer": "standard",
           "preserve_separators": true,
@@ -77,33 +81,14 @@ PUT odt_vehicle_suggestor
             }
           ]
         },
-        "suggest_color": {
-          "type": "completion",
-          "analyzer": "standard",
-          "preserve_separators": true,
-          "preserve_position_increments": true,
-          "max_input_length": 50,
-          "contexts": [
-            {
-              "name": "color",
-              "type": "CATEGORY"
-            }
-          ]
-        },
         "suggest_postcode": {
           "type": "completion",
           "analyzer": "standard",
           "preserve_separators": true,
           "preserve_position_increments": true,
-          "max_input_length": 50,
-          "contexts": [
-            {
-              "name": "postcode",
-              "type": "CATEGORY"
-            }
-          ]
+          "max_input_length": 50
         }
       }
     }
   }
-}
+}'
