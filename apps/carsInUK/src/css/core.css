@@ -1,0 +1,53 @@
+
+/* ************ */
+/*  common css  */
+/* ************ */
+
+.hiding {
+  display: none;
+}
+.showing {
+  display: block;
+}
+.pointer {
+  cursor: pointer;
+}
+
+/* ******************** */
+/*  landingpage related */
+/* ******************** */
+
+body {
+  padding: 4px;
+}
+
+.search_bar_simple_container {
+  display: inline-block;
+  /*width: 80%;*/
+  width: 600px;
+}
+.search_bar_simple_outer_container {
+  width: 100%;
+  margin: auto;
+}
+.search_bar_input {}
+
+/* ****************** */
+/*  item list related */
+/* ****************** */
+
+.item_list_outer_container {
+  width: calc(100%);
+  max-height: 600px;
+  min-height: 350px;
+  overflow: auto;
+
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 2px -3px 5px #ccc;
+}
+.item_list_inner_container {
+  width: calc(100%);
+  padding-top: 8px;
+  padding-bottom: 8px;
+}

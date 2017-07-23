@@ -1,0 +1,89 @@
+
+
+<div id="carousel-fake" class="carousel slide carousel-fade" data-ride="carousel">
+  <!--Slides-->
+  <div class="carousel-inner" role="listbox">
+    <div class="carousel-item active">
+      <div class="view hm-black-light" style="border-radius: 4px;">
+        <img src="./../../../resources/images/car_banner.jpg" alt="First slide">
+        <div class="mask pattern-1"></div>
+      </div>
+      <div class="carousel-caption" style="top: 120px;">
+        <h1 class="h1-responsive align-middle" style="font-size: 32px;">
+          <img src='./../../../resources/images/es_logo.png' style="width: 40px;">
+          Cars in the United Kingdom
+        </h1>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div>
+  <!--search and advance search-->
+  <!-- basic search -->
+  <div [ngClass]='_getClassForSearchDiv()' style="margin-top: 12px;">
+    <div style="" class="search_bar_simple_container">
+      <input class="form-control search_bar_input"
+        style="border-radius: 4px; padding-left: 20px; padding-right: 20px; margin-bottom: 0px;"
+        placeholder="type in a car model here..." />
+    </div>
+    <div style="display: inline-block;">
+      &nbsp;
+      <i class="btn btn-outline-default fa fa-lg fa-search left pointer"
+        style="color: #555; border-radius: 20px; margin: 2px; padding-left: 14px; padding-right: 14px; padding-top: 12px; padding-bottom: 12px;"
+        data-toggle='tooltip' data-placement="left" title="search now"></i>
+      <i class="btn btn-outline-success fa fa-lg fa-search-plus left pointer"
+        style="color: #555; border-radius: 20px; margin: 2px; padding-left: 14px; padding-right: 14px; padding-top: 12px; padding-bottom: 12px;"
+        (click)='toggleSearchPane()'
+        data-toggle='tooltip' data-placement="left" title="show advance search"></i>
+      <i class="btn btn-outline-info fa fa-lg fa-align-left left pointer"
+        style="color: #555; border-radius: 20px; margin: 2px; padding-left: 13px; padding-right: 13px; padding-top: 12px; padding-bottom: 12px;"
+        (click)='toggleLayout()'
+        data-toggle='tooltip' data-placement="left" title="toggle screen layout"></i>
+    </div>
+
+  </div>
+
+  <!-- advance search -->
+  <div [ngClass]='_getClassForAdvSearchDiv()' style="margin-top: 12px;">
+    <div style="border-radius: 8px; border: 1px solid #ccc; width: calc(100%); padding: 16px;">
+      <span class="">search by car manufacturer: </span>
+      <input class='form-control' placeholder='e.g. ford, nissan' style='border-radius: 4px; padding-left: 12px; padding-right: 12px;' >
+      <span class="">search by car model: </span>
+      <input class='form-control' placeholder='e.g. subaru, cooper' style='border-radius: 4px; padding-left: 12px; padding-right: 12px;' >
+      <span class="">search by color: </span>
+      <select class="form-control">
+<!-- TODO: get the color list from es -->
+        <option value=""></option>
+        <option value="blue">blue</option>
+        <option value="blue">red</option>
+      </select>
+      <span class="">search by postcode area: </span>
+      <select class="form-control">
+<!-- TODO: get the postcode area list from es -->
+        <option value=""></option>
+        <option value="AB">Aberdeen</option>
+        <option value="B">Bermingham</option>
+      </select>
+
+      <div class="pull-right">
+        <i class="btn btn-outline-default fa fa-lg fa-search left pointer"
+          style="color: #555; border-radius: 20px; margin: 2px; padding-left: 14px; padding-right: 14px; padding-top: 12px; padding-bottom: 12px;"
+          data-toggle='tooltip' data-placement="left" title="search now"></i>
+        <i class="btn btn-outline-success fa fa-lg fa-search-plus left pointer"
+          style="color: #555; border-radius: 20px; margin: 2px; padding-left: 14px; padding-right: 14px; padding-top: 12px; padding-bottom: 12px;"
+          (click)='toggleSearchPane()'
+          data-toggle='tooltip' data-placement="left" title="show advance search"></i>
+        <i class="btn btn-outline-info fa fa-lg fa-align-left left pointer"
+          style="color: #555; border-radius: 20px; margin: 2px; padding-left: 13px; padding-right: 13px; padding-top: 12px; padding-bottom: 12px;"
+          (click)='toggleLayout()'
+          data-toggle='tooltip' data-placement="left" title="toggle screen layout"></i>
+      </div>
+    </div>
+
+
+
+  </div>
+
+</div>
