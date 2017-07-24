@@ -10,6 +10,7 @@ var platform_browser_1 = require("@angular/platform-browser");
 var landing_page_component_1 = require("./landing.page.component");
 var search_component_1 = require("./../component/search/search.component");
 var item_list_component_1 = require("./../component/item/item.list.component");
+var item_card_component_1 = require("./../component/item/item.card.component");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -21,7 +22,7 @@ AppModule = __decorate([
         declarations: [
             landing_page_component_1.LandingPageComponent,
             search_component_1.SearchComponent,
-            item_list_component_1.ItemListComponent
+            item_list_component_1.ItemListComponent, item_card_component_1.ItemCardComponent
         ],
         bootstrap: [landing_page_component_1.LandingPageComponent]
     })

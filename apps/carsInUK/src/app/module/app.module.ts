@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { LandingPageComponent }  from './landing.page.component';
 import { SearchComponent } from './../component/search/search.component';
 import { ItemListComponent } from './../component/item/item.list.component';
+import { ItemCardComponent } from './../component/item/item.card.component';
 
 
 @NgModule({
@@ -11,7 +12,7 @@ import { ItemListComponent } from './../component/item/item.list.component';
   declarations: [
     LandingPageComponent,
     SearchComponent,
-    ItemListComponent
+    ItemListComponent, ItemCardComponent
   ],
   bootstrap:    [ LandingPageComponent ]
 })

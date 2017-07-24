@@ -51,3 +51,14 @@ body {
   padding-top: 8px;
   padding-bottom: 8px;
 }
+
+/* ******************* */
+/*  google map related */
+/* ******************* */
+
+.gmap_container {
+  box-shadow: 2px -3px 5px #ccc;
+  width: calc(100%);
+  max-height: 600px;
+  min-height: 350px;
+}

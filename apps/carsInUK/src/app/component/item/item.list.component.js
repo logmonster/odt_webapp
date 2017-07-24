@@ -16,7 +16,6 @@ var landing_page_component_1 = require("./../../module/landing.page.component");
 var ItemListComponent = (function () {
     function ItemListComponent() {
         // ctor. Init anything when necessary
-        console.log('item.list~');
         // TODO: destroy / remove element / component on the fly
         // elementRef.nativeElement.querySelector('some-elem').destroy();
     }

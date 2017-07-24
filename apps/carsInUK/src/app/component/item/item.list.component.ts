@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 //import { NgClass } from '@angular/common';
 
 import { LandingPageComponent } from './../../module/landing.page.component';
+import { ItemCardComponent } from './item.card.component';
 
 // make jQuery "recognizable"
 //declare var jQuery:any;
@@ -15,9 +16,8 @@ export class ItemListComponent  {
 
   constructor() {
     // ctor. Init anything when necessary
-console.log('item.list~');
 
-    // TODO: destroy / remove element / component on the fly
+// TODO: destroy / remove element / component on the fly
     // elementRef.nativeElement.querySelector('some-elem').destroy();
   }
 
