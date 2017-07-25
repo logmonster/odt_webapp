@@ -96,43 +96,34 @@ export class SearchComponent  {
   // ####################
 
   protected getSuggestionOnBasicSearch(_event:any, _callerRef:any, _uiCallback:any) {
-    if (_event['key'].length!=1 &&
-      (_event['code'].toLowerCase()!='backspace' &&
-      _event['code'].toLowerCase()!='delete')) {
-      // TODO: check for "arrow keys" or "enter" CODE
-console.log('#'+_event['code']+'$');
+    // * handle alpha-numeric keys + backspace
+    let _prefix = this._suggestionOnBasicSearch;
 
-
-    } else {
-      // * handle alpha-numeric keys + backspace
-      let _prefix = this._suggestionOnBasicSearch;
-
-      this._es.getClient().suggest({
-        index: 'odt_vehicle_suggestor',
-        body: {
-          "1": {
-            "prefix": _prefix,
-            "completion": {
-              "field": "suggest_model",
-              "size": 5
-            }
+    this._es.getClient().suggest({
+      index: 'odt_vehicle_suggestor',
+      body: {
+        "1": {
+          "prefix": _prefix,
+          "completion": {
+            "field": "suggest_model",
+            "size": 5
           }
         }
-      }).then(function(_body:any) {
-        let _options=_body['1'][0]['options'];
-        //console.log(_options);
-        //console.log(_options.length);
-        if (_uiCallback) {
-          _uiCallback(_options, _callerRef);
-        } else {
-          console.log('### sth wrong, _uiCallback is null');
-        }
+      }
+    }).then(function(_body:any) {
+      let _options=_body['1'][0]['options'];
+      //console.log(_options);
+      //console.log(_options.length);
+      if (_uiCallback) {
+        _uiCallback(_options, _callerRef);
+      } else {
+        console.log('### sth wrong, _uiCallback is null');
+      }
 
-      }, function(_err:any) {
-        console.log('*** ERR');
-        console.log(_err.message);
-      });
-    }
+    }, function(_err:any) {
+      console.log('*** ERR');
+      console.log(_err.message);
+    });
     /*
     console.log(_event);
     chrome, safari, firefox => code => Enter, ArrowUp, ArrowDown, ArrowRight, ArrowLeft

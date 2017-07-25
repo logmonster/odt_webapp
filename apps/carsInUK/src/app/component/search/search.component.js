@@ -79,41 +79,33 @@ var SearchComponent = (function () {
     };
     // ####################
     SearchComponent.prototype.getSuggestionOnBasicSearch = function (_event, _callerRef, _uiCallback) {
-        if (_event['key'].length != 1 &&
-            (_event['code'].toLowerCase() != 'backspace' &&
-                _event['code'].toLowerCase() != 'delete')) {
-            // TODO: check for "arrow keys" or "enter" CODE
-            console.log('#' + _event['code'] + '$');
-        }
-        else {
-            // * handle alpha-numeric keys + backspace
-            var _prefix = this._suggestionOnBasicSearch;
-            this._es.getClient().suggest({
-                index: 'odt_vehicle_suggestor',
-                body: {
-                    "1": {
-                        "prefix": _prefix,
-                        "completion": {
-                            "field": "suggest_model",
-                            "size": 5
-                        }
+        // * handle alpha-numeric keys + backspace
+        var _prefix = this._suggestionOnBasicSearch;
+        this._es.getClient().suggest({
+            index: 'odt_vehicle_suggestor',
+            body: {
+                "1": {
+                    "prefix": _prefix,
+                    "completion": {
+                        "field": "suggest_model",
+                        "size": 5
                     }
                 }
-            }).then(function (_body) {
-                var _options = _body['1'][0]['options'];
-                //console.log(_options);
-                //console.log(_options.length);
-                if (_uiCallback) {
-                    _uiCallback(_options, _callerRef);
-                }
-                else {
-                    console.log('### sth wrong, _uiCallback is null');
-                }
-            }, function (_err) {
-                console.log('*** ERR');
-                console.log(_err.message);
-            });
-        }
+            }
+        }).then(function (_body) {
+            var _options = _body['1'][0]['options'];
+            //console.log(_options);
+            //console.log(_options.length);
+            if (_uiCallback) {
+                _uiCallback(_options, _callerRef);
+            }
+            else {
+                console.log('### sth wrong, _uiCallback is null');
+            }
+        }, function (_err) {
+            console.log('*** ERR');
+            console.log(_err.message);
+        });
         /*
         console.log(_event);
         chrome, safari, firefox => code => Enter, ArrowUp, ArrowDown, ArrowRight, ArrowLeft

@@ -26,6 +26,41 @@ export class SuggestiveTextInputComponent  {
    *    "_delegate" object
    */
   private _keyUpHandler(_event:any) {
+    if (_event['key'].length==1 ||
+      _event['code'].toLowerCase()=='backspace' ||
+      _event['code'].toLowerCase()=='delete') {
+
+      this._delegate['_ref'][(this._delegate['keyUpHandler'])](_event, this, this.updateUIWithSuggestions);
+    } else {
+      // check for arrow keys (up or down ONLY)
+      let _kcode=_event['code'].toLowerCase();
+      let _idxUpdated:boolean = false;
+      if (_kcode=='arrowup') {
+        if (this._selectedSuggestion>=1) {
+          this._selectedSuggestion-=1;
+          _idxUpdated=true;
+        }
+      } else if (_kcode=='arrowdown') {
+        if (this._options && this._options.length>(this._selectedSuggestion+1)) {
+          this._selectedSuggestion+=1;
+          this._delegate['placeholder']=this._options[this._selectedSuggestion]['text'];
+          _idxUpdated=true;
+        }
+      }
+
+      if (_idxUpdated) {
+        this._delegate["_ref"][(this._delegate["ngModelField"])]=this._options[this._selectedSuggestion]['text'];
+      }
+
+      if (_kcode=='enter' || _kcode=='return') {
+        // no more suggestions, as user confirmed the value
+console.log(this._options);
+        this._options=[];
+// TODO: do another callback based on search based on the text (it is necessary as we only return top 5 suggestions... there might be alot of entries matching the given prefix)
+      }
+    }
+
+    /*
     if (this._delegate &&
       this._delegate['_ref'] &&
       this._delegate['keyUpHandler']) {
@@ -34,6 +69,7 @@ export class SuggestiveTextInputComponent  {
     } else {
       console.log('*** should not happen');
     }
+    */
   }
 
   private _getSearchSuggestionContainerClass() {
@@ -52,9 +88,10 @@ export class SuggestiveTextInputComponent  {
     }
   }
 
-  private _getSearchSuggestionItemClass() {
+  private _getSearchSuggestionItemClass(_idx:number) {
     return {
-      search_suggestion_item: true
+      search_suggestion_item: true,
+      search_suggestion_item_selected: (_idx==this._selectedSuggestion)?true:false
     };
   }
 

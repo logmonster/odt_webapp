@@ -22,14 +22,47 @@ var SuggestiveTextInputComponent = (function () {
      *    "_delegate" object
      */
     SuggestiveTextInputComponent.prototype._keyUpHandler = function (_event) {
-        if (this._delegate &&
-            this._delegate['_ref'] &&
-            this._delegate['keyUpHandler']) {
+        if (_event['key'].length == 1 ||
+            _event['code'].toLowerCase() == 'backspace' ||
+            _event['code'].toLowerCase() == 'delete') {
             this._delegate['_ref'][(this._delegate['keyUpHandler'])](_event, this, this.updateUIWithSuggestions);
         }
         else {
-            console.log('*** should not happen');
+            // check for arrow keys (up or down ONLY)
+            var _kcode = _event['code'].toLowerCase();
+            var _idxUpdated = false;
+            if (_kcode == 'arrowup') {
+                if (this._selectedSuggestion >= 1) {
+                    this._selectedSuggestion -= 1;
+                    _idxUpdated = true;
+                }
+            }
+            else if (_kcode == 'arrowdown') {
+                if (this._options && this._options.length > (this._selectedSuggestion + 1)) {
+                    this._selectedSuggestion += 1;
+                    this._delegate['placeholder'] = this._options[this._selectedSuggestion]['text'];
+                    _idxUpdated = true;
+                }
+            }
+            if (_idxUpdated) {
+                this._delegate["_ref"][(this._delegate["ngModelField"])] = this._options[this._selectedSuggestion]['text'];
+            }
+            if (_kcode == 'enter' || _kcode == 'return') {
+                // no more suggestions, as user confirmed the value
+                console.log(this._options);
+                this._options = [];
+            }
         }
+        /*
+        if (this._delegate &&
+          this._delegate['_ref'] &&
+          this._delegate['keyUpHandler']) {
+    
+          this._delegate['_ref'][(this._delegate['keyUpHandler'])](_event, this, this.updateUIWithSuggestions);
+        } else {
+          console.log('*** should not happen');
+        }
+        */
     };
     SuggestiveTextInputComponent.prototype._getSearchSuggestionContainerClass = function () {
         if (this._options && this._options.length > 0) {
@@ -47,9 +80,10 @@ var SuggestiveTextInputComponent = (function () {
             };
         }
     };
-    SuggestiveTextInputComponent.prototype._getSearchSuggestionItemClass = function () {
+    SuggestiveTextInputComponent.prototype._getSearchSuggestionItemClass = function (_idx) {
         return {
-            search_suggestion_item: true
+            search_suggestion_item: true,
+            search_suggestion_item_selected: (_idx == this._selectedSuggestion) ? true : false
         };
     };
     /**

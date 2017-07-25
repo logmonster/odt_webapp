@@ -10,13 +10,12 @@
   placeholder="{{_delegate['placeholder']}}" />
 <div [ngClass]='_getSearchSuggestionContainerClass()'>
   <div *ngFor='let _item of _options; index as _idx'
-  [ngClass]='_getSearchSuggestionItemClass()'>
+  [ngClass]='_getSearchSuggestionItemClass(_idx)'>
     {{_item['text']}}
   </div>
-  <div [ngClass]='_getSearchSuggestionItemClass()'>option a</div>
-
 </div>
 <!--
+(keyup)='_keyUpHandler($event)'
 <div class="search_suggestion_item search_suggestion_item_selected">option b</div>
  -->
 
