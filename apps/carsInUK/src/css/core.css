@@ -32,6 +32,18 @@ body {
 }
 .search_bar_input {}
 
+.search_suggestion_container {
+  border: 1px solid rgba(0,0,0,0.15);
+  box-shadow: 1px -1px 5px #ccc;
+}
+.search_suggestion_item {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.search_suggestion_item_selected {
+  background: #eee;
+}
+
 /* ****************** */
 /*  item list related */
 /* ****************** */

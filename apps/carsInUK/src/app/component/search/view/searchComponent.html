@@ -24,9 +24,12 @@
   <!-- basic search -->
   <div [ngClass]='_getClassForSearchDiv()' style="margin-top: 12px;">
     <div style="" class="search_bar_simple_container">
-      <input class="form-control search_bar_input"
+      <suggestive-text-input [_delegate]='this._searchBarSimpleDelegate'></suggestive-text-input>
+      <!--input class="form-control search_bar_input"
         style="border-radius: 4px; padding-left: 20px; padding-right: 20px; margin-bottom: 0px;"
-        placeholder="type in a car model here..." />
+        (keyup)='getSuggestionOnBasicSearch($event)'
+        [(ngModel)]="_suggestionOnBasicSearch"
+        placeholder="type in a car model here..." / -->
     </div>
     <div style="display: inline-block;">
       &nbsp;

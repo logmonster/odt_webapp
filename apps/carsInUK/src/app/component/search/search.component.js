@@ -10,15 +10,33 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var landing_page_component_1 = require("./../../module/landing.page.component");
+var esearch_provider_1 = require("./../../core/esearch.provider");
 var SearchComponent = (function () {
-    function SearchComponent(_el) {
-        // ctor. Init anything when necessary
+    // * ctor
+    function SearchComponent(_el, _es) {
         this._el = _el;
+        this._es = _es;
         this._showSimpleSearch = true;
         this._uiInited = false;
         this._isFirstSearchToggle = true;
-        // TODO: destroy / remove element / component on the fly
-        // elementRef.nativeElement.querySelector('some-elem').destroy();
+        // form-binding related variables
+        this._suggestionOnBasicSearch = '';
+        this._meRef = this;
+        // * delegate object for the suggestive.text.input.component to invoke
+        this._searchBarSimpleDelegate = {};
+        // init the _delegate for simple and adv search
+        this._searchBarSimpleDelegate = {
+            _ref: this,
+            keyUpHandler: 'getSuggestionOnBasicSearch',
+            ngModelField: '_suggestionOnBasicSearch',
+            placeholder: 'type in a car model here...',
+            styles: {
+                'border-radius': '4px',
+                'padding-left': '20px',
+                'padding-right': '20px',
+                'margin-bottom': '0px'
+            }
+        };
     }
     SearchComponent.prototype.ngAfterContentChecked = function () {
         // do sth if necessary after state change in the component
@@ -59,6 +77,54 @@ var SearchComponent = (function () {
     SearchComponent.prototype.toggleSearchPane = function () {
         this._showSimpleSearch = !this._showSimpleSearch;
     };
+    // ####################
+    SearchComponent.prototype.getSuggestionOnBasicSearch = function (_event, _callerRef, _uiCallback) {
+        if (_event['key'].length != 1 &&
+            (_event['code'].toLowerCase() != 'backspace' &&
+                _event['code'].toLowerCase() != 'delete')) {
+            // TODO: check for "arrow keys" or "enter" CODE
+            console.log('#' + _event['code'] + '$');
+        }
+        else {
+            // * handle alpha-numeric keys + backspace
+            var _prefix = this._suggestionOnBasicSearch;
+            this._es.getClient().suggest({
+                index: 'odt_vehicle_suggestor',
+                body: {
+                    "1": {
+                        "prefix": _prefix,
+                        "completion": {
+                            "field": "suggest_model",
+                            "size": 5
+                        }
+                    }
+                }
+            }).then(function (_body) {
+                var _options = _body['1'][0]['options'];
+                //console.log(_options);
+                //console.log(_options.length);
+                if (_uiCallback) {
+                    _uiCallback(_options, _callerRef);
+                }
+                else {
+                    console.log('### sth wrong, _uiCallback is null');
+                }
+            }, function (_err) {
+                console.log('*** ERR');
+                console.log(_err.message);
+            });
+        }
+        /*
+        console.log(_event);
+        chrome, safari, firefox => code => Enter, ArrowUp, ArrowDown, ArrowRight, ArrowLeft
+    
+        KeyboardEvent: key: "a" code: "KeyA", location: index_of_character_inTheTextInput
+        if special keys...
+          key: "Meta", code: "MetaLeft" "ShiftLeft", location: n
+    
+        PS. if key != a_singular_character... it could be a special key (e.g. meta, shift, alt)
+        */
+    };
     return SearchComponent;
 }());
 __decorate([
@@ -68,16 +134,12 @@ __decorate([
 SearchComponent = __decorate([
     core_1.Component({
         selector: 'search-component',
-        templateUrl: "./view/searchComponent.html"
+        templateUrl: "./view/searchComponent.html",
+        providers: [
+            esearch_provider_1.ESearchProvider
+        ]
     }),
-    __metadata("design:paramtypes", [core_1.ElementRef])
+    __metadata("design:paramtypes", [core_1.ElementRef, esearch_provider_1.ESearch])
 ], SearchComponent);
 exports.SearchComponent = SearchComponent;
-/*
-$(function () {
-  $('[data-toggle="tooltip"]').tooltip({
-    container: 'body'
-  })
-})
-*/
 //# sourceMappingURL=search.component.js.map

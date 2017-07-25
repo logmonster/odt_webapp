@@ -1,0 +1,27 @@
+
+<!-- id prefix naming conventiion, based on the 1st letter of the Camel case name
+  suggestiveTextInputComponent => s_t_i_c (_main was added just for identification purpose)
+-->
+<input id='s_t_i_c_main'
+  class="form-control search_bar_input"
+  [ngStyle]="_delegate['styles']"
+  (keyup)='_keyUpHandler($event)'
+  [(ngModel)]='_delegate["_ref"][(_delegate["ngModelField"])]'
+  placeholder="{{_delegate['placeholder']}}" />
+<div [ngClass]='_getSearchSuggestionContainerClass()'>
+  <div *ngFor='let _item of _options; index as _idx'
+  [ngClass]='_getSearchSuggestionItemClass()'>
+    {{_item['text']}}
+  </div>
+  <div [ngClass]='_getSearchSuggestionItemClass()'>option a</div>
+
+</div>
+<!--
+<div class="search_suggestion_item search_suggestion_item_selected">option b</div>
+ -->
+
+<!-- input class="form-control search_bar_input"
+  style="border-radius: 4px; padding-left: 20px; padding-right: 20px; margin-bottom: 0px;"
+  (keyup)='getSuggestionOnBasicSearch($event)'
+  [(ngModel)]="_suggestionOnBasicSearch"
+  placeholder="type in a car model here..." / -->
