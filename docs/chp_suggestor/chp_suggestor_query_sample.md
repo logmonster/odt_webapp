@@ -252,6 +252,24 @@ GET odt_vehicle_suggestor/_search
   }
 }
 
+# random score example
+GET odt_vehicle_suggestor/data/_search
+{
+  "query": {
+    "function_score": {
+      "query": {
+        "match_phrase_prefix": {
+          "model": "v7"
+        }
+      },
+      "functions": [
+        {
+          "random_score": {}
+        }
+      ]
+    }
+  }
+}
 
 # cleanup (if necessary)
 POST odt_vehicle_suggestor/data/_delete_by_query

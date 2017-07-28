@@ -57,6 +57,7 @@ export class SuggestiveTextInputComponent  {
 console.log(this._options);
         this._options=[];
 // TODO: do another callback based on search based on the text (it is necessary as we only return top 5 suggestions... there might be alot of entries matching the given prefix)
+// TODO: add back onclick event (for mouse instead of keyboard; then set focus back on the textInput)
       }
     }
 
