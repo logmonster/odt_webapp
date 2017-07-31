@@ -30,6 +30,7 @@ export class SearchComponent  {
 
   // * delegate object for the suggestive.text.input.component to invoke
   private _searchBarSimpleDelegate={};
+  private _suggestionOptions:any=[];
 
   // * ctor
   constructor(private _el:ElementRef, private _es:ESearch) {
@@ -39,6 +40,8 @@ export class SearchComponent  {
       keyUpHandler: 'getSuggestionOnBasicSearch',
       ngModelField: '_suggestionOnBasicSearch',
       placeholder: 'type in a car model here...',
+      keyEnterHandler: 'getBasicSearch',
+      suggestionOptions: '_suggestionOptions',
       styles: {
         'border-radius': '4px',
         'padding-left': '20px',
@@ -94,6 +97,34 @@ export class SearchComponent  {
   }
 
   // ####################
+
+  protected getBasicSearch_btn() {
+    // hide the suggestion pane
+    this._suggestionOptions=[];
+    this.getBasicSearch();
+  }
+
+  protected getBasicSearch() {
+    let _parent = this._ref;
+    let _hint = this._suggestionOnBasicSearch;
+
+    this._es.getClient().search({
+      index: 'odt_vehicle_suggestor',
+      body: {
+        "query": {
+          "match": {
+            "model": _hint
+          }
+        }
+      }
+    }).then(function(_body:any) {
+      let _hits = _body['hits']['hits'];
+      _parent['setItemList'](_hits);
+    }, function(_err:any) {
+      console.log('*** ERR');
+      console.log(_err.message);
+    });
+  }
 
   protected getSuggestionOnBasicSearch(_event:any, _callerRef:any, _uiCallback:any) {
     // * handle alpha-numeric keys + backspace

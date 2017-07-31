@@ -9,10 +9,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
+var esearch_provider_1 = require("./../core/esearch.provider");
 var LandingPageComponent = (function () {
     // constructor
-    function LandingPageComponent(_el) {
+    function LandingPageComponent(_el, _es) {
         this._el = _el;
+        this._es = _es;
         this._layoutType = LANDING_LAYOUT_TYPE.COLUMNS;
         this._mapInited = false;
         this._gmarkers = [];
@@ -23,6 +25,13 @@ var LandingPageComponent = (function () {
             // init gmap
             this._initGMap();
         }
+    };
+    /**
+     *  set the item-list for ItemListComponent (visualization)
+     */
+    LandingPageComponent.prototype.setItemList = function (_list) {
+        this._itemList = _list;
+        console.log(this._itemList);
     };
     LandingPageComponent.prototype._initGMap = function () {
         // clear div contents first
@@ -82,7 +91,7 @@ LandingPageComponent = __decorate([
         selector: 'landing-page-component',
         templateUrl: "./view/landingPageComponent.html"
     }),
-    __metadata("design:paramtypes", [core_1.ElementRef])
+    __metadata("design:paramtypes", [core_1.ElementRef, esearch_provider_1.ESearch])
 ], LandingPageComponent);
 exports.LandingPageComponent = LandingPageComponent;
 /**

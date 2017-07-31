@@ -2,6 +2,7 @@ import { Component, ElementRef } from '@angular/core';
 import { NgClass } from '@angular/common';
 
 import { SearchComponent } from './../component/search/search.component';
+import { ESearch, ESearchProvider } from './../core/esearch.provider';
 
 // get a reference to google apis (e.g. places, maps)
 declare var google:any;
@@ -16,9 +17,10 @@ export class LandingPageComponent  {
   private _mapInited:boolean = false;
   private _gmap:any;
   private _gmarkers:any = [];
+  private _itemList:any;
 
   // constructor
-  constructor(private _el:ElementRef) {}
+  constructor(private _el:ElementRef, private _es:ESearch) {}
 
   ngAfterContentChecked() {
     if (!this._mapInited) {
@@ -26,6 +28,14 @@ export class LandingPageComponent  {
       // init gmap
       this._initGMap();
     }
+  }
+
+  /**
+   *  set the item-list for ItemListComponent (visualization)
+   */
+  public setItemList(_list:any) {
+    this._itemList=_list;
+    console.log(this._itemList);
   }
 
   private _initGMap() {

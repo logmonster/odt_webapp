@@ -11,8 +11,11 @@
 <!--
   the suggestions (if any)
 -->
-<div [ngClass]='_getSearchSuggestionContainerClass()'>
-  <div *ngFor='let _item of _options; index as _idx'
+<div id='s_t_i_c_suggest' [ngClass]='_getSearchSuggestionContainerClass()'>
+  <!--
+    let _item of _options; index as _idx
+  -->
+  <div *ngFor='let _item of _delegate["_ref"][(_delegate["suggestionOptions"])]; index as _idx'
   (click)='_suggestionClickHandler(_idx)'
   [ngClass]='_getSearchSuggestionItemClass(_idx)'>
     {{_item['text']}}
