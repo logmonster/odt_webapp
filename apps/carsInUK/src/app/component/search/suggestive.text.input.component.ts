@@ -21,6 +21,15 @@ export class SuggestiveTextInputComponent  {
 
   // ######################
 
+  private _suggestionClickHandler(_idx) {
+    if (_idx && this._selectedSuggestion != _idx) {
+      this._selectedSuggestion=_idx;
+      // update the textInput value too...
+      this._delegate["_ref"][(this._delegate["ngModelField"])]=this._options[_idx]['text'];
+      jQuery('#s_t_i_c_main').focus();
+    }
+  }
+
   /**
    *  keyup handler => calling the correct handler based on the injected
    *    "_delegate" object

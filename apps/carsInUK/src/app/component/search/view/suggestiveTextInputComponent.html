@@ -8,8 +8,12 @@
   (keyup)='_keyUpHandler($event)'
   [(ngModel)]='_delegate["_ref"][(_delegate["ngModelField"])]'
   placeholder="{{_delegate['placeholder']}}" />
+<!--
+  the suggestions (if any)
+-->
 <div [ngClass]='_getSearchSuggestionContainerClass()'>
   <div *ngFor='let _item of _options; index as _idx'
+  (click)='_suggestionClickHandler(_idx)'
   [ngClass]='_getSearchSuggestionItemClass(_idx)'>
     {{_item['text']}}
   </div>
