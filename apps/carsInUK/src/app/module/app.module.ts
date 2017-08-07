@@ -8,8 +8,9 @@ import { SuggestiveTextInputComponent } from './../component/search/suggestive.t
 import { ItemListComponent } from './../component/item/item.list.component';
 import { ItemCardComponent } from './../component/item/item.card.component';
 
-
+import { QueryDlgComponent } from './../component/dlg/query.dlg.component';
 import { ESearchProvider } from './../core/esearch.provider';
+import { CoreModelProvider } from './../core/core.model.provider';
 
 
 @NgModule({
@@ -17,10 +18,12 @@ import { ESearchProvider } from './../core/esearch.provider';
   declarations: [
     LandingPageComponent,
     SearchComponent, SuggestiveTextInputComponent,
-    ItemListComponent, ItemCardComponent
+    ItemListComponent, ItemCardComponent,
+    QueryDlgComponent
   ],
   providers: [
-    ESearchProvider
+    ESearchProvider,
+    CoreModelProvider
   ],
   bootstrap:    [ LandingPageComponent ]
 })

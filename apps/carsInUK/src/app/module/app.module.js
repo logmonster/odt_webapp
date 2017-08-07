@@ -13,7 +13,9 @@ var search_component_1 = require("./../component/search/search.component");
 var suggestive_text_input_component_1 = require("./../component/search/suggestive.text.input.component");
 var item_list_component_1 = require("./../component/item/item.list.component");
 var item_card_component_1 = require("./../component/item/item.card.component");
+var query_dlg_component_1 = require("./../component/dlg/query.dlg.component");
 var esearch_provider_1 = require("./../core/esearch.provider");
+var core_model_provider_1 = require("./../core/core.model.provider");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -25,10 +27,12 @@ AppModule = __decorate([
         declarations: [
             landing_page_component_1.LandingPageComponent,
             search_component_1.SearchComponent, suggestive_text_input_component_1.SuggestiveTextInputComponent,
-            item_list_component_1.ItemListComponent, item_card_component_1.ItemCardComponent
+            item_list_component_1.ItemListComponent, item_card_component_1.ItemCardComponent,
+            query_dlg_component_1.QueryDlgComponent
         ],
         providers: [
-            esearch_provider_1.ESearchProvider
+            esearch_provider_1.ESearchProvider,
+            core_model_provider_1.CoreModelProvider
         ],
         bootstrap: [landing_page_component_1.LandingPageComponent]
     })

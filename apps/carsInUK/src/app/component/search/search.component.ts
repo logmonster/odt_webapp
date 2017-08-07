@@ -5,7 +5,9 @@ import { NgClass } from '@angular/common';
 
 import { SuggestiveTextInputComponent } from './suggestive.text.input.component';
 import { LandingPageComponent } from './../../module/landing.page.component';
+import { QueryDlgComponent } from './../dlg/query.dlg.component';
 import { ESearch, ESearchProvider } from './../../core/esearch.provider';
+import { CoreModel, CoreModelProvider } from './../../core/core.model.provider';
 
 // make jQuery "recognizable"
 declare var jQuery:any;
@@ -14,7 +16,8 @@ declare var jQuery:any;
   selector: 'search-component',
   templateUrl: "./view/searchComponent.html",
   providers: [
-    ESearchProvider
+    ESearchProvider,
+    CoreModelProvider
   ]
 })
 export class SearchComponent  {
@@ -33,7 +36,7 @@ export class SearchComponent  {
   private _suggestionOptions:any=[];
 
   // * ctor
-  constructor(private _el:ElementRef, private _es:ESearch) {
+  constructor(private _el:ElementRef, private _es:ESearch, private _coreModel:CoreModel) {
     // init the _delegate for simple and adv search
     this._searchBarSimpleDelegate={
       _ref: this,
@@ -94,6 +97,39 @@ export class SearchComponent  {
   // toggle the _showSimpleSearch variable and hence toggle which pane to show
   protected toggleSearchPane() {
     this._showSimpleSearch=!this._showSimpleSearch;
+  }
+
+  // ####################
+
+  private showQueryDlg_basicQuery() {
+    // set the contents on CoreModel instance hence the QueryDlgComponent can re-use the states
+    this._coreModel.setDataByKey(QueryDlgComponent.KEY_TITLE,
+      "queries involved", true);
+    this._coreModel.setDataByKey(QueryDlgComponent.KEY_CONTENT,
+      [{
+        "id": "suggestion query",
+        "content": JSON.stringify({
+          "suggest": {
+            "1": {
+              "prefix": this._suggestionOnBasicSearch,
+              "completion": {
+                "field": "suggest_model",
+                "size": 5
+              }
+            }
+          }
+        })
+      }, {
+        "id": "search (basic)",
+        "content": JSON.stringify({
+          "query": {
+            "match": {
+              "model": this._suggestionOnBasicSearch
+            }
+          }
+        })
+      }], true);
+    jQuery('#_btnShowQuery').click();
   }
 
   // ####################

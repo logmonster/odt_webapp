@@ -13,6 +13,23 @@
   cursor: pointer;
 }
 
+.query_tooltip {
+  color: #2BBBAD!important;
+}
+.query_outer_container {
+  min-height: 200px;
+  max-height: 400px;
+  overflow: auto;
+}
+.query_inner_textarea {
+  min-height: 200px;
+  border-radius: 4px;
+  border: 1px solid rgba(102,102,102,0.6);
+}
+.query_dlg_title_border {
+  border-radius: 8px 8px 0px 0px;
+}
+
 /* ******************** */
 /*  landingpage related */
 /* ******************** */

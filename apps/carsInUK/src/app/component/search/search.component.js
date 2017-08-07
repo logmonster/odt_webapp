@@ -10,12 +10,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var landing_page_component_1 = require("./../../module/landing.page.component");
+var query_dlg_component_1 = require("./../dlg/query.dlg.component");
 var esearch_provider_1 = require("./../../core/esearch.provider");
+var core_model_provider_1 = require("./../../core/core.model.provider");
 var SearchComponent = (function () {
     // * ctor
-    function SearchComponent(_el, _es) {
+    function SearchComponent(_el, _es, _coreModel) {
         this._el = _el;
         this._es = _es;
+        this._coreModel = _coreModel;
         this._showSimpleSearch = true;
         this._uiInited = false;
         this._isFirstSearchToggle = true;
@@ -79,6 +82,35 @@ var SearchComponent = (function () {
     // toggle the _showSimpleSearch variable and hence toggle which pane to show
     SearchComponent.prototype.toggleSearchPane = function () {
         this._showSimpleSearch = !this._showSimpleSearch;
+    };
+    // ####################
+    SearchComponent.prototype.showQueryDlg_basicQuery = function () {
+        // set the contents on CoreModel instance hence the QueryDlgComponent can re-use the states
+        this._coreModel.setDataByKey(query_dlg_component_1.QueryDlgComponent.KEY_TITLE, "queries involved", true);
+        this._coreModel.setDataByKey(query_dlg_component_1.QueryDlgComponent.KEY_CONTENT, [{
+                "id": "suggestion query",
+                "content": JSON.stringify({
+                    "suggest": {
+                        "1": {
+                            "prefix": this._suggestionOnBasicSearch,
+                            "completion": {
+                                "field": "suggest_model",
+                                "size": 5
+                            }
+                        }
+                    }
+                })
+            }, {
+                "id": "search (basic)",
+                "content": JSON.stringify({
+                    "query": {
+                        "match": {
+                            "model": this._suggestionOnBasicSearch
+                        }
+                    }
+                })
+            }], true);
+        jQuery('#_btnShowQuery').click();
     };
     // ####################
     SearchComponent.prototype.getBasicSearch_btn = function () {
@@ -156,10 +188,11 @@ SearchComponent = __decorate([
         selector: 'search-component',
         templateUrl: "./view/searchComponent.html",
         providers: [
-            esearch_provider_1.ESearchProvider
+            esearch_provider_1.ESearchProvider,
+            core_model_provider_1.CoreModelProvider
         ]
     }),
-    __metadata("design:paramtypes", [core_1.ElementRef, esearch_provider_1.ESearch])
+    __metadata("design:paramtypes", [core_1.ElementRef, esearch_provider_1.ESearch, core_model_provider_1.CoreModel])
 ], SearchComponent);
 exports.SearchComponent = SearchComponent;
 //# sourceMappingURL=search.component.js.map
