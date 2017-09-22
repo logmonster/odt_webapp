@@ -1,0 +1,52 @@
+
+.hiding {
+  display: none;
+}
+.showing {
+  display: block;
+}
+.error-box {
+  color: red;
+  margin-bottom: 8px;
+}
+
+.query-container {
+  margin-top: 12px;
+  margin-bottom: 20px;
+  width: 500px;
+}
+
+.result-container-outer {
+  width: 500px;
+  height: 300px;
+  overflow: scroll;
+}
+.result-container-inner {
+  width: calc(100%);
+}
+
+.lecture-body-container {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+.lecture-section-container {
+  padding: 8px;
+  border-radius: 4px;
+  border-color: #33b5e5;
+  border-width: 1px;
+  border-style: solid;
+  margin-top: 8px;
+}
+.lecture-result-div {
+  font-style: italic;
+}
+
+.normal_ul {
+
+}
+.normal_ul>li {
+  list-style-type: circle;
+  list-style-position: inside; margin-left: 12px;
+}
