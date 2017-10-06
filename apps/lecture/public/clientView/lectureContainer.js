@@ -11,12 +11,23 @@ var LectSidemenu = require('./vue/lecture-container-sidemenu.vue');
 Vue.component('lecture-navigator', LectNav);
 Vue.component('lecture-container-sidemenu', LectSidemenu);
 
+// setup Router
+var Router = require('vue-router');
+var Routes = require('./vue/router.vue');
+
+Vue.use(Router);
+
+var router = new Router(Routes);
+//console.log(router);
+
 // this is a starting-point (app)
 // setup the global Vue instance
 window.Vue = new Vue();
 
 let app = new Vue({
   el: '#lecture-container',
+  //routes: new Router(Routes),
+  router,
   render: function (createElement) {
     return createElement(App)
   }

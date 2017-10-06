@@ -7,6 +7,10 @@
 .showing {
   display: block;
 }
+.showing-inline {
+  display: inline-block;
+}
+
 .error-box {
   color: red;
   margin-bottom: 8px;
@@ -109,6 +113,13 @@
 .lecture-container-content-div {
   padding: 0px;
   margin: 0px;
+}
+
+.lecture-sidemenu-subitem {
+  padding-left: 12px; padding-right: 4px;
+}
+.lecture-sidemenu-subitem-icon {
+  font-size: 12px;
 }
 
 @media only screen and (max-width: 499px) {
