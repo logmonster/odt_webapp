@@ -1,0 +1,71 @@
+<html>
+<head>
+  <title>queryRunnerJ - demo webapp using jQuery integration with elasticsearch</title>
+  <!-- [step] set the base url... geee -->
+  <!-- base href="/lab.html" -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel='stylesheet' href='css/style.css'>
+
+  <!-- ################################ -->
+  <!-- using MDB (metal design bootstrap) -->
+  <!-- ################################ -->
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css' >
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.3.1/css/mdb.css">
+
+  <!-- MDB required jscript lib -->
+  <!-- JQuery -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
+  <!-- Bootstrap tooltips -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.js"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/js/bootstrap.js"></script>
+
+  <!-- ######################## -->
+  <!-- the js files for the app -->
+  <!-- ######################## -->
+  <script type="text/javascript" src="serverJS/ajax.js"></script>
+
+  <script>
+    function runQuery_1_no_builder() {
+      ajaxCall('/chp02/searchChp2NoBuilder',
+        function(_resp, _b, _c) {
+          let _hit=_resp.hits.hits[0];
+          document.querySelector('#divRes_1').innerHTML=JSON.stringify(_hit._source);
+        }, function(_err, _b, _c) {
+          alert(_err);
+        }
+      );
+    }
+    function runQuery_1_builder() {
+      ajaxCall('/chp02/searchChp2Builder',
+        function(_resp, _b, _c) {
+          let _hit=_resp.hits.hits[_resp.hits.hits.length-1];
+          document.querySelector('#divRes_2').innerHTML=JSON.stringify(_hit._source);
+        }, function(_err, _b, _c) {
+          alert(_err);
+        }
+      );
+    }
+  </script>
+
+</head>
+<body class="lecture-body-container" style="padding-top: 20px; padding-bottom: 16px;">
+
+  <div class="lecture-section-container">
+    run a query (promise) without builder:
+    <button class="btn btn-sm btn-secondary" onclick="runQuery_1_no_builder()">go</button>
+    <div class='lecture-result-div' id='divRes_1'></div>
+  </div>
+
+  <div class="lecture-section-container">
+    run a query (promise) WITH builder:
+    <button class="btn btn-sm btn-secondary" onclick="runQuery_1_builder()">go</button>
+    <div class='lecture-result-div' id='divRes_2'></div>
+  </div>
+
+
+</body>
+</html>

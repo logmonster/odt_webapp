@@ -4,16 +4,17 @@
   <!-- [step] set the base url... geee -->
   <!-- base href="/lab.html" -->
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <link rel='stylesheet' href='../public/css/style.css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- ################################ -->
   <!-- using MDB (metal design bootstrap) -->
   <!-- ################################ -->
   <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css' >
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.3.1/css/mdb.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.4.1/js/mdb.min.js">
+
+  <!-- weird, the media queries are being overrided somehow (put it here seems working again) -->
+  <link rel='stylesheet' href='/css/style.css'>
 
   <!-- MDB required jscript lib -->
   <!-- JQuery -->
@@ -26,17 +27,19 @@
   <!-- ######################## -->
   <!-- the js files for the app -->
   <!-- ######################## -->
-  <script type="text/javascript" src="../core/elasticsearch-js-13_1/elasticsearch.jquery.js"></script>
-  <script type="text/javascript" src="../core/query.js"></script>
-  <script type="text/javascript" src="../core/es.js"></script>
-  <script type="text/javascript" src="../core/lecture.js"></script>
-
-  <script>
-
-  </script>
+  <script type="text/javascript" src="/clientJS/elasticsearch-js-13_1/elasticsearch.jquery.js"></script>
+  <script type="text/javascript" src="/clientJS/query.js"></script>
+  <script type="text/javascript" src="/clientJS/es.js"></script>
+  <script type="text/javascript" src="/clientJS/lecture.js"></script>
 
 </head>
-<body class="lecture-body-container" style="padding-top: 20px; padding-bottom: 16px;">
+
+<body class="" style="padding-left: 1px; padding-right: 1px; padding-bottom: 16px;">
+  <!-- navigator -->
+  <!--Main Navigation-->
+<header>
+  <div id='lecture-container'></div>
+
 
   <div class="lecture-section-container">
     run a query using event-handler:
@@ -50,6 +53,13 @@
     <div class='lecture-result-div' id='divRes_2'></div>
   </div>
 
+  <div class="lecture-section-container">
+    run a query using filterPath:
+    <button class="btn btn-sm btn-secondary" onclick="chp02.runQueryWithFilterPath()">go</button>
+    <div class='lecture-result-div' id='divRes_3'></div>
+  </div>
 
 </body>
+<script type="text/javascript" src="/clientView/build/build-lectureContainer.js"></script>
+<!--script type="text/javascript" src="/clientView/build/build-lectureNavigator.js"></script-->
 </html>

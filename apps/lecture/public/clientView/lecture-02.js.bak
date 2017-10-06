@@ -1,0 +1,10 @@
+// main.js
+var Vue = require('vue')
+var App = require('./vue/lecture-app.vue')
+
+new Vue({
+  el: '#lecture-02-app',
+  render: function (createElement) {
+    return createElement(App)
+  }
+})

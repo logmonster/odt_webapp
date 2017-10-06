@@ -47,5 +47,23 @@ let chp02={
         alert(_err);
       }
     );  // end of "search"
+  },
+  runQueryWithFilterPath: function() {
+    // only return the "took", "hits.hits._source.key" and "hits.hits._score"
+    // ** seems not work on jQuery....?
+    getESClient({
+      hosts: 'http://localhost:9200',
+      ignore: [404],
+      filterPath: 'took,hits.hits._source.key,hits.hits._score'
+    }).search(chp02['basicQuery_1']).then(
+      function(_resp) {
+        let _hit=_resp.hits.hits[_resp.hits.hits.length-1];
+        document.querySelector('#divRes_3').innerHTML=JSON.stringify(_hit._source);
+      }, function(_err) {
+        // FAIL
+        alert(_err);
+      }
+    );  // end -- search
   }
+
 };

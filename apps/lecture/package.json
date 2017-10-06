@@ -4,8 +4,8 @@
   "description": "for lecture contents and demo purpose",
   "main": "view/index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-    , "dev": "lite-server"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "lite-server"
   },
   "keywords": [
     "odt",
@@ -15,6 +15,15 @@
   "author": "Jason.Wong@elastic",
   "license": "MIT",
   "dependencies": {
-    "lite-server": "^2.3.0"
+    "elastic-builder": "^1.1.1",
+    "elasticsearch": "^13.3.1",
+    "express": "^4.15.5",
+    "lite-server": "^2.3.0",
+    "nodemon": "^1.12.1",
+    "vue": "^2.4.4",
+    "vue-router": "^2.7.0"
+  },
+  "devDependencies": {
+    "vueify": "^9.4.1"
   }
 }

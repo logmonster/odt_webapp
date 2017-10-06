@@ -1,4 +1,6 @@
 
+
+
 .hiding {
   display: none;
 }
@@ -49,4 +51,79 @@
 .normal_ul>li {
   list-style-type: circle;
   list-style-position: inside; margin-left: 12px;
+}
+
+/* ################### */
+/*  lecture container  */
+/* ################### */
+
+.lecture-container-navigation {
+  width: 100%;
+  background: #eee;
+  padding-left: 4px; padding-right: 4px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  border-radius: 0 0 2px 2px;
+  box-shadow: 1px 2px 2px #aaa;
+}
+
+.lecture-container-navigation-title {
+  display: inline-block;
+  font-size: 24px;
+  color: #555;
+  padding-left: 14px; padding-right: 18px;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.lecture-container-navigation-subtitle {
+  display: inline-block;
+  font-size: 16px;
+  color: #555;
+  padding-left: 8px; padding-right: 8px;
+  padding-top: 2px; padding-bottom: 2px;
+  font-weight: 200;
+  cursor: pointer;
+}
+.lecture-container-navigation-subtitle-clicked {
+  background: #fff;
+  border-radius: 4px;
+  color: #777;
+  box-shadow: 1px 2px 1px #aaa;
+}
+
+.lecture-container-navigation-pull-right-section {
+  float: right;
+  /*display: inline-block;*/
+}
+.lecture-container-navigation-icon {
+  font-size: 16px;
+  color: #555;
+  padding-left: 8px; padding-right: 8px;
+  /* padding top 14px -> 2px + container's padding-top 12px = 14px; */
+  padding-top: 14px; padding-bottom: 14px;
+  font-weight: 200;
+  cursor: pointer;
+}
+
+.lecture-container-content-div {
+  padding: 0px;
+  margin: 0px;
+}
+
+@media only screen and (max-width: 499px) {
+  .lecture-container-navigation-pull-right-section-vis {
+    display: none;
+  }
+  .lecture-container-navigation-pull-right-section-min {
+    display: inline-block;
+  }
+}
+@media only screen and (min-width: 500px) {
+  .lecture-container-navigation-pull-right-section-vis {
+    display: inline-block;
+  }
+  .lecture-container-navigation-pull-right-section-min {
+    display: none;
+  }
 }
