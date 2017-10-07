@@ -11,6 +11,11 @@
   display: inline-block;
 }
 
+.no-wrap-horizontal-scroll-container {
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
 .error-box {
   color: red;
   margin-bottom: 8px;
@@ -120,6 +125,9 @@
 }
 .lecture-sidemenu-subitem-icon {
   font-size: 12px;
+}
+.lecture-sidemenu-subitem-label {
+  font-size: 13px;
 }
 
 @media only screen and (max-width: 499px) {

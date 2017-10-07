@@ -2,23 +2,25 @@
 
 <template>
   <div style="padding-left: 12px; padding-top: 12px;">
-    <div v-for="(_stat, _i) in chpStatus" :key="_stat.id" style="margin-top: 4px; ">
-      <!-- caret icons -->
-      <i class="fa fa-caret-right" aria-hidden="true"
-        :class="{ 'showing-inline': !_stat.showSubItems, 'hiding': _stat.showSubItems }"
-        @click='toggleMenuItemsVisibility(_stat.id)' ></i>
-      <i class="fa fa-caret-down" aria-hidden="true"
-        :class="{ 'showing-inline': _stat.showSubItems, 'hiding': !_stat.showSubItems }"
-        @click='toggleMenuItemsVisibility(_stat.id)' ></i>
-      <span>{{_stat.label}}</span>
-      <!-- sub items -->
-      <div :class="{ 'showing': _stat.showSubItems, 'hiding': !_stat.showSubItems }">
-        <div v-for="(_item, _j) in _stat.items" :key="_stat.id+'-'+_item.id">
-          <i class="fa fa-circle-o lecture-sidemenu-subitem lecture-sidemenu-subitem-icon" aria-hidden="true" ></i>
-          <span @click="updateRouterView(_item.view)">{{_item.label}}</span>
-
+    <div class="no-wrap-horizontal-scroll-container">
+      <div v-for="(_stat, _i) in chpStatus" :key="_stat.id" style="margin-top: 4px;">
+        <!-- caret icons -->
+        <i class="fa fa-caret-right" aria-hidden="true"
+          :class="{ 'showing-inline': !_stat.showSubItems, 'hiding': _stat.showSubItems }"
+          @click='toggleMenuItemsVisibility(_stat.id)' ></i>
+        <i class="fa fa-caret-down" aria-hidden="true"
+          :class="{ 'showing-inline': _stat.showSubItems, 'hiding': !_stat.showSubItems }"
+          @click='toggleMenuItemsVisibility(_stat.id)' ></i>
+        <span>{{_stat.label}}</span>
+        <!-- sub items -->
+        <div :class="{ 'showing': _stat.showSubItems, 'hiding': !_stat.showSubItems }">
+          <div v-for="(_item, _j) in _stat.items" :key="_stat.id+'-'+_item.id">
+            <i class="fa fa-circle-o lecture-sidemenu-subitem lecture-sidemenu-subitem-icon" aria-hidden="true" ></i>
+            <span @click="updateRouterView(_item.view)" class="lecture-sidemenu-subitem-label">
+              {{_item.label}}</span>
+          </div>
         </div>
-      </div>
+      </div>  <!-- end of chpStatus items -->
     </div>
     <!--
     {{pickedChapter}} > {{pickedItemId}}
@@ -42,7 +44,11 @@ function _model_lcs() {
       });
     },
     updateRouterView: (_view) => {
-      console.log(_view);
+      // # validation => check if the Route is declared???
+      VueRouter.push({
+        name: _view //, params: { 'key1': 'value1' }
+      } //, onCompleteCallback, onAbortCallback
+      );
     },
     // list of menu-item(s) and corresponding subItem(s)
     chpStatus: [
@@ -51,7 +57,7 @@ function _model_lcs() {
         label: 'chapter 2',
         showSubItems: false,
         items: [
-          { id: '__1', label: 'item 1', view: '/chp02/query_by_event_handler' },
+          { id: '__1', label: 'query by eventHandler example', view: '/chp02/query_by_event_handler' },
           { id: '__2', label: 'item 2' }
         ]
       },

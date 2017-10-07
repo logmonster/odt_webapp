@@ -24,7 +24,7 @@
             :pickedItemId='pickedItemId'></lecture-container-sidemenu>
         </div>
         <div class="col-sm-8 col-md-8">
-          <router-link to="/chp02/query_by_event_handler">Go to Foo</router-link>
+          <!--router-link to="/chp02/query_by_event_handler">Go to Foo</router-link-->
           <router-view></router-view>
         </div>
       </div>

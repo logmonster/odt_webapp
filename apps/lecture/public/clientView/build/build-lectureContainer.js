@@ -10211,7 +10211,7 @@ module.exports = Vue$3;
 var Vue = require('vue')
 var App = require('./vue/lecture-container.vue')
 
-// MUST load the component(s)
+// # MUST load the component(s)
 // component setup
 var LectNav = require('./vue/lecture-container-navigator.vue')
 var LectSidemenu = require('./vue/lecture-container-sidemenu.vue');
@@ -10224,19 +10224,20 @@ Vue.component('lecture-container-sidemenu', LectSidemenu);
 var Router = require('vue-router');
 var Routes = require('./vue/router.vue');
 
+// # let vue-router operationable
+// # need to create an instance of the vue-router to work
 Vue.use(Router);
-
 var router = new Router(Routes);
-//console.log(router);
+
+// # setup a "bus" for inter-components communication (MUST for bundled apps)
+window.Vue = new Vue();
+window.VueRouter = router;
 
 // this is a starting-point (app)
 // setup the global Vue instance
-window.Vue = new Vue();
-
 let app = new Vue({
   el: '#lecture-container',
-  //routes: new Router(Routes),
-  router,
+  router, //routes: new Router(Routes),
   render: function (createElement) {
     return createElement(App)
   }
@@ -10244,7 +10245,7 @@ let app = new Vue({
 
 // another way to communicate through "bus" concept
 /*window.Vue.$on('testing', function() {
-  console.log('fuck yeah, in parent (but... the root level)');
+  console.log('in parent (but... the root level)');
 });*/
 
 },{"./vue/lecture-container-navigator.vue":6,"./vue/lecture-container-sidemenu.vue":7,"./vue/lecture-container.vue":8,"./vue/router.vue":9,"vue":3,"vue-router":2}],5:[function(require,module,exports){
@@ -10377,6 +10378,8 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 //
 //
 //
+//
+//
 
 // model
 function _model_lcs() {
@@ -10392,7 +10395,11 @@ function _model_lcs() {
       });
     },
     updateRouterView: (_view) => {
-      console.log(_view);
+      // # validation => check if the Route is declared???
+      VueRouter.push({
+        name: _view //, params: { 'key1': 'value1' }
+      } //, onCompleteCallback, onAbortCallback
+      );
     },
     // list of menu-item(s) and corresponding subItem(s)
     chpStatus: [
@@ -10401,7 +10408,7 @@ function _model_lcs() {
         label: 'chapter 2',
         showSubItems: false,
         items: [
-          { id: '__1', label: 'item 1', view: '/chp02/query_by_event_handler' },
+          { id: '__1', label: 'query by eventHandler example', view: '/chp02/query_by_event_handler' },
           { id: '__2', label: 'item 2' }
         ]
       },
@@ -10445,7 +10452,7 @@ module.exports = {
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticStyle:{"padding-left":"12px","padding-top":"12px"}},_vm._l((_vm.chpStatus),function(_stat,_i){return _c('div',{key:_stat.id,staticStyle:{"margin-top":"4px"}},[_c('i',{staticClass:"fa fa-caret-right",class:{ 'showing-inline': !_stat.showSubItems, 'hiding': _stat.showSubItems },attrs:{"aria-hidden":"true"},on:{"click":function($event){_vm.toggleMenuItemsVisibility(_stat.id)}}}),_vm._v(" "),_c('i',{staticClass:"fa fa-caret-down",class:{ 'showing-inline': _stat.showSubItems, 'hiding': !_stat.showSubItems },attrs:{"aria-hidden":"true"},on:{"click":function($event){_vm.toggleMenuItemsVisibility(_stat.id)}}}),_vm._v(" "),_c('span',[_vm._v(_vm._s(_stat.label))]),_vm._v(" "),_c('div',{class:{ 'showing': _stat.showSubItems, 'hiding': !_stat.showSubItems }},_vm._l((_stat.items),function(_item,_j){return _c('div',{key:_stat.id+'-'+_item.id},[_c('i',{staticClass:"fa fa-circle-o lecture-sidemenu-subitem lecture-sidemenu-subitem-icon",attrs:{"aria-hidden":"true"}}),_vm._v(" "),_c('span',{on:{"click":function($event){_vm.updateRouterView(_item.view)}}},[_vm._v(_vm._s(_item.label))])])}))])}))}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticStyle:{"padding-left":"12px","padding-top":"12px"}},[_c('div',{staticClass:"no-wrap-horizontal-scroll-container"},_vm._l((_vm.chpStatus),function(_stat,_i){return _c('div',{key:_stat.id,staticStyle:{"margin-top":"4px"}},[_c('i',{staticClass:"fa fa-caret-right",class:{ 'showing-inline': !_stat.showSubItems, 'hiding': _stat.showSubItems },attrs:{"aria-hidden":"true"},on:{"click":function($event){_vm.toggleMenuItemsVisibility(_stat.id)}}}),_vm._v(" "),_c('i',{staticClass:"fa fa-caret-down",class:{ 'showing-inline': _stat.showSubItems, 'hiding': !_stat.showSubItems },attrs:{"aria-hidden":"true"},on:{"click":function($event){_vm.toggleMenuItemsVisibility(_stat.id)}}}),_vm._v(" "),_c('span',[_vm._v(_vm._s(_stat.label))]),_vm._v(" "),_c('div',{class:{ 'showing': _stat.showSubItems, 'hiding': !_stat.showSubItems }},_vm._l((_stat.items),function(_item,_j){return _c('div',{key:_stat.id+'-'+_item.id},[_c('i',{staticClass:"fa fa-circle-o lecture-sidemenu-subitem lecture-sidemenu-subitem-icon",attrs:{"aria-hidden":"true"}}),_vm._v(" "),_c('span',{staticClass:"lecture-sidemenu-subitem-label",on:{"click":function($event){_vm.updateRouterView(_item.view)}}},[_vm._v("\n            "+_vm._s(_item.label))])])}))])}))])}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -10534,7 +10541,7 @@ module.exports = {
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('lecture-navigator',{attrs:{"menu-item-selected":"DEmO"}}),_vm._v(" "),_c('div',{staticClass:"container lecture-container-content-div"},[_c('div',{staticClass:"row"},[_c('div',{staticClass:"col-sm-4 col-md-4"},[_c('lecture-container-sidemenu',{attrs:{"pickedChapter":_vm.pickedChapter,"pickedItemId":_vm.pickedItemId},on:{"testing":_vm.testPlz}})],1),_vm._v(" "),_c('div',{staticClass:"col-sm-8 col-md-8"},[_c('router-link',{attrs:{"to":"/chp02/query_by_event_handler"}},[_vm._v("Go to Foo")]),_vm._v(" "),_c('router-view')],1)])])],1)}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('lecture-navigator',{attrs:{"menu-item-selected":"DEmO"}}),_vm._v(" "),_c('div',{staticClass:"container lecture-container-content-div"},[_c('div',{staticClass:"row"},[_c('div',{staticClass:"col-sm-4 col-md-4"},[_c('lecture-container-sidemenu',{attrs:{"pickedChapter":_vm.pickedChapter,"pickedItemId":_vm.pickedItemId},on:{"testing":_vm.testPlz}})],1),_vm._v(" "),_c('div',{staticClass:"col-sm-8 col-md-8"},[_c('router-view')],1)])])],1)}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -10549,6 +10556,9 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 },{"vue":3,"vue-hot-reload-api":1}],9:[function(require,module,exports){
 ;(function(){
 
+/* ------------------------------------------------------------------------
+ *  aim: setup the paths and its corresponding Components for vue-router
+ * ------------------------------------------------------------------------ */
 var Router = require('vue-router');
 var C2_QueryByEventHandler = require('./chp02/query_by_event_handler.vue');
 

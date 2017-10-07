@@ -1,4 +1,7 @@
 <script>
+/* ------------------------------------------------------------------------
+ *  aim: setup the paths and its corresponding Components for vue-router
+ * ------------------------------------------------------------------------ */
 var Router = require('vue-router');
 var C2_QueryByEventHandler = require('./chp02/query_by_event_handler.vue');
 
