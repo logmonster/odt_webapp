@@ -2655,7 +2655,7 @@ if (inBrowser && window.Vue) {
 module.exports = VueRouter;
 
 }).call(this,require('_process'))
-},{"_process":10}],3:[function(require,module,exports){
+},{"_process":13}],3:[function(require,module,exports){
 (function (process,global){
 /*!
  * Vue.js v2.4.4
@@ -10206,7 +10206,7 @@ setTimeout(function () {
 module.exports = Vue$3;
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":10}],4:[function(require,module,exports){
+},{"_process":13}],4:[function(require,module,exports){
 // main.js
 var Vue = require('vue')
 var App = require('./vue/lecture-container.vue')
@@ -10219,6 +10219,7 @@ var LectSidemenu = require('./vue/lecture-container-sidemenu.vue');
 // registration (important)
 Vue.component('lecture-navigator', LectNav);
 Vue.component('lecture-container-sidemenu', LectSidemenu);
+Vue.component('lecture-code-snippet', require('./vue/lecture-code-snippet-component.vue'));
 
 // setup Router
 var Router = require('vue-router');
@@ -10232,6 +10233,7 @@ var router = new Router(Routes);
 // # setup a "bus" for inter-components communication (MUST for bundled apps)
 window.Vue = new Vue();
 window.VueRouter = router;
+window.LectureUtil = require('./vue/LectureUtil.vue');
 
 // this is a starting-point (app)
 // setup the global Vue instance
@@ -10248,7 +10250,143 @@ let app = new Vue({
   console.log('in parent (but... the root level)');
 });*/
 
-},{"./vue/lecture-container-navigator.vue":6,"./vue/lecture-container-sidemenu.vue":7,"./vue/lecture-container.vue":8,"./vue/router.vue":9,"vue":3,"vue-router":2}],5:[function(require,module,exports){
+},{"./vue/LectureUtil.vue":5,"./vue/lecture-code-snippet-component.vue":7,"./vue/lecture-container-navigator.vue":8,"./vue/lecture-container-sidemenu.vue":9,"./vue/lecture-container.vue":10,"./vue/router.vue":12,"vue":3,"vue-router":2}],5:[function(require,module,exports){
+;(function(){
+
+
+let CODE_TERMS = {
+  "keywords": {
+    "terms": [ "function", "let", "var", "if", "typeof", "return", "new", "else" ],
+    "color": "js_code_keyword"
+  },
+  "methods": {
+    "delim": [ /[a-z|0-9|_]+\s*\(/ ],
+    "open_bracket": "(",
+    "color": "js_code_method"
+  },
+  "html": {
+    "terms": [ "document", "querySelector", "execCommand", "div", "span", "class", "style", "JSON", "Math" ],
+    "color": "js_code_html"
+  }
+};
+
+module.exports = {
+  // method to copy to clipboard
+  htmlCopy2Clipboard: (_elementId, _hideAfterCopy) => {
+    var _e = document.querySelector('#'+_elementId);
+
+    if (_e && document.execCommand) {
+      // 0. show the element
+      $(_e).addClass('showing').removeClass('hiding');
+
+      _e.select();  // a. get the element selected all the contents
+      // b. execute a "copy" command
+      let _success = document.execCommand('copy');
+      // c. to blur and remove selection of the element
+      _e.selectionEnd = _e.selectionStart;
+      _e.blur();
+
+      // 0. remove the showing class
+      $(_e).removeClass('showing').addClass('hiding');
+
+      return _success;
+    }
+    return false;
+  },
+
+  // load a resource file
+  loadResourceFile: (_path, _callback) => {
+    if ($.get) {
+      $.get(_path, null, function(_data, _status, _xhr) {
+        if (_callback) {
+          _callback(_data, _status, _xhr);
+        }
+      });
+    }
+  },
+
+  // a beta js code beautifier
+  jsCodeBeautifier: (_content) => {
+    let _lines = _content.split('\n');
+    let _ct = '';
+
+    var _checkHtmlTerms = function(_t, _ct) {
+      var _currentT=_t; // the currently replaced _t
+      for (var _l=0; _l<CODE_TERMS['html']['terms'].length; _l++) {
+        var _curTerm=CODE_TERMS['html']['terms'][_l];
+        if ( _t.indexOf(_curTerm) != -1) {
+          _currentT=_currentT.replace(_curTerm,
+            "<span class='"+CODE_TERMS['html']['color']+"'>"+_curTerm+"</span>");
+        }
+      }
+      return { _ct: _currentT, ok: true };
+    };
+
+    _lines.forEach(function(_line, _idx) {
+      let _htmlMethodReturnVal=null;
+
+      // tokenize
+      let _tokens=_line.split(" ");
+
+      // lead space handling
+      let _leadSpacesCnt = _line.search(/[^\s]/);
+      let _leadSpaces = '';
+
+      if (_leadSpacesCnt!=-1) {
+        for (var _k=0; _k<_leadSpacesCnt; _k++) {
+          _leadSpaces+="&nbsp;";
+        }
+        _ct+=_leadSpaces;
+      }
+
+      _tokens.forEach(function(_token, _jdx) {
+        if (CODE_TERMS['keywords']['terms'].indexOf(_token)!=-1) {
+          _ct+="<span class='"+CODE_TERMS['keywords']["color"]+"'>"+_token+"</span>";
+          _tokenUpdated=true;
+
+        /*} else if ( (_htmlMethodReturnVal=_checkHtmlTerms(_token, _ct)).ok ) {
+          //_ct+="<span class='"+CODE_TERMS['html']["color"]+"'>"+_token+"</span>";
+          if (_htmlMethodReturnVal.ok) {
+            _ct+=_htmlMethodReturnVal._ct;
+            _tokenUpdated=true;
+          }
+        */
+        } else if (_token.search(CODE_TERMS['methods']['delim'][0]) != -1 ) {
+          // it is a method token
+          let _oBracketIdx = _token.indexOf(CODE_TERMS['methods']['open_bracket']);
+          _ct+="<span class='"+CODE_TERMS['methods']['color']+"'>"+_token.substring(0, _oBracketIdx)+"</span>"+_token.substring(_oBracketIdx);
+
+        } else {
+          _ct+=_token;
+        }
+        // trailing space
+        _ct+=" ";
+
+      }, _tokens);
+
+      // add newline per row
+      _ct+="<br/>";
+    }, _ct);
+
+    return _ct;
+  }
+
+}
+
+})()
+if (module.exports.__esModule) module.exports = module.exports.default
+var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
+if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-1a0e4e1e", __vue__options__)
+  } else {
+    hotAPI.reload("data-v-1a0e4e1e", __vue__options__)
+  }
+})()}
+},{"vue":3,"vue-hot-reload-api":1}],6:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -10258,16 +10396,53 @@ let app = new Vue({
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
+function _model_chp2_qbeh(_instance) {
+  return {
+    '_instance': _instance,
+    'jsClient': {
+      'codeLabel': 'javascript (client)',
+      'codeContent': '',
+      'codeContentBeautified': '',
+      'codeId': '_model_chp2_qbeh_jsclient'
+    }
+    //, es (code as well), js_server (code if necessary)
+  };
+}
+// model instance
+var _model;
 
 module.exports = {
   name: 'query_by_event_handler',
-  data: () => {
-    return {
-      'testing': 'testing-message'
-    };
+  data: function() {
+    if (!_model) {
+      _model = new _model_chp2_qbeh(this);
+    }
+    return _model;
+  },
+  mounted: function() {
+    LectureUtil.loadResourceFile(
+      '/clientView/samples/chp02/query_by_event_handler.code',
+      function(_data, _status, _xhr) {
+        if (_data) {
+          _model.jsClient.codeContent = _data;
+          _model.jsClient.codeContentBeautified = LectureUtil.jsCodeBeautifier(_data);
+        }
+      }
+    );  // end -- loadResourceFile
   }
-  //,props: [ 'menuItemSelected' ]
 };
 
 
@@ -10275,7 +10450,7 @@ module.exports = {
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_vm._v("\n  query by event handler example\n")])}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"lecture-chapter-container"},[_c('h3',[_vm._v("Query by eventHandler:")]),_vm._v(" "),_c('p',{staticClass:"lead text-justify",staticStyle:{"font-size":"16px","margin-top":"8px"}},[_vm._v("\n    There are 2 ways to handle the results from a ES query. One of the ways\n    is through a simple eventHander. The following are the\n    javascript side code as well as the es query involved.\n  ")]),_vm._v(" "),_c('lecture-code-snippet',{attrs:{"codeLabel":_vm.jsClient.codeLabel,"codeContent":_vm.jsClient.codeContent,"codeContentBeautified":_vm.jsClient.codeContentBeautified,"codeId":_vm.jsClient.codeId}})],1)}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -10287,7 +10462,101 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-648346d6", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],6:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],7:[function(require,module,exports){
+;(function(){
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+// IMPORTANT: store the VueComponent instance in the model for data access later on
+// to access a field => _model._instance.{field_name}
+function _model_cnc(_instance) {
+  return {
+    codeContentVisible: true,
+    "_instance": _instance
+  };
+}
+var _model;
+
+module.exports = {
+  name: 'code-snippet-component',
+  /*
+   *  tricky => you need to use "function" instead of "() => "; if not,
+   *  "this" would be the window object instead of the VueComponent
+   */
+  data: function() {
+    if (!_model) _model = new _model_cnc(this);
+    return _model;
+  },
+  computed: {
+    // create certain randomness to the div's id
+    getCodeId: () => {
+      if (!_model._instance.hasOwnProperty('_idGenerated')) {
+        _model._instance._idGenerated = _model._instance.codeId+
+          Math.round(Math.random()*10000);
+      }
+      return _model._instance._idGenerated;
+    }
+  },
+  props: [ 'codeLabel', 'codeContent', 'codeId', 'codeContentBeautified' ],
+  methods: {
+    // copy content to clipboard
+    copyCodeContentToClipboard: () => {
+      // "this" sometimes... is undefined....???
+      LectureUtil.htmlCopy2Clipboard(_model._instance._idGenerated, true);
+    },
+    // toggle the codeContent's visibility
+    toggleCodeContentVisibility: () => {
+      if (_model) {
+        _model.codeContentVisible = !_model.codeContentVisible;
+      }
+    }
+  }
+};
+
+})()
+if (module.exports.__esModule) module.exports = module.exports.default
+var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
+if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('div',{staticClass:"text-right code-snippet-header",class:{ 'rounded-top': _vm.codeContentVisible, 'rounded': !_vm.codeContentVisible },on:{"click":function($event){_vm.toggleCodeContentVisibility()}}},[_c('span',[_vm._v(_vm._s(_vm.codeLabel))]),_vm._v(" "),_c('span',{on:{"click":function($event){$event.preventDefault();$event.stopPropagation();_vm.copyCodeContentToClipboard()}}},[_vm._v("\n       \n      "),_c('i',{staticClass:"fa fa-file-text-o pointer",attrs:{"aria-hidden":"true"}})])]),_vm._v(" "),_c('textarea',{staticClass:"code-snippet-content rounded-bottom hiding",attrs:{"id":_vm.getCodeId,"readonly":""}},[_vm._v(_vm._s(_vm.codeContent))]),_vm._v(" "),_c('div',{staticClass:"code-snippet-content rounded-bottom",class:{ 'showing': _vm.codeContentVisible, 'hiding': !_vm.codeContentVisible },staticStyle:{"overflow":"auto"}},[_c('div',{domProps:{"innerHTML":_vm._s(_vm.codeContentBeautified)}})])])}
+__vue__options__.staticRenderFns = []
+if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-18475c8a", __vue__options__)
+  } else {
+    hotAPI.reload("data-v-18475c8a", __vue__options__)
+  }
+})()}
+},{"vue":3,"vue-hot-reload-api":1}],8:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -10327,7 +10596,12 @@ module.exports = {
       'testing': 'testing-message'
     };
   },
-  props: [ 'menuItemSelected' ]
+  props: [ 'menuItemSelected' ],
+  methods: {
+    homeClicked: () => {
+      VueRouter.push({ name: '/' });
+    }
+  }
 };
 
 
@@ -10335,7 +10609,7 @@ module.exports = {
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"lecture-container-navigation"},[_vm._m(0),_vm._v(" "),_c('div',{staticClass:"lecture-container-navigation-subtitle"},[_vm._v("\n    home\n  ")]),_vm._v(" "),_c('div',{staticClass:"lecture-container-navigation-subtitle lecture-container-navigation-subtitle-clicked"},[_vm._v("\n    demo\n  ")]),_vm._v(" "),_vm._m(1),_vm._v("\n  "+_vm._s(_vm.menuItemSelected)+"\n")])}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"lecture-container-navigation"},[_vm._m(0),_vm._v(" "),_c('div',{staticClass:"lecture-container-navigation-subtitle",on:{"click":function($event){_vm.homeClicked()}}},[_vm._v("\n    home\n  ")]),_vm._v(" "),_c('div',{staticClass:"lecture-container-navigation-subtitle lecture-container-navigation-subtitle-clicked"},[_vm._v("\n    demo\n  ")]),_vm._v(" "),_vm._m(1),_vm._v("\n  "+_vm._s(_vm.menuItemSelected)+"\n")])}
 __vue__options__.staticRenderFns = [function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"lecture-container-navigation-title"},[_vm._v("\n    lecture\n    "),_c('i',{staticClass:"fa fa-book",attrs:{"aria-hidden":"true"}})])},function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"lecture-container-navigation-pull-right-section"},[_c('div',{staticClass:"lecture-container-navigation-pull-right-section-vis"},[_c('i',{staticClass:"fa fa-user-circle lecture-container-navigation-icon",attrs:{"aria-hidden":"true"}}),_vm._v(" "),_c('i',{staticClass:"fa fa-info lecture-container-navigation-icon",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('div',{staticClass:"lecture-container-navigation-pull-right-section-min"},[_c('i',{staticClass:"fa fa-navicon lecture-container-navigation-icon",attrs:{"aria-hidden":"true"}})])])}]
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -10347,7 +10621,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-c64ec8a6", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],7:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],9:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -10380,9 +10654,33 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 //
 //
 //
+//
+//
+
+
+// utility method to change the icon for selected menuItem
+function _updateSelectedMenuItem(_chpStatus, _item, _model) {
+  // check if the _model is there or not...
+  if (_model) {
+    for (var _i=0; _i<_model.chpStatus.length; _i++) {
+      var _curItem = _model.chpStatus[_i];
+      // menuItem(s)
+      for (var _j=0; _j<_curItem['items'].length; _j++) {
+        var _curMenuItem = _curItem['items'][_j];
+
+        if (_curItem['id'] == _chpStatus['id'] && (_curMenuItem['id']==_item['id'])) {
+          _curMenuItem['selected'] = true;
+        } else {
+          _curMenuItem['selected'] = false;
+        }
+      }
+    } // end -- for (chpStatus.length)
+  }
+};
 
 // model
 function _model_lcs() {
+
   return {
     // helper method to toggle the "showing" status of the chpStatus map
     toggleChpStatus: (_model, _chp) => {
@@ -10394,8 +10692,8 @@ function _model_lcs() {
         }
       });
     },
-    updateRouterView: (_view) => {
-      // # validation => check if the Route is declared???
+    updateRouterView: (_chpStatus, _item, _view) => {
+      _updateSelectedMenuItem(_chpStatus, _item, _model);
       VueRouter.push({
         name: _view //, params: { 'key1': 'value1' }
       } //, onCompleteCallback, onAbortCallback
@@ -10408,8 +10706,8 @@ function _model_lcs() {
         label: 'chapter 2',
         showSubItems: false,
         items: [
-          { id: '__1', label: 'query by eventHandler example', view: '/chp02/query_by_event_handler' },
-          { id: '__2', label: 'item 2' }
+          { id: '__1', label: 'query by eventHandler example', view: '/chp02/query_by_event_handler', selected: false },
+          { id: '__2', label: 'item 2', selected: false }
         ]
       },
       {
@@ -10417,8 +10715,8 @@ function _model_lcs() {
         label: 'chapter 3',
         showSubItems: false,
         items: [
-          { id: '__1', label: 'item a' },
-          { id: '__2', label: 'item b' }
+          { id: '__1', label: 'item a', selected: false },
+          { id: '__2', label: 'item b', selected: false }
         ]
       }
     ],
@@ -10436,6 +10734,16 @@ module.exports = {
     return _model;
   },
   props: [ 'pickedChapter', 'pickedItemId' ],
+  mounted: () => {
+    Vue.$on('getStartedFromHelpComponent', function() {
+      // picked the first example...
+      if (_model) {
+        let _1chpStatus = _model.chpStatus[0];
+        let _1menuItem = _1chpStatus.items[0];
+        _updateSelectedMenuItem(_1chpStatus, _1menuItem, _model);
+      }
+    });
+  },
   methods: {
     // toggle the subItem(s) visibility
     toggleMenuItemsVisibility: (_chp) => {
@@ -10452,7 +10760,7 @@ module.exports = {
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticStyle:{"padding-left":"12px","padding-top":"12px"}},[_c('div',{staticClass:"no-wrap-horizontal-scroll-container"},_vm._l((_vm.chpStatus),function(_stat,_i){return _c('div',{key:_stat.id,staticStyle:{"margin-top":"4px"}},[_c('i',{staticClass:"fa fa-caret-right",class:{ 'showing-inline': !_stat.showSubItems, 'hiding': _stat.showSubItems },attrs:{"aria-hidden":"true"},on:{"click":function($event){_vm.toggleMenuItemsVisibility(_stat.id)}}}),_vm._v(" "),_c('i',{staticClass:"fa fa-caret-down",class:{ 'showing-inline': _stat.showSubItems, 'hiding': !_stat.showSubItems },attrs:{"aria-hidden":"true"},on:{"click":function($event){_vm.toggleMenuItemsVisibility(_stat.id)}}}),_vm._v(" "),_c('span',[_vm._v(_vm._s(_stat.label))]),_vm._v(" "),_c('div',{class:{ 'showing': _stat.showSubItems, 'hiding': !_stat.showSubItems }},_vm._l((_stat.items),function(_item,_j){return _c('div',{key:_stat.id+'-'+_item.id},[_c('i',{staticClass:"fa fa-circle-o lecture-sidemenu-subitem lecture-sidemenu-subitem-icon",attrs:{"aria-hidden":"true"}}),_vm._v(" "),_c('span',{staticClass:"lecture-sidemenu-subitem-label",on:{"click":function($event){_vm.updateRouterView(_item.view)}}},[_vm._v("\n            "+_vm._s(_item.label))])])}))])}))])}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticStyle:{"padding-left":"12px","padding-top":"12px"}},[_c('div',{staticClass:"no-wrap-horizontal-scroll-container"},_vm._l((_vm.chpStatus),function(_stat,_i){return _c('div',{key:_stat.id,staticStyle:{"margin-top":"4px"}},[_c('div',{staticClass:"pointer",on:{"click":function($event){_vm.toggleMenuItemsVisibility(_stat.id)}}},[_c('i',{staticClass:"fa fa-caret-right",class:{ 'showing-inline': !_stat.showSubItems, 'hiding': _stat.showSubItems },attrs:{"aria-hidden":"true"}}),_vm._v(" "),_c('i',{staticClass:"fa fa-caret-down",class:{ 'showing-inline': _stat.showSubItems, 'hiding': !_stat.showSubItems },attrs:{"aria-hidden":"true"}}),_vm._v(" "),_c('span',[_vm._v(_vm._s(_stat.label))])]),_vm._v(" "),_c('div',{class:{ 'showing': _stat.showSubItems, 'hiding': !_stat.showSubItems }},_vm._l((_stat.items),function(_item,_j){return _c('div',{key:_stat.id+'-'+_item.id,staticClass:"pointer"},[_c('i',{staticClass:"fa  lecture-sidemenu-subitem lecture-sidemenu-subitem-icon",class:{ 'fa-circle-o': !_item.selected, 'fa-circle': _item.selected },attrs:{"aria-hidden":"true"}}),_vm._v(" "),_c('span',{staticClass:"lecture-sidemenu-subitem-label",on:{"click":function($event){_vm.updateRouterView(_stat, _item, _item.view)}}},[_vm._v("\n            "+_vm._s(_item.label))])])}))])}))])}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -10464,7 +10772,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-5bbe94d0", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],8:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],10:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -10553,7 +10861,70 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-042415a3", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],9:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],11:[function(require,module,exports){
+;(function(){
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+module.exports = {
+  name: 'lecture-help',
+  data: () => {
+    return {
+      'testing': 'testing-message'
+    };
+  },
+  methods: {
+    getStartedClick: () => {
+      Vue.$emit('getStartedFromHelpComponent');
+      VueRouter.push({ name: '/chp02/query_by_event_handler' });
+    }
+  }
+  //,props: [ 'menuItemSelected' ]
+};
+
+
+})()
+if (module.exports.__esModule) module.exports = module.exports.default
+var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
+if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticStyle:{"margin-top":"20px","margin-bottom":"20px"}},[_c('div',{staticClass:"jumbotron"},[_vm._m(0),_vm._v(" "),_c('div',{staticStyle:{"margin-bottom":"4px"}},[_vm._v(" ")]),_vm._v(" "),_c('p',{staticClass:"lead text-justify"},[_vm._v("\n      The lecture app contains all demo queries and javascript code snippets\n      illustrated throughout the course. The examples are ordered by chapters,\n      simply click on the side menu and pick the corresponding entry you are\n      interested in.\n    ")]),_vm._v(" "),_c('a',{staticClass:"btn btn-secondary btn-lg",attrs:{"role":"button"},on:{"click":function($event){_vm.getStartedClick()}}},[_vm._v("Get started")])])])}
+__vue__options__.staticRenderFns = [function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('h2',{staticClass:"h1-responsive"},[_vm._v("\n      about the lecture app:\n      "),_c('i',{staticClass:"fa fa-binoculars",staticStyle:{"font-size":"24px"},attrs:{"aria-hidden":"true"}})])}]
+if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-75f207e2", __vue__options__)
+  } else {
+    hotAPI.reload("data-v-75f207e2", __vue__options__)
+  }
+})()}
+},{"vue":3,"vue-hot-reload-api":1}],12:[function(require,module,exports){
 ;(function(){
 
 /* ------------------------------------------------------------------------
@@ -10566,7 +10937,7 @@ module.exports = {
   routes: [
     { path: '/',
       name: '/',
-      component: C2_QueryByEventHandler
+      component: require('./lecture-help.vue')
     },
     { path: '/chp02/query_by_event_handler',
       name: '/chp02/query_by_event_handler',
@@ -10588,7 +10959,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-45650430", __vue__options__)
   }
 })()}
-},{"./chp02/query_by_event_handler.vue":5,"vue":3,"vue-hot-reload-api":1,"vue-router":2}],10:[function(require,module,exports){
+},{"./chp02/query_by_event_handler.vue":6,"./lecture-help.vue":11,"vue":3,"vue-hot-reload-api":1,"vue-router":2}],13:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 

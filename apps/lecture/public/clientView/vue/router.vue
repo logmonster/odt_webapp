@@ -9,7 +9,7 @@ module.exports = {
   routes: [
     { path: '/',
       name: '/',
-      component: C2_QueryByEventHandler
+      component: require('./lecture-help.vue')
     },
     { path: '/chp02/query_by_event_handler',
       name: '/chp02/query_by_event_handler',

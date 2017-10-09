@@ -7,7 +7,7 @@
       lecture
       <i class="fa fa-book" aria-hidden="true"></i>
     </div>
-    <div class="lecture-container-navigation-subtitle">
+    <div class="lecture-container-navigation-subtitle" @click="homeClicked()">
       home
     </div>
     <div class="lecture-container-navigation-subtitle lecture-container-navigation-subtitle-clicked">
@@ -36,7 +36,12 @@ module.exports = {
       'testing': 'testing-message'
     };
   },
-  props: [ 'menuItemSelected' ]
+  props: [ 'menuItemSelected' ],
+  methods: {
+    homeClicked: () => {
+      VueRouter.push({ name: '/' });
+    }
+  }
 };
 
 </script>

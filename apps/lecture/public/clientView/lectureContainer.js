@@ -10,6 +10,7 @@ var LectSidemenu = require('./vue/lecture-container-sidemenu.vue');
 // registration (important)
 Vue.component('lecture-navigator', LectNav);
 Vue.component('lecture-container-sidemenu', LectSidemenu);
+Vue.component('lecture-code-snippet', require('./vue/lecture-code-snippet-component.vue'));
 
 // setup Router
 var Router = require('vue-router');
@@ -23,6 +24,7 @@ var router = new Router(Routes);
 // # setup a "bus" for inter-components communication (MUST for bundled apps)
 window.Vue = new Vue();
 window.VueRouter = router;
+window.LectureUtil = require('./vue/LectureUtil.vue');
 
 // this is a starting-point (app)
 // setup the global Vue instance
