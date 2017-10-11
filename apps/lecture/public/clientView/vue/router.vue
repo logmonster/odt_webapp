@@ -14,6 +14,10 @@ module.exports = {
     { path: '/chp02/query_by_event_handler',
       name: '/chp02/query_by_event_handler',
       component: C2_QueryByEventHandler
+    },
+    { path: '/chp02/query_by_promise',
+      name: '/chp02/query_by_promise',
+      component: require('./chp02/query_by_promise.vue')
     }
   ]
 };

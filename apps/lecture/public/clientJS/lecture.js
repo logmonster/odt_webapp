@@ -8,6 +8,31 @@ function getESClientInstance() {
   return _es;
 }
 
+function prettyJson(_jsonObj) {
+  var _json=_isValidJson(_jsonObj);
+
+  if (typeof(_json)=='object') {
+    _v=JSON.stringify(_json, null, 2);
+    return _v;
+  }
+  return 'unknown format: '+_jsonObj;
+}
+function _isValidJson(_string) {
+  var _s='';
+  try {
+    _s=JSON.parse(_string);
+  } catch(_err) {
+    _s='incorrect json query format : '+_err;
+  }
+  return _s;
+}
+
+function _isEmptyString(_string) {
+  var _reg=new RegExp('^\s*$');
+
+  return _reg.test(_string);
+}
+
 let chp02={
   // define the query
   basicQuery_1: {

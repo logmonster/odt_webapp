@@ -1,0 +1,6 @@
+GET javascript_client_data/config/_search
+{
+  "query": {
+    "match_all": {}
+  }
+}

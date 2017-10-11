@@ -82,7 +82,7 @@ function _model_lcs() {
         showSubItems: false,
         items: [
           { id: '__1', label: 'query by eventHandler example', view: '/chp02/query_by_event_handler', selected: false },
-          { id: '__2', label: 'item 2', selected: false }
+          { id: '__2', label: 'query by promise example', view: '/chp02/query_by_promise', selected: false }
         ]
       },
       {

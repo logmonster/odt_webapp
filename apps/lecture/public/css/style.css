@@ -141,10 +141,25 @@
   padding: 6px;
   font-size: 14px;
 }
+.code-snippet-header-result {
+  background: #2BBBAD;
+  border: 1px solid #4B515D;
+  padding: 6px;
+  font-size: 14px;
+  color: #fff;
+}
 .code-snippet-content {
   width: calc(100%); height: 200px;
   border: 1px solid #ccc;
   border-top: 0px;
+}
+.code-snippet-content-result {
+  width: calc(100%); height: 200px;
+  border: 1px solid #4B515D;
+  border-top: 0px;
+}
+.code-snippet-bottom-margin {
+  margin-bottom: 2px;
 }
 
 @media only screen and (max-width: 499px) {

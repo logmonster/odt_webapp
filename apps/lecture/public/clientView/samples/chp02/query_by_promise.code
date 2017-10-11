@@ -1,0 +1,34 @@
+// create an es connection / instance
+function getESClient() {
+  let _config={
+    hosts: 'http://localhost:9200',
+    ignore: [404]
+  };
+  return new $.es.Client(_config);
+}
+
+var chp02={
+  // define the query
+  basicQuery_1: {
+    index: 'javascript_client_data',
+    type: 'config',
+    body: {
+      "query": {
+        "match_all": {}
+      }
+    }
+  }
+};
+
+function runQueryPromise() {
+  getESClient().search(chp02['basicQuery_1']).
+    then(function(_resp) {
+      // SUCCEED -- display the last result to a div
+      let _hit=_resp.hits.hits[_resp.hits.hits.length-1];
+      document.querySelector('#divRes_2').innerHTML=JSON.stringify(_hit._source);
+    }, function(_err) {
+      // FAIL
+      alert(_err);
+    }
+  );  // end of "search"
+};
