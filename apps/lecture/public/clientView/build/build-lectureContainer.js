@@ -2655,7 +2655,7 @@ if (inBrowser && window.Vue) {
 module.exports = VueRouter;
 
 }).call(this,require('_process'))
-},{"_process":14}],3:[function(require,module,exports){
+},{"_process":15}],3:[function(require,module,exports){
 (function (process,global){
 /*!
  * Vue.js v2.4.4
@@ -10206,7 +10206,7 @@ setTimeout(function () {
 module.exports = Vue$3;
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":14}],4:[function(require,module,exports){
+},{"_process":15}],4:[function(require,module,exports){
 // main.js
 var Vue = require('vue')
 var App = require('./vue/lecture-container.vue')
@@ -10250,7 +10250,7 @@ let app = new Vue({
   console.log('in parent (but... the root level)');
 });*/
 
-},{"./vue/LectureUtil.vue":5,"./vue/lecture-code-snippet-component.vue":8,"./vue/lecture-container-navigator.vue":9,"./vue/lecture-container-sidemenu.vue":10,"./vue/lecture-container.vue":11,"./vue/router.vue":13,"vue":3,"vue-router":2}],5:[function(require,module,exports){
+},{"./vue/LectureUtil.vue":5,"./vue/lecture-code-snippet-component.vue":9,"./vue/lecture-container-navigator.vue":10,"./vue/lecture-container-sidemenu.vue":11,"./vue/lecture-container.vue":12,"./vue/router.vue":14,"vue":3,"vue-router":2}],5:[function(require,module,exports){
 ;(function(){
 
 
@@ -10270,7 +10270,35 @@ let CODE_TERMS = {
   }
 };
 
+let _loadResourceFile = function(_path, _callback) {
+  if ($.get) {
+    $.get(_path, null, function(_data, _status, _xhr) {
+      if (_callback) {
+        _callback(_data, _status, _xhr);
+      }
+    });
+  }
+};
+
+let _esConfig=null;
+
 module.exports = {
+  getESConfig: () => {
+    var _jDef=$.Deferred();
+
+    // not yet loaded, try loading it
+    if (_esConfig==null) {
+      _loadResourceFile('/clientView/samples/es_config.json',
+        function(_data, _status, _xhr) {
+          _esConfig=_data;
+          _jDef.resolve(_esConfig);
+        }
+      );
+    } else {
+      _jDef.resolve(_esConfig);
+    }
+    return _jDef.promise();
+  },
   // method to copy to clipboard
   htmlCopy2Clipboard: (_elementId, _hideAfterCopy) => {
     var _e = document.querySelector('#'+_elementId);
@@ -10296,13 +10324,14 @@ module.exports = {
 
   // load a resource file
   loadResourceFile: (_path, _callback) => {
-    if ($.get) {
+    _loadResourceFile(_path, _callback);
+    /*if ($.get) {
       $.get(_path, null, function(_data, _status, _xhr) {
         if (_callback) {
           _callback(_data, _status, _xhr);
         }
       });
-    }
+    }*/
   },
 
   // a beta js code beautifier
@@ -10646,9 +10675,9 @@ module.exports = {
       let _instance = this;
       // re-use the functions declared in clientJS/es.js
       if (getESClient && search) {
-        search(getESClient(),
+        search(getESClient({ hosts: ['http://localhost:9201'] }),
           'javascript_client_data',
-          'config',
+          'doc',
           {
             "query": {
               "match_all": {}
@@ -10690,6 +10719,186 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   }
 })()}
 },{"vue":3,"vue-hot-reload-api":1}],8:[function(require,module,exports){
+;(function(){
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+function _model_chp3_cim(_instance) {
+  return {
+    '_instance': _instance,
+    'jsClient': {
+      'codeLabel': 'javascript (client)',
+      'codeContent': '',
+      'codeContentBeautified': '',
+      'codeId': '_model_chp3_cim_jsclient'
+    },
+    'es': {
+      'codeLabel': 'es DSL query',
+      'codeContent': '',
+      'codeContentBeautified': '',
+      'codeId': '_model_chp3_cim_es'
+    },
+    'result': {
+      'codeLabel': 'query result (JSON)',
+      'codeContent': '',
+      'codeContentBeautified': '',
+      'codeId': '_model_chp3_cim_result'
+    },
+    'showResult': false,
+    'esConfig': {  },
+    getESConfig: function(_cfg) {
+      // make a clone... jesus...
+      // https://github.com/elastic/elasticsearch-js/issues/33
+      var _keys=Object.keys(_cfg);
+      var _clone={};
+
+      for (var _i=0; _i<_keys.length; _i++) {
+        var _k=_keys[_i];
+        var _v=_cfg[_k];
+
+        _clone[_k]=_v;
+      }
+      return _clone;
+    }
+    //, es (code as well), js_server (code if necessary)
+  };
+}
+// model instance
+//var _model;
+
+module.exports = {
+  name: 'query_by_event_handler',
+  data: function() {
+    return new _model_chp3_cim(this);
+  },
+  mounted: function() {
+    let _instance=this;
+    // load esConfig
+    LectureUtil.getESConfig().then(function(_data) {
+      _instance.esConfig['cfg']=_data;
+    });
+    LectureUtil.loadResourceFile(
+      '/clientView/samples/chp03/create_index_n_mapping.code',
+      function(_data, _status, _xhr) {
+        if (_data && _instance) {
+          _instance.jsClient.codeContent = _data;
+          _instance.jsClient.codeContentBeautified = LectureUtil.jsCodeBeautifier(_data);
+        }
+      }
+    );  // end -- loadResourceFile
+    LectureUtil.loadResourceFile(
+      '/clientView/samples/chp03/query_dsl_cim.code',
+      function(_data, _status, _xhr) {
+        if (_data && _instance) {
+          _instance.es.codeContent = _data;
+          _instance.es.codeContentBeautified = LectureUtil.jsCodeBeautifier(_data);
+        }
+      }
+    );  // end -- loadResourceFile
+  },
+  methods: {
+    runQuery: function() {
+      let _instance = this;
+      // re-use the functions declared in clientJS/es.js
+      if (getESClient && search) {
+        // { hosts: ['http://localhost:9201'] }
+        getESClient(_instance.getESConfig(_instance.esConfig['cfg'])).indices.create({
+          "index": "jeymart_product",
+          "body": {
+            "mappings": {
+              "doc": {
+                "properties": {
+                  "category": {
+                    "type": "text",
+                    "fields": {
+                      "keyword": {
+                        "type": "keyword"
+                      }
+                    }
+                  },
+                  "description": {
+                    "type": "text"
+                  },
+                  "stock_code": {
+                    "type": "keyword"
+                  },
+                  "price": {
+                    "type": "float"
+                  }
+                }
+              }
+            }
+          }
+        }).then(function(_resp) {
+          var _v = prettyJson(JSON.stringify(_resp));
+          _instance.result.codeContent = _v;
+          _instance.result.codeContentBeautified = LectureUtil.jsCodeBeautifier(_v);
+          _instance.showResult=true;
+        }, function(_err) {
+          _instance.result.codeContent = _err;
+          _instance.result.codeContentBeautified = _err;
+          _instance.showResult=true;
+        });
+      }
+    } // end -- runQuery
+  }
+};
+
+
+})()
+if (module.exports.__esModule) module.exports = module.exports.default
+var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
+if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"lecture-chapter-container"},[_c('h3',[_vm._v("Create Index with Mapping:")]),_vm._v(" "),_c('p',{staticClass:"lead text-justify",staticStyle:{"font-size":"16px","margin-top":"8px"}},[_vm._v("\n    It is a good practice to supply the mapping configurations during index creation.\n    Although you can also first create and index, then add back the mapping and/or\n    setting configurations just before indexing a document.\n    The following are the javascript side code as well as the es query involved.\n  ")]),_vm._v(" "),_c('lecture-code-snippet',{attrs:{"codeLabel":_vm.jsClient.codeLabel,"codeContent":_vm.jsClient.codeContent,"codeContentBeautified":_vm.jsClient.codeContentBeautified,"codeId":_vm.jsClient.codeId}}),_vm._v(" "),_c('lecture-code-snippet',{attrs:{"codeLabel":_vm.es.codeLabel,"codeContent":_vm.es.codeContent,"codeContentBeautified":_vm.es.codeContentBeautified,"codeId":_vm.es.codeId}}),_vm._v(" "),_c('lecture-code-snippet',{class:{ 'showing': _vm.showResult, 'hiding': !_vm.showResult },staticStyle:{"margin-top":"6px"},attrs:{"snippetType":"result","codeLabel":_vm.result.codeLabel,"codeContent":_vm.result.codeContent,"codeContentBeautified":_vm.result.codeContentBeautified,"codeId":_vm.result.codeId}}),_vm._v(" "),_c('button',{staticClass:"btn btn-info",staticStyle:{"margin-top":"12px"},on:{"click":function($event){_vm.runQuery()}}},[_vm._v("run query")])],1)}
+__vue__options__.staticRenderFns = []
+if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-95759ca6", __vue__options__)
+  } else {
+    hotAPI.reload("data-v-95759ca6", __vue__options__)
+  }
+})()}
+},{"vue":3,"vue-hot-reload-api":1}],9:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -10796,7 +11005,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-18475c8a", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],9:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],10:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -10861,7 +11070,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-c64ec8a6", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],10:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],11:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -10955,7 +11164,7 @@ function _model_lcs() {
         label: 'chapter 3',
         showSubItems: false,
         items: [
-          { id: '__1', label: 'item a', selected: false },
+          { id: '__1', label: 'create index with mapping', view: '/chp03/create_index_n_mapping', selected: false },
           { id: '__2', label: 'item b', selected: false }
         ]
       }
@@ -11012,7 +11221,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-5bbe94d0", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],11:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],12:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -11101,7 +11310,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-042415a3", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],12:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],13:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -11164,7 +11373,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-75f207e2", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],13:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],14:[function(require,module,exports){
 ;(function(){
 
 /* ------------------------------------------------------------------------
@@ -11186,6 +11395,10 @@ module.exports = {
     { path: '/chp02/query_by_promise',
       name: '/chp02/query_by_promise',
       component: require('./chp02/query_by_promise.vue')
+    },
+    { path: '/chp03/create_index_n_mapping',
+      name: '/chp03/create_index_n_mapping',
+      component: require('./chp03/create_index_n_mapping.vue')
     }
   ]
 };
@@ -11203,7 +11416,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-45650430", __vue__options__)
   }
 })()}
-},{"./chp02/query_by_event_handler.vue":6,"./chp02/query_by_promise.vue":7,"./lecture-help.vue":12,"vue":3,"vue-hot-reload-api":1,"vue-router":2}],14:[function(require,module,exports){
+},{"./chp02/query_by_event_handler.vue":6,"./chp02/query_by_promise.vue":7,"./chp03/create_index_n_mapping.vue":8,"./lecture-help.vue":13,"vue":3,"vue-hot-reload-api":1,"vue-router":2}],15:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 

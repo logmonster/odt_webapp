@@ -1,0 +1,26 @@
+PUT jeymart_product
+{
+  "mappings": {
+    "doc": {
+      "properties": {
+        "category": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword"
+            }
+          }
+        },
+        "description": {
+          "type": "text"
+        },
+        "stock_code": {
+          "type": "keyword"
+        },
+        "price": {
+          "type": "float"
+        }
+      }
+    }
+  }
+}

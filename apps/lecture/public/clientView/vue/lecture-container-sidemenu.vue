@@ -90,7 +90,7 @@ function _model_lcs() {
         label: 'chapter 3',
         showSubItems: false,
         items: [
-          { id: '__1', label: 'item a', selected: false },
+          { id: '__1', label: 'create index with mapping', view: '/chp03/create_index_n_mapping', selected: false },
           { id: '__2', label: 'item b', selected: false }
         ]
       }

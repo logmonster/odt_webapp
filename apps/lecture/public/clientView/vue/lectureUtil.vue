@@ -16,7 +16,35 @@ let CODE_TERMS = {
   }
 };
 
+let _loadResourceFile = function(_path, _callback) {
+  if ($.get) {
+    $.get(_path, null, function(_data, _status, _xhr) {
+      if (_callback) {
+        _callback(_data, _status, _xhr);
+      }
+    });
+  }
+};
+
+let _esConfig=null;
+
 module.exports = {
+  getESConfig: () => {
+    var _jDef=$.Deferred();
+
+    // not yet loaded, try loading it
+    if (_esConfig==null) {
+      _loadResourceFile('/clientView/samples/es_config.json',
+        function(_data, _status, _xhr) {
+          _esConfig=_data;
+          _jDef.resolve(_esConfig);
+        }
+      );
+    } else {
+      _jDef.resolve(_esConfig);
+    }
+    return _jDef.promise();
+  },
   // method to copy to clipboard
   htmlCopy2Clipboard: (_elementId, _hideAfterCopy) => {
     var _e = document.querySelector('#'+_elementId);
@@ -42,13 +70,14 @@ module.exports = {
 
   // load a resource file
   loadResourceFile: (_path, _callback) => {
-    if ($.get) {
+    _loadResourceFile(_path, _callback);
+    /*if ($.get) {
       $.get(_path, null, function(_data, _status, _xhr) {
         if (_callback) {
           _callback(_data, _status, _xhr);
         }
       });
-    }
+    }*/
   },
 
   // a beta js code beautifier

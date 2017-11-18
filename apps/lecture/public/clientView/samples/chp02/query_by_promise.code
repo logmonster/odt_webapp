@@ -1,7 +1,7 @@
 // create an es connection / instance
 function getESClient() {
   let _config={
-    hosts: 'http://localhost:9200',
+    hosts: 'http://localhost:9201',
     ignore: [404]
   };
   return new $.es.Client(_config);

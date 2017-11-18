@@ -1,9 +1,13 @@
 
+//var _previousESConfig=null;
+//var _previousClient=null;
+
 /**
  *  enhanced getESClient method; you can provide config params for the
  *  client creation
  */
 function getESClient(_config) {
+  let _client=null;
   // default config
   let _finalConfig={
     hosts: 'http://localhost:9200',
@@ -13,7 +17,6 @@ function getESClient(_config) {
   if (_config && typeof(_config)=='object') {
     _finalConfig=_config;
   }
-
   return new $.es.Client(_finalConfig);
 }
 
