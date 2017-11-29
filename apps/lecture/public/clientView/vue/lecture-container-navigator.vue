@@ -23,7 +23,7 @@
         <i class="fa fa-navicon lecture-container-navigation-icon" aria-hidden="true"></i>
       </div>
     </div>
-    {{menuItemSelected}}
+    <!--{{menuItemSelected}} -->
   </div>
 </template>
 

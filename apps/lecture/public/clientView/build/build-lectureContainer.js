@@ -2655,7 +2655,7 @@ if (inBrowser && window.Vue) {
 module.exports = VueRouter;
 
 }).call(this,require('_process'))
-},{"_process":15}],3:[function(require,module,exports){
+},{"_process":17}],3:[function(require,module,exports){
 (function (process,global){
 /*!
  * Vue.js v2.4.4
@@ -10206,7 +10206,7 @@ setTimeout(function () {
 module.exports = Vue$3;
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":15}],4:[function(require,module,exports){
+},{"_process":17}],4:[function(require,module,exports){
 // main.js
 var Vue = require('vue')
 var App = require('./vue/lecture-container.vue')
@@ -10250,7 +10250,7 @@ let app = new Vue({
   console.log('in parent (but... the root level)');
 });*/
 
-},{"./vue/LectureUtil.vue":5,"./vue/lecture-code-snippet-component.vue":9,"./vue/lecture-container-navigator.vue":10,"./vue/lecture-container-sidemenu.vue":11,"./vue/lecture-container.vue":12,"./vue/router.vue":14,"vue":3,"vue-router":2}],5:[function(require,module,exports){
+},{"./vue/LectureUtil.vue":5,"./vue/lecture-code-snippet-component.vue":11,"./vue/lecture-container-navigator.vue":12,"./vue/lecture-container-sidemenu.vue":13,"./vue/lecture-container.vue":14,"./vue/router.vue":16,"vue":3,"vue-router":2}],5:[function(require,module,exports){
 ;(function(){
 
 
@@ -10283,6 +10283,7 @@ let _loadResourceFile = function(_path, _callback) {
 let _esConfig=null;
 
 module.exports = {
+  // return the es-config related json configuration file
   getESConfig: () => {
     var _jDef=$.Deferred();
 
@@ -10398,6 +10399,23 @@ module.exports = {
     }, _ct);
 
     return _ct;
+  },
+  /* clone the given object; it is a MUST for elasticsearch.js
+   *  as you couldn't re-use a config object to create another connection
+   */
+  cloneObject: function(_cfg) {
+    // make a clone... jesus...
+    // https://github.com/elastic/elasticsearch-js/issues/33
+    var _keys=Object.keys(_cfg);
+    var _clone={};
+
+    for (var _i=0; _i<_keys.length; _i++) {
+      var _k=_keys[_i];
+      var _v=_cfg[_k];
+
+      _clone[_k]=_v;
+    }
+    return _clone;
   }
 
 }
@@ -10786,22 +10804,12 @@ function _model_chp3_cim(_instance) {
     getESConfig: function(_cfg) {
       // make a clone... jesus...
       // https://github.com/elastic/elasticsearch-js/issues/33
-      var _keys=Object.keys(_cfg);
-      var _clone={};
-
-      for (var _i=0; _i<_keys.length; _i++) {
-        var _k=_keys[_i];
-        var _v=_cfg[_k];
-
-        _clone[_k]=_v;
-      }
-      return _clone;
+      return LectureUtil.cloneObject(_cfg);
     }
     //, es (code as well), js_server (code if necessary)
   };
 }
 // model instance
-//var _model;
 
 module.exports = {
   name: 'query_by_event_handler',
@@ -10838,7 +10846,6 @@ module.exports = {
       let _instance = this;
       // re-use the functions declared in clientJS/es.js
       if (getESClient && search) {
-        // { hosts: ['http://localhost:9201'] }
         getESClient(_instance.getESConfig(_instance.esConfig['cfg'])).indices.create({
           "index": "jeymart_product",
           "body": {
@@ -10872,9 +10879,21 @@ module.exports = {
           _instance.result.codeContentBeautified = LectureUtil.jsCodeBeautifier(_v);
           _instance.showResult=true;
         }, function(_err) {
-          _instance.result.codeContent = _err;
-          _instance.result.codeContentBeautified = _err;
-          _instance.showResult=true;
+          // bug for 14.x (submitted PR already)
+          if (_err &&
+            _err.message &&
+            _err.message.message &&
+            "Connection Failure"==_err.message.message) {
+
+            _instance.result.codeContent = "index already existed exception";
+            _instance.result.codeContentBeautified = "index already existed exception";
+            _instance.showResult=true;
+
+          } else {
+            _instance.result.codeContent = _err;
+            _instance.result.codeContentBeautified = _err;
+            _instance.showResult=true;
+          }
         });
       }
     } // end -- runQuery
@@ -10899,6 +10918,303 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   }
 })()}
 },{"vue":3,"vue-hot-reload-api":1}],9:[function(require,module,exports){
+;(function(){
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+function _model_chp3_iwid(_instance) {
+  return {
+    '_instance': _instance,
+    'jsClient': {
+      'codeLabel': 'javascript (client)',
+      'codeContent': '',
+      'codeContentBeautified': '',
+      'codeId': '_model_chp3_iwid_jsclient'
+    },
+    'es': {
+      'codeLabel': 'es DSL query',
+      'codeContent': '',
+      'codeContentBeautified': '',
+      'codeId': '_model_chp3_iwid_es'
+    },
+    'result': {
+      'codeLabel': 'query result (JSON)',
+      'codeContent': '',
+      'codeContentBeautified': '',
+      'codeId': '_model_chp3_iwid_result'
+    },
+    'showResult': false,
+    'esConfig': {  },
+    getESConfig: function(_cfg) {
+      return LectureUtil.cloneObject(_cfg);
+    }
+  };
+}
+// model instance
+
+module.exports = {
+  name: 'index_with_id',
+  data: function() {
+    return new _model_chp3_iwid(this);
+  },
+  mounted: function() {
+    let _instance=this;
+    // load esConfig
+    LectureUtil.getESConfig().then(function(_data) {
+      _instance.esConfig['cfg']=_data;
+    });
+    // load js and dsl file
+    LectureUtil.loadResourceFile(
+      '/clientView/samples/chp03/index_with_id.code',
+      function(_data, _status, _xhr) {
+        if (_data && _instance) {
+          _instance.jsClient.codeContent = _data;
+          _instance.jsClient.codeContentBeautified = LectureUtil.jsCodeBeautifier(_data);
+        }
+      }
+    );
+    LectureUtil.loadResourceFile(
+      '/clientView/samples/chp03/query_index_with_id.code',
+      function(_data, _status, _xhr) {
+        if (_data && _instance) {
+          _instance.es.codeContent = _data;
+          _instance.es.codeContentBeautified = LectureUtil.jsCodeBeautifier(_data);
+        }
+      }
+    );
+
+  },
+  methods: {
+    doIndex: function() {
+      let _instance=this;
+      getESClient(_instance.getESConfig(_instance.esConfig['cfg'])).index({
+        "index": "jeymart_product",
+        "type": "doc",
+        "id": "122_abc_phi1234",
+        "body": {
+          "category": [
+            "phones",
+            "electronics"
+          ],
+          "description": "latest ePhoneX from Naple.",
+          "price": 1599.99,
+          "stock_code": "ele_ph_45999"
+        }
+      }).then(function(_resp) {
+        var _v = prettyJson(JSON.stringify(_resp));
+        _instance.result.codeContent = _v;
+        _instance.result.codeContentBeautified = LectureUtil.jsCodeBeautifier(_v);
+        _instance.showResult=true;
+      }, function(_err) {
+        _instance.result.codeContent = _err;
+        _instance.result.codeContentBeautified = _err;
+        _instance.showResult=true;
+      });
+
+    }
+  }
+}
+
+
+})()
+if (module.exports.__esModule) module.exports = module.exports.default
+var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
+if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"lecture-chapter-container"},[_c('h3',[_vm._v("Index with document_id:")]),_vm._v(" "),_c('p',{staticClass:"lead text-justify",staticStyle:{"font-size":"16px","margin-top":"8px"}},[_vm._v("\n    There are 2 ways to index a document;\n    this is a demo on indexing a document with a document_id provided.")]),_c('p'),_vm._v("\n    PS. for the 1st time, you should have a \"created\" result; when you run\n    the indexing for the 2nd time you should have an \"updated\" result.\n  "),_c('p'),_vm._v(" "),_c('lecture-code-snippet',{attrs:{"codeLabel":_vm.jsClient.codeLabel,"codeContent":_vm.jsClient.codeContent,"codeContentBeautified":_vm.jsClient.codeContentBeautified,"codeId":_vm.jsClient.codeId}}),_vm._v(" "),_c('lecture-code-snippet',{attrs:{"codeLabel":_vm.es.codeLabel,"codeContent":_vm.es.codeContent,"codeContentBeautified":_vm.es.codeContentBeautified,"codeId":_vm.es.codeId}}),_vm._v(" "),_c('lecture-code-snippet',{class:{ 'showing': _vm.showResult, 'hiding': !_vm.showResult },staticStyle:{"margin-top":"6px"},attrs:{"snippetType":"result","codeLabel":_vm.result.codeLabel,"codeContent":_vm.result.codeContent,"codeContentBeautified":_vm.result.codeContentBeautified,"codeId":_vm.result.codeId}}),_vm._v(" "),_c('button',{staticClass:"btn btn-info",staticStyle:{"margin-top":"12px"},on:{"click":function($event){_vm.doIndex()}}},[_vm._v("do index")])],1)}
+__vue__options__.staticRenderFns = []
+if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-4a7cd252", __vue__options__)
+  } else {
+    hotAPI.reload("data-v-4a7cd252", __vue__options__)
+  }
+})()}
+},{"vue":3,"vue-hot-reload-api":1}],10:[function(require,module,exports){
+;(function(){
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+function _model_chp3_iwoid(_instance) {
+  return {
+    '_instance': _instance,
+    'jsClient': {
+      'codeLabel': 'javascript (client)',
+      'codeContent': '',
+      'codeContentBeautified': '',
+      'codeId': '_model_chp3_iwoid_jsclient'
+    },
+    'es': {
+      'codeLabel': 'es DSL query',
+      'codeContent': '',
+      'codeContentBeautified': '',
+      'codeId': '_model_chp3_iwoid_es'
+    },
+    'result': {
+      'codeLabel': 'query result (JSON)',
+      'codeContent': '',
+      'codeContentBeautified': '',
+      'codeId': '_model_chp3_iwoid_result'
+    },
+    'showResult': false,
+    'esConfig': {  },
+    getESConfig: function(_cfg) {
+      return LectureUtil.cloneObject(_cfg);
+    }
+  };
+}
+// model instance
+
+module.exports = {
+  name: 'index_without_id',
+  data: function() {
+    return new _model_chp3_iwoid(this);
+  },
+  mounted: function() {
+    let _instance=this;
+    // load esConfig
+    LectureUtil.getESConfig().then(function(_data) {
+      _instance.esConfig['cfg']=_data;
+    });
+    // load js and dsl file
+    LectureUtil.loadResourceFile(
+      '/clientView/samples/chp03/index_without_id.code',
+      function(_data, _status, _xhr) {
+        if (_data && _instance) {
+          _instance.jsClient.codeContent = _data;
+          _instance.jsClient.codeContentBeautified = LectureUtil.jsCodeBeautifier(_data);
+        }
+      }
+    );
+    LectureUtil.loadResourceFile(
+      '/clientView/samples/chp03/query_index_without_id.code',
+      function(_data, _status, _xhr) {
+        if (_data && _instance) {
+          _instance.es.codeContent = _data;
+          _instance.es.codeContentBeautified = LectureUtil.jsCodeBeautifier(_data);
+        }
+      }
+    );
+
+  },
+  methods: {
+    doIndex: function() {
+      let _instance=this;
+      getESClient(_instance.getESConfig(_instance.esConfig['cfg'])).index({
+        "index": "jeymart_product",
+        "type": "doc",
+        "body": {
+          "category": [
+            "phones",
+            "electronics"
+          ],
+          "description": "latest ManyCall phone series from JamSong.",
+          "price": 1200.99,
+          "stock_code": "ele_ph_46000"
+        }
+      }).then(function(_resp) {
+        var _v = prettyJson(JSON.stringify(_resp));
+        _instance.result.codeContent = _v;
+        _instance.result.codeContentBeautified = LectureUtil.jsCodeBeautifier(_v);
+        _instance.showResult=true;
+      }, function(_err) {
+        _instance.result.codeContent = _err;
+        _instance.result.codeContentBeautified = _err;
+        _instance.showResult=true;
+      });
+
+    }
+  }
+}
+
+
+})()
+if (module.exports.__esModule) module.exports = module.exports.default
+var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
+if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"lecture-chapter-container"},[_c('h3',[_vm._v("Index with document_id:")]),_vm._v(" "),_c('p',{staticClass:"lead text-justify",staticStyle:{"font-size":"16px","margin-top":"8px"}},[_vm._v("\n    There are 2 ways to index a document;\n    this is a demo on indexing a document WITHOUT a document_id provided.\n  ")]),_vm._v(" "),_c('lecture-code-snippet',{attrs:{"codeLabel":_vm.jsClient.codeLabel,"codeContent":_vm.jsClient.codeContent,"codeContentBeautified":_vm.jsClient.codeContentBeautified,"codeId":_vm.jsClient.codeId}}),_vm._v(" "),_c('lecture-code-snippet',{attrs:{"codeLabel":_vm.es.codeLabel,"codeContent":_vm.es.codeContent,"codeContentBeautified":_vm.es.codeContentBeautified,"codeId":_vm.es.codeId}}),_vm._v(" "),_c('lecture-code-snippet',{class:{ 'showing': _vm.showResult, 'hiding': !_vm.showResult },staticStyle:{"margin-top":"6px"},attrs:{"snippetType":"result","codeLabel":_vm.result.codeLabel,"codeContent":_vm.result.codeContent,"codeContentBeautified":_vm.result.codeContentBeautified,"codeId":_vm.result.codeId}}),_vm._v(" "),_c('button',{staticClass:"btn btn-info",staticStyle:{"margin-top":"12px"},on:{"click":function($event){_vm.doIndex()}}},[_vm._v("do index")])],1)}
+__vue__options__.staticRenderFns = []
+if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-b629eac2", __vue__options__)
+  } else {
+    hotAPI.reload("data-v-b629eac2", __vue__options__)
+  }
+})()}
+},{"vue":3,"vue-hot-reload-api":1}],11:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -11005,7 +11321,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-18475c8a", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],10:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],12:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -11058,7 +11374,7 @@ module.exports = {
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"lecture-container-navigation"},[_vm._m(0),_vm._v(" "),_c('div',{staticClass:"lecture-container-navigation-subtitle",on:{"click":function($event){_vm.homeClicked()}}},[_vm._v("\n    home\n  ")]),_vm._v(" "),_c('div',{staticClass:"lecture-container-navigation-subtitle lecture-container-navigation-subtitle-clicked"},[_vm._v("\n    demo\n  ")]),_vm._v(" "),_vm._m(1),_vm._v("\n  "+_vm._s(_vm.menuItemSelected)+"\n")])}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"lecture-container-navigation"},[_vm._m(0),_vm._v(" "),_c('div',{staticClass:"lecture-container-navigation-subtitle",on:{"click":function($event){_vm.homeClicked()}}},[_vm._v("\n    home\n  ")]),_vm._v(" "),_c('div',{staticClass:"lecture-container-navigation-subtitle lecture-container-navigation-subtitle-clicked"},[_vm._v("\n    demo\n  ")]),_vm._v(" "),_vm._m(1)])}
 __vue__options__.staticRenderFns = [function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"lecture-container-navigation-title"},[_vm._v("\n    lecture\n    "),_c('i',{staticClass:"fa fa-book",attrs:{"aria-hidden":"true"}})])},function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"lecture-container-navigation-pull-right-section"},[_c('div',{staticClass:"lecture-container-navigation-pull-right-section-vis"},[_c('i',{staticClass:"fa fa-user-circle lecture-container-navigation-icon",attrs:{"aria-hidden":"true"}}),_vm._v(" "),_c('i',{staticClass:"fa fa-info lecture-container-navigation-icon",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('div',{staticClass:"lecture-container-navigation-pull-right-section-min"},[_c('i',{staticClass:"fa fa-navicon lecture-container-navigation-icon",attrs:{"aria-hidden":"true"}})])])}]
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -11070,7 +11386,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-c64ec8a6", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],11:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],13:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -11165,7 +11481,12 @@ function _model_lcs() {
         showSubItems: false,
         items: [
           { id: '__1', label: 'create index with mapping', view: '/chp03/create_index_n_mapping', selected: false },
-          { id: '__2', label: 'item b', selected: false }
+          { id: '__2', label: 'index a document with id', view: '/chp03/index_with_id', selected: false },
+          { id: '__3', label: 'index a document without id', view: '/chp03/index_without_id', selected: false },
+          { id: '__4', label: 'create a document', view: '/chp03/create_doc', selected: false },
+          { id: '__5', label: 'read a document', view: '/chp03/read_doc', selected: false },
+          { id: '__6', label: 'update a document', view: '/chp03/update_doc', selected: false },
+          { id: '__7', label: 'delete a document', view: '/chp03/delete_doc', selected: false }
         ]
       }
     ],
@@ -11221,7 +11542,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-5bbe94d0", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],12:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],14:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -11310,7 +11631,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-042415a3", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],13:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],15:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -11373,7 +11694,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-75f207e2", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],14:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],16:[function(require,module,exports){
 ;(function(){
 
 /* ------------------------------------------------------------------------
@@ -11399,7 +11720,33 @@ module.exports = {
     { path: '/chp03/create_index_n_mapping',
       name: '/chp03/create_index_n_mapping',
       component: require('./chp03/create_index_n_mapping.vue')
+    },
+
+    { path: '/chp03/index_with_id',
+      name: '/chp03/index_with_id',
+      component: require('./chp03/index_with_id.vue')
+    },
+    { path: '/chp03/index_without_id',
+      name: '/chp03/index_without_id',
+      component: require('./chp03/index_without_id.vue')
+    },
+    { path: '/chp03/create_doc',
+      name: '/chp03/create_doc',
+      component: require('./chp03/create_index_n_mapping.vue')
+    },
+    { path: '/chp03/read_doc',
+      name: '/chp03/read_doc',
+      component: require('./chp03/create_index_n_mapping.vue')
+    },
+    { path: '/chp03/update_doc',
+      name: '/chp03/update_doc',
+      component: require('./chp03/create_index_n_mapping.vue')
+    },
+    { path: '/chp03/delete_doc',
+      name: '/chp03/delete_doc',
+      component: require('./chp03/create_index_n_mapping.vue')
     }
+
   ]
 };
 
@@ -11416,7 +11763,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-45650430", __vue__options__)
   }
 })()}
-},{"./chp02/query_by_event_handler.vue":6,"./chp02/query_by_promise.vue":7,"./chp03/create_index_n_mapping.vue":8,"./lecture-help.vue":13,"vue":3,"vue-hot-reload-api":1,"vue-router":2}],15:[function(require,module,exports){
+},{"./chp02/query_by_event_handler.vue":6,"./chp02/query_by_promise.vue":7,"./chp03/create_index_n_mapping.vue":8,"./chp03/index_with_id.vue":9,"./chp03/index_without_id.vue":10,"./lecture-help.vue":15,"vue":3,"vue-hot-reload-api":1,"vue-router":2}],17:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 

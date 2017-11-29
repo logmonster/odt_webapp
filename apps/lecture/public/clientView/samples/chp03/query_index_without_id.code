@@ -1,0 +1,10 @@
+POST jeymart_product/doc/
+{
+  "category": [
+    "phones",
+    "electronics"
+  ],
+  "description": "latest ManyCall phone series from JamSong.",
+  "price": 1200.99,
+  "stock_code": "ele_ph_46000"
+}

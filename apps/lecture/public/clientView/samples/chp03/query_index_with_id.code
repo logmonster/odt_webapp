@@ -1,0 +1,10 @@
+PUT jeymart_product/doc/122_abc_phi1234
+{
+  "category": [
+    "phones",
+    "electronics"
+  ],
+  "description": "latest ePhoneX from Naple.",
+  "price": 1599.99,
+  "stock_code": "ele_ph_45999"
+}

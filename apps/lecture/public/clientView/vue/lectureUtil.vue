@@ -29,6 +29,7 @@ let _loadResourceFile = function(_path, _callback) {
 let _esConfig=null;
 
 module.exports = {
+  // return the es-config related json configuration file
   getESConfig: () => {
     var _jDef=$.Deferred();
 
@@ -144,6 +145,23 @@ module.exports = {
     }, _ct);
 
     return _ct;
+  },
+  /* clone the given object; it is a MUST for elasticsearch.js
+   *  as you couldn't re-use a config object to create another connection
+   */
+  cloneObject: function(_cfg) {
+    // make a clone... jesus...
+    // https://github.com/elastic/elasticsearch-js/issues/33
+    var _keys=Object.keys(_cfg);
+    var _clone={};
+
+    for (var _i=0; _i<_keys.length; _i++) {
+      var _k=_keys[_i];
+      var _v=_cfg[_k];
+
+      _clone[_k]=_v;
+    }
+    return _clone;
   }
 
 }

@@ -91,7 +91,12 @@ function _model_lcs() {
         showSubItems: false,
         items: [
           { id: '__1', label: 'create index with mapping', view: '/chp03/create_index_n_mapping', selected: false },
-          { id: '__2', label: 'item b', selected: false }
+          { id: '__2', label: 'index a document with id', view: '/chp03/index_with_id', selected: false },
+          { id: '__3', label: 'index a document without id', view: '/chp03/index_without_id', selected: false },
+          { id: '__4', label: 'create a document', view: '/chp03/create_doc', selected: false },
+          { id: '__5', label: 'read a document', view: '/chp03/read_doc', selected: false },
+          { id: '__6', label: 'update a document', view: '/chp03/update_doc', selected: false },
+          { id: '__7', label: 'delete a document', view: '/chp03/delete_doc', selected: false }
         ]
       }
     ],

@@ -64,22 +64,12 @@ function _model_chp3_cim(_instance) {
     getESConfig: function(_cfg) {
       // make a clone... jesus...
       // https://github.com/elastic/elasticsearch-js/issues/33
-      var _keys=Object.keys(_cfg);
-      var _clone={};
-
-      for (var _i=0; _i<_keys.length; _i++) {
-        var _k=_keys[_i];
-        var _v=_cfg[_k];
-
-        _clone[_k]=_v;
-      }
-      return _clone;
+      return LectureUtil.cloneObject(_cfg);
     }
     //, es (code as well), js_server (code if necessary)
   };
 }
 // model instance
-//var _model;
 
 module.exports = {
   name: 'query_by_event_handler',
@@ -116,7 +106,6 @@ module.exports = {
       let _instance = this;
       // re-use the functions declared in clientJS/es.js
       if (getESClient && search) {
-        // { hosts: ['http://localhost:9201'] }
         getESClient(_instance.getESConfig(_instance.esConfig['cfg'])).indices.create({
           "index": "jeymart_product",
           "body": {
@@ -150,9 +139,21 @@ module.exports = {
           _instance.result.codeContentBeautified = LectureUtil.jsCodeBeautifier(_v);
           _instance.showResult=true;
         }, function(_err) {
-          _instance.result.codeContent = _err;
-          _instance.result.codeContentBeautified = _err;
-          _instance.showResult=true;
+          // bug for 14.x (submitted PR already)
+          if (_err &&
+            _err.message &&
+            _err.message.message &&
+            "Connection Failure"==_err.message.message) {
+
+            _instance.result.codeContent = "index already existed exception";
+            _instance.result.codeContentBeautified = "index already existed exception";
+            _instance.showResult=true;
+
+          } else {
+            _instance.result.codeContent = _err;
+            _instance.result.codeContentBeautified = _err;
+            _instance.showResult=true;
+          }
         });
       }
     } // end -- runQuery
