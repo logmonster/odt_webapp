@@ -1,0 +1,10 @@
+PUT jeymart_product/doc/testing_create_doc_1/_create
+{
+  "category": [
+    "phones",
+    "electronics"
+  ],
+  "description": "Tired of using smart phones? Try MetaRola ringer phones.",
+  "price": 399,
+  "stock_code": "rng_ph_12900"
+}

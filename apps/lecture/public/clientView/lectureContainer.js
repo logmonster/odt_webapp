@@ -11,6 +11,7 @@ var LectSidemenu = require('./vue/lecture-container-sidemenu.vue');
 Vue.component('lecture-navigator', LectNav);
 Vue.component('lecture-container-sidemenu', LectSidemenu);
 Vue.component('lecture-code-snippet', require('./vue/lecture-code-snippet-component.vue'));
+Vue.component('lecture-server-side-snippet', require('./vue/lecture-server-side-snippet-component.vue'));
 
 // setup Router
 var Router = require('vue-router');

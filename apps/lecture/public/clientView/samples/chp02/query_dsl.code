@@ -1,4 +1,4 @@
-GET javascript_client_data/config/_search
+GET javascript_client_data/doc/_search
 {
   "query": {
     "match_all": {}

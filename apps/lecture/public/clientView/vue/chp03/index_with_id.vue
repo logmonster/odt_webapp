@@ -3,7 +3,8 @@
     <h3>Index with document_id:</h3>
     <p class="lead text-justify" style="font-size: 16px; margin-top: 8px;">
       There are 2 ways to index a document;
-      this is a demo on indexing a document with a document_id provided.<p/>
+      this is a demo on indexing a document with a document_id provided.
+      <br><br>
       PS. for the 1st time, you should have a "created" result; when you run
       the indexing for the 2nd time you should have an "updated" result.
     </p>

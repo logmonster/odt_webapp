@@ -58,7 +58,11 @@ function _model_chp2_qbeh(_instance) {
       'codeContentBeautified': '',
       'codeId': '_model_chp2_qbeh_result'
     },
-    'showResult': false
+    'showResult': false,
+    'esConfig': {  },
+    getESConfig: function(_cfg) {
+      return LectureUtil.cloneObject(_cfg);
+    }
     //, es (code as well), js_server (code if necessary)
   };
 }
@@ -77,6 +81,10 @@ module.exports = {
   },
   mounted: function() {
     let _instance=this;
+    // load esConfig
+    LectureUtil.getESConfig().then(function(_data) {
+      _instance.esConfig['cfg']=_data;
+    });
     LectureUtil.loadResourceFile(
       '/clientView/samples/chp02/query_by_event_handler.code',
       function(_data, _status, _xhr) {
@@ -101,9 +109,9 @@ module.exports = {
       let _instance = this;
       // re-use the functions declared in clientJS/es.js
       if (getESClient && search) {
-        search(getESClient(),
+        search(getESClient(_instance.getESConfig(_instance.esConfig['cfg'])),
           'javascript_client_data',
-          'config',
+          'doc',
           {
             "query": {
               "match_all": {}

@@ -1,34 +1,21 @@
-// create an es connection / instance
-function getESClient() {
-  let _config={
-    hosts: 'http://localhost:9201',
-    ignore: [404]
-  };
-  return new $.es.Client(_config);
-}
-
-var chp02={
-  // define the query
-  basicQuery_1: {
-    index: 'javascript_client_data',
-    type: 'config',
-    body: {
-      "query": {
-        "match_all": {}
-      }
+search(getESClient(_instance.getESConfig(_instance.esConfig['cfg'])),
+  'javascript_client_data',
+  'doc',
+  {
+    "query": {
+      "match_all": {}
     }
+  },
+  true,
+  function(_resp) {
+    var _v = prettyJson(JSON.stringify(_resp));
+    _instance.result.codeContent = _v;
+    _instance.result.codeContentBeautified = LectureUtil.jsCodeBeautifier(_v);
+    _instance.showResult=true;
+  },
+  function(_err) {
+    _instance.result.codeContent = _err;
+    _instance.result.codeContentBeautified = _err;
+    _instance.showResult=true;
   }
-};
-
-function runQueryPromise() {
-  getESClient().search(chp02['basicQuery_1']).
-    then(function(_resp) {
-      // SUCCEED -- display the last result to a div
-      let _hit=_resp.hits.hits[_resp.hits.hits.length-1];
-      document.querySelector('#divRes_2').innerHTML=JSON.stringify(_hit._source);
-    }, function(_err) {
-      // FAIL
-      alert(_err);
-    }
-  );  // end of "search"
-};
+);  // end -- search

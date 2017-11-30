@@ -1,39 +1,37 @@
 // create an es connection / instance
-function getESClient() {
-  let _config={
+function getESClient(_config) {
+  let _client=null;
+  // default config
+  let _finalConfig={
     hosts: 'http://localhost:9200',
     ignore: [404]
   };
-  return new $.es.Client(_config);
-}
 
-var chp02={
-  // define the query
-  basicQuery_1: {
-    index: 'javascript_client_data',
-    type: 'config',
-    body: {
-      "query": {
-        "match_all": {}
-      }
-    }
+  if (_config && typeof(_config)=='object') {
+    _finalConfig=_config;
   }
-};
-
-function runQueryEventHandler() {
-  getESClient.search(
-    chp02['basicQuery_1'],
-    function(_err, _resp) {
-      // event-handler / callback
-      if (_err) {
-        // error handling
-        alert(_err);
-      } else {
-        // display the first result to a div
-        let _hit=_resp.hits.hits[0];
-        document.querySelector('#divRes_1').innerHTML =
-          JSON.stringify(_hit._source);
-      }
-    }
-  );  // end of "search"
+  return new $.es.Client(_finalConfig);
 }
+
+search(getESClient(_instance.getESConfig(_instance.esConfig['cfg'])),
+  'javascript_client_data',
+  'doc',
+  {
+    "query": {
+      "match_all": {}
+    }
+  },
+  false,
+  function(_err, _resp) {
+    if (!_err) {
+      var _v = prettyJson(JSON.stringify(_resp));
+      _instance.result.codeContent = _v;
+      _instance.result.codeContentBeautified = LectureUtil.jsCodeBeautifier(_v);
+      _instance.showResult=true;
+    } else {
+      _instance.result.codeContent = _err;
+      _instance.result.codeContentBeautified = _err;
+      _instance.showResult=true;
+    }
+  },
+  null);  // end -- search

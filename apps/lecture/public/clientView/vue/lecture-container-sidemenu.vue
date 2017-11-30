@@ -96,7 +96,8 @@ function _model_lcs() {
           { id: '__4', label: 'create a document', view: '/chp03/create_doc', selected: false },
           { id: '__5', label: 'read a document', view: '/chp03/read_doc', selected: false },
           { id: '__6', label: 'update a document', view: '/chp03/update_doc', selected: false },
-          { id: '__7', label: 'delete a document', view: '/chp03/delete_doc', selected: false }
+          { id: '__7', label: 'delete a document', view: '/chp03/delete_doc', selected: false },
+          { id: '__8', label: 'server side CRUD', view: '/chp03/server_crud', selected: false }
         ]
       }
     ],

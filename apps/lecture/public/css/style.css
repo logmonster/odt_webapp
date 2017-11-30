@@ -162,6 +162,43 @@
   margin-bottom: 2px;
 }
 
+/* ########################## */
+/*  server-side code snippet  */
+/* ########################## */
+
+.server-code-snippet-icon-container {
+  /*display: inline-block;
+  width: 120px;
+  */
+  padding: 8px;
+  background-color: #444;
+  color: #fff;
+  font-size: 20px;
+  border-radius: 4px 0 0 4px;
+}
+.server-code-snippet-code-container {
+  background-color: #66bb6a;
+  color: #fff;
+  border-radius: 0 4px 4px 0;
+}
+.server-code-snippet-title-container {
+  padding-left: 4px;
+  padding-right: 4px;
+  font-size: 18px;
+  margin-top: 4px;
+}
+.server-code-snippet-content-container {
+  margin-top: 6px;
+  background-color: #eee;
+  color: #000;
+  border-radius: 0 0 4px 4px;
+  border-bottom: 1px solid #6d4c41;
+  border-left: 1px solid #6d4c41;
+  border-right: 1px solid #6d4c41;
+}
+
+
+
 @media only screen and (max-width: 499px) {
   .lecture-container-navigation-pull-right-section-vis {
     display: none;

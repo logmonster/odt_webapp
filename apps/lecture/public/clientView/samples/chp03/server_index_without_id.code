@@ -1,0 +1,35 @@
+getESClient(_instance.getESConfig(_instance.esConfig['cfg'])).create({
+  "index": "jeymart_product",
+  "type": "doc",
+  "id": "testing_create_doc_1",
+  "body": {
+    "category": [
+      "phones",
+      "electronics"
+    ],
+    "description": "Tired of using smart phones? Try MetaRola ringer phones.",
+    "price": 399,
+    "stock_code": "rng_ph_12900"
+  }
+}).then(function(_resp) {
+  var _v = prettyJson(JSON.stringify(_resp));
+  _instance.result.codeContent = _v;
+  _instance.result.codeContentBeautified = LectureUtil.jsCodeBeautifier(_v);
+  _instance.showResult=true;
+}, function(_err) {
+  // bug for 14.x (submitted PR already)
+  if (_err &&
+    _err.message &&
+    _err.message.message &&
+    "Connection Failure"==_err.message.message) {
+
+    _instance.result.codeContent = "document already exists";
+    _instance.result.codeContentBeautified = "document already exists";
+    _instance.showResult=true;
+
+  } else {
+    _instance.result.codeContent = _err;
+    _instance.result.codeContentBeautified = _err;
+    _instance.showResult=true;
+  }
+});

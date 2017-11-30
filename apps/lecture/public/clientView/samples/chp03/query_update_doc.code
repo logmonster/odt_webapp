@@ -1,0 +1,7 @@
+POST jeymart_product/doc/testing_create_doc_1/_update
+{
+  "doc": {
+    "description": "MetaRola is the best ringer phones ever~ Say no to smart phones.",
+    "price": 409
+  }
+}

@@ -1,9 +1,12 @@
 <template>
   <div class="lecture-chapter-container">
-    <h3>Index WITHOUT document_id:</h3>
+    <h3>Update document:</h3>
     <p class="lead text-justify" style="font-size: 16px; margin-top: 8px;">
-      There are 2 ways to index a document;
-      this is a demo on indexing a document WITHOUT a document_id provided.
+      Update an existing document on a subset of fields only. <br></br>
+      For example,the document consists of 100 fields, whilst the only field
+      you need to update is the "mailing_address" field; instead of preparing
+      the 100 fields, all you need is to provide the 1 and only 1
+      "mailing_address" field.
     </p>
 
     <lecture-code-snippet
@@ -27,33 +30,33 @@
       :codeContentBeautified="result.codeContentBeautified"
       :codeId="result.codeId" ></lecture-code-snippet>
 
-    <button style='margin-top: 12px;' class="btn btn-info" @click="doIndex()">do index</button>
+    <button style='margin-top: 12px;' class="btn btn-info" @click="readDoc()">read/get document</button>
 
 
   </div>
 </template>
 
 <script>
-function _model_chp3_iwoid(_instance) {
+function _model_chp3_udoc(_instance) {
   return {
     '_instance': _instance,
     'jsClient': {
       'codeLabel': 'javascript (client)',
       'codeContent': '',
       'codeContentBeautified': '',
-      'codeId': '_model_chp3_iwoid_jsclient'
+      'codeId': '_model_chp3_udoc_jsclient'
     },
     'es': {
       'codeLabel': 'es DSL query',
       'codeContent': '',
       'codeContentBeautified': '',
-      'codeId': '_model_chp3_iwoid_es'
+      'codeId': '_model_chp3_udoc_es'
     },
     'result': {
       'codeLabel': 'query result (JSON)',
       'codeContent': '',
       'codeContentBeautified': '',
-      'codeId': '_model_chp3_iwoid_result'
+      'codeId': '_model_chp3_udoc_result'
     },
     'showResult': false,
     'esConfig': {  },
@@ -65,9 +68,9 @@ function _model_chp3_iwoid(_instance) {
 // model instance
 
 module.exports = {
-  name: 'index_without_id',
+  name: 'update_doc',
   data: function() {
-    return new _model_chp3_iwoid(this);
+    return new _model_chp3_udoc(this);
   },
   mounted: function() {
     let _instance=this;
@@ -77,7 +80,7 @@ module.exports = {
     });
     // load js and dsl file
     LectureUtil.loadResourceFile(
-      '/clientView/samples/chp03/index_without_id.code',
+      '/clientView/samples/chp03/update_doc.code',
       function(_data, _status, _xhr) {
         if (_data && _instance) {
           _instance.jsClient.codeContent = _data;
@@ -86,7 +89,7 @@ module.exports = {
       }
     );
     LectureUtil.loadResourceFile(
-      '/clientView/samples/chp03/query_index_without_id.code',
+      '/clientView/samples/chp03/query_update_doc.code',
       function(_data, _status, _xhr) {
         if (_data && _instance) {
           _instance.es.codeContent = _data;
@@ -97,19 +100,17 @@ module.exports = {
 
   },
   methods: {
-    doIndex: function() {
+    readDoc: function() {
       let _instance=this;
-      getESClient(_instance.getESConfig(_instance.esConfig['cfg'])).index({
+      getESClient(_instance.getESConfig(_instance.esConfig['cfg'])).update({
         "index": "jeymart_product",
         "type": "doc",
+        "id": "testing_create_doc_1",
         "body": {
-          "category": [
-            "phones",
-            "electronics"
-          ],
-          "description": "latest ManyCall phone series from JamSong.",
-          "price": 1200.99,
-          "stock_code": "ele_ph_46000"
+          "doc": {
+            "description": "MetaRola is the best ringer phones ever~ Say no to smart phones.",
+            "price": 409
+          }
         }
       }).then(function(_resp) {
         var _v = prettyJson(JSON.stringify(_resp));
@@ -117,9 +118,20 @@ module.exports = {
         _instance.result.codeContentBeautified = LectureUtil.jsCodeBeautifier(_v);
         _instance.showResult=true;
       }, function(_err) {
-        _instance.result.codeContent = _err;
-        _instance.result.codeContentBeautified = _err;
-        _instance.showResult=true;
+        if (_err &&
+          _err.message &&
+          _err.message.message &&
+          "Connection Failure"==_err.message.message) {
+
+          _instance.result.codeContent = "document not found";
+          _instance.result.codeContentBeautified = "document not found";
+          _instance.showResult=true;
+
+        } else {
+          _instance.result.codeContent = _err;
+          _instance.result.codeContentBeautified = _err;
+          _instance.showResult=true;
+        }
       });
 
     }

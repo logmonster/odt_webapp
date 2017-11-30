@@ -23,7 +23,6 @@ module.exports = {
       name: '/chp03/create_index_n_mapping',
       component: require('./chp03/create_index_n_mapping.vue')
     },
-
     { path: '/chp03/index_with_id',
       name: '/chp03/index_with_id',
       component: require('./chp03/index_with_id.vue')
@@ -34,19 +33,23 @@ module.exports = {
     },
     { path: '/chp03/create_doc',
       name: '/chp03/create_doc',
-      component: require('./chp03/create_index_n_mapping.vue')
+      component: require('./chp03/create_doc.vue')
     },
     { path: '/chp03/read_doc',
       name: '/chp03/read_doc',
-      component: require('./chp03/create_index_n_mapping.vue')
+      component: require('./chp03/read_doc.vue')
     },
     { path: '/chp03/update_doc',
       name: '/chp03/update_doc',
-      component: require('./chp03/create_index_n_mapping.vue')
+      component: require('./chp03/update_doc.vue')
     },
     { path: '/chp03/delete_doc',
       name: '/chp03/delete_doc',
-      component: require('./chp03/create_index_n_mapping.vue')
+      component: require('./chp03/delete_doc.vue')
+    },
+    { path: '/chp03/server_crud',
+      name: '/chp03/server_crud',
+      component: require('./chp03/server_crud.vue')
     }
 
   ]
