@@ -1,0 +1,41 @@
+var _fs = require('fs');
+var eb = require('elastic-builder');
+...
+
+// load es config and create the client object
+let _cfg = JSON.parse(
+  _fs.readFileSync(_path.join(
+    __dirname,
+    "../public/clientView/samples/es_config.json")).toString());
+
+let _client = new _es.Client(_cfg);
+...
+
+// term query
+let _tq = new eb.TermQuery('stock_code', 'ele_ph_45999');
+// match query
+let _mq = new eb.MatchQuery('description', 'PhOne').operator("or");
+
+_runQuery([ _tq, _mq ], _req, _resp);
+...
+
+let _runQuery = function(_qList, _req, _resp) {
+  let _lst=[];
+
+  if (_qList) {
+    _qList.forEach(function(_item, _idx) {
+      // prepare for msearch instead of logging out
+      _lst.push({ "index": "jeymart_product", "type": "doc" });
+      _lst.push({ "query": _item.toJSON() });
+    }, null);
+  }
+  // run a msearch
+  _client.msearch({
+    body: _lst
+  }).then(function(_data) {
+    _resp.send(_data);
+
+  }, function(_err) {
+    _resp.send(_err);
+  });
+};

@@ -1,0 +1,10 @@
+GET jeymart_product/_search
+{
+  "query": {
+    "term": {
+      "stock_code": {
+        "value": "ele_ph_45999"
+      }
+    }
+  }
+}

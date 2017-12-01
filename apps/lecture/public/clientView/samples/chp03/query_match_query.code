@@ -1,0 +1,10 @@
+GET jeymart_product/_search
+{
+  "query": {
+    "match": {
+      "description": {
+        "query": "PhOne"
+      }
+    }
+  }
+}

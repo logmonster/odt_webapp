@@ -1,0 +1,36 @@
+let eb = _eBuilder;
+
+// terms aggs
+let _ta = new eb.RequestBodySearch().
+  query(new eb.MatchAllQuery()).
+  size(0).
+  aggs([
+    new eb.TermsAggregation("_categories", "category.keyword")
+  ]
+);
+// multi aggs
+let _ma = new eb.RequestBodySearch().
+  query(new eb.MatchAllQuery()).
+  size(0).
+  aggs([
+    new eb.MinAggregation("_cheapestPhone", "price"),
+    new eb.MaxAggregation("_luxuriousPhone", "price"),
+    new eb.StatsAggregation("_basicStats", "price")
+  ]
+);
+
+// run the aggs
+let _lst=[];
+
+_lst.push({ "index": "jeymart_product", "type": "doc" });
+_lst.push(_ta.toJSON());
+_lst.push({ "index": "jeymart_product", "type": "doc" });
+_lst.push(_ma.toJSON());
+
+_client.msearch({
+  body: _lst
+}).then(function(_data) {
+  _resp.send(_data);
+}, function(_err) {
+  _resp.send(_err);
+});

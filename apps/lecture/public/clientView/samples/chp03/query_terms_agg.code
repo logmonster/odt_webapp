@@ -1,0 +1,12 @@
+GET jeymart_product/_search
+{
+  "size": 0,
+  "aggs": {
+    "_categories": {
+      "terms": {
+        "field": "category.keyword",
+        "size": 10
+      }
+    }
+  }
+}

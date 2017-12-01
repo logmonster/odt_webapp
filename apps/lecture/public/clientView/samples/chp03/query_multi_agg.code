@@ -1,0 +1,21 @@
+GET jeymart_product/_search
+{
+  "size": 0,
+  "aggs": {
+    "_cheapestPhone": {
+      "min": {
+        "field": "price"
+      }
+    },
+    "_luxuriousPhone": {
+      "max": {
+        "field": "price"
+      }
+    },
+    "_basicStats": {
+      "stats": {
+        "field": "price"
+      }
+    }
+  }
+}

@@ -16,15 +16,21 @@
             class="server-code-snippet-title-container pointer"
             @click.prevent.stop="toggleContentVisibility()">
             {{config.title}}</div>
-          <textarea
+          <!--textarea
+            :id='getCodeId'
             style="width: calc(100%); height: 200px; border-top: 0px;"
             class='server-code-snippet-content-container'
             :class="{ 'showing': contentVisible, 'hiding': !contentVisible }"
-            readonly >{{code}}</textarea>
-          <!--div
+            readonly >{{code}}</textarea-->
+          <div
+            :id='getCodeId'
+            style="width: calc(100%); height: 200px; border-top: 0px; overflow: auto;"
             class='server-code-snippet-content-container'
-            :class="{ 'showing': contentVisible, 'hiding': !contentVisible }"
-            v-html="codeBeautified"></div-->
+            :class="{ 'showing': contentVisible, 'hiding': !contentVisible }" >
+            <div v-html="codeBeautified"></div>
+          </div>
+
+
         </div>
       </div>
     </div>

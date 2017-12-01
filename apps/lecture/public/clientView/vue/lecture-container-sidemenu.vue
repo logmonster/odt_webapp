@@ -97,7 +97,13 @@ function _model_lcs() {
           { id: '__5', label: 'read a document', view: '/chp03/read_doc', selected: false },
           { id: '__6', label: 'update a document', view: '/chp03/update_doc', selected: false },
           { id: '__7', label: 'delete a document', view: '/chp03/delete_doc', selected: false },
-          { id: '__8', label: 'server side CRUD', view: '/chp03/server_crud', selected: false }
+          //,{ id: '__8', label: 'server side CRUD', view: '/chp03/server_crud', selected: false }
+          { id: '__9', label: 'term query', view: '/chp03/term_query', selected: false },
+          { id: '__10', label: 'match query', view: '/chp03/match_query', selected: false },
+          { id: '__11', label: 'server side term and match query', view: '/chp03/server_query', selected: false },
+          { id: '__12', label: 'terms aggregation', view: '/chp03/terms_agg', selected: false },
+          { id: '__13', label: 'multiple aggregations', view: '/chp03/multi_agg', selected: false },
+          { id: '__14', label: 'server side aggregations', view: '/chp03/server_agg', selected: false }
         ]
       }
     ],
