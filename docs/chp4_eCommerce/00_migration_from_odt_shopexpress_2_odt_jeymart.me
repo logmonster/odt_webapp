@@ -1,0 +1,341 @@
+[step 1 migrate the items]
+PUT _template/default_template
+{
+  "index_patterns": [ "*" ],
+  "settings": {
+    "number_of_replicas": 0,
+    "number_of_shards": 1
+  },
+  "mappings": {
+    "doc": {
+      "dynamic": true,
+      "dynamic_templates": [
+        {
+          "m_halfFloat": {
+            "match": "hf_*",
+            "mapping": {
+              "type": "half_float"
+            }
+          }
+        },
+        {
+          "m_int": {
+            "match": "i_*",
+            "mapping": {
+              "type": "integer"
+            }
+          }
+        },
+        {
+          "m_text": {
+            "match": "t_*",
+            "mapping": {
+              "type": "text"
+            }
+          }
+        },
+        {
+          "m_keyword": {
+            "match": "k_*",
+            "mapping": {
+              "type": "keyword"
+            }
+          }
+        },
+        {
+          "m_string": {
+            "match": "s_*",
+            "mapping": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword"
+                }
+              }
+            }
+          }
+        },
+        {
+          "m_float": {
+            "match": "f_*",
+            "mapping": {
+              "type": "float"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+PUT odt_jeymart_items
+{
+  "settings": {
+    "analysis": {
+      "normalizer": {
+        "norm_lowercase": {
+          "type": "custom",
+          "filter": ["lowercase", "asciifolding"]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "doc": {
+      "properties": {
+        "k_category": {
+          "type": "keyword",
+          "normalizer": "norm_lowercase"
+        }
+      }
+    }
+  }
+}
+
+
+cripts/fix_jeymart_items_from_shopexpress_item
+{
+  "script": {
+    "lang": "painless",
+    "source": """ 
+ctx._source.k_category = ctx._source.category;
+ctx._source.t_description = ctx._source.desc;
+ctx._source.k_photo = ctx._source.photo;
+
+if (ctx._source.containsKey("price_low") &&
+ctx._source.containsKey("price_up") ) {
+  ctx._source.hf_price_lbound = ctx._source.price_low;
+  ctx._source.hf_price_ubound = ctx._source.price_up;
+  ctx._source.hf_price_suggested = (ctx._source.price_low + ctx._source.price_up)/2f;
+}
+
+ctx._source.k_stock_code = ctx._source.stock_code;
+ctx._source.i_ratings = 0;
+
+ctx._source.remove('category');
+ctx._source.remove('desc');
+ctx._source.remove('photo');
+ctx._source.remove('price_low');
+ctx._source.remove('price_up');
+ctx._source.remove('stock_code');
+ctx._source.remove('@version');
+ctx._source.remove('host');
+
+// random assign a "brand_name"
+def _brands=[ "Softy Designs", "Clarence & Co", "Shop at Calmers", "Divinity Works", "Bedtime", "Bakery and Art", "Lifestyle Furnishings", "Jerry & Co", "Palace Athena's", "Tiffany's", "Dominic Party", "Avery Works" ];
+
+def _i = new Random(System.currentTimeMillis()).nextInt(_brands.length);
+
+ctx._source.s_brand_name=_brands[_i];
+
+ctx._type = "doc";
+    """
+  }
+}
+
+POST _reindex
+{
+  "conflicts": "proceed",
+  "source": {
+    "index": "odt_shopexpress_item",
+    "query": {
+      "bool": {
+        "must": [
+          {
+            "exists": {
+              "field": "price_low"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "dest": {
+    "index": "odt_jeymart_items"
+  },
+  "script": {
+    "id": "fix_jeymart_items_from_shopexpress_item"
+  }
+}
+
+# step 1 done
+
+
+[step 2 migrate the real_trx to users_trx]
+DELETE odt_jeymart_user_trx
+PUT odt_jeymart_user_trx
+{
+  "settings": {
+    "analysis": {
+      "normalizer": {
+        "norm_lowercase": {
+          "type": "custom",
+          "filter": [
+            "lowercase",
+            "asciifolding"
+          ]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "doc": {
+      "properties": {
+        "k_category": {
+          "type": "keyword",
+          "normalizer": "norm_lowercase"
+        },
+        "dt_invoice_date": {
+          "type": "date"
+        },
+        "user": {
+          "properties": {
+            "k_last_name": {
+              "type": "keyword",
+              "normalizer": "norm_lowercase"
+            },
+            "k_first_name": {
+              "type": "keyword",
+              "normalizer": "norm_lowercase"
+            },
+            "k_country_reside": {
+              "type": "keyword",
+              "normalizer": "norm_lowercase"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+# generate a random score.... 
+GET odt_jeymart_items/_search
+{
+  "query": {
+    "function_score": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "exists": {
+                "field": "hf_price_suggested"
+              }
+            },
+            {
+              "match": {
+                "t_description": "WHITE ROSEBUD PEARL EARRINGS"
+              }
+            },
+            {
+              "terms": {
+                "k_category": [
+                  "fashion"
+                ]
+              }
+            },
+            {
+              "match": {
+                "k_photo": "earring00.jpg"
+              }
+            }
+          ]
+        }
+      },
+      "functions": [
+        {
+          "random_score": {
+            "field": "hf_price_suggested"
+          }
+        }
+      ],
+      "score_mode": "sum"
+    }
+  },
+  "sort": [
+    {
+      "_score": {
+        "order": "asc"
+      }
+    }
+  ]
+}
+
+# basic scrip for reindex
+PUT _scripts/fix_jeymart_user_trx_from_shopexpress_real_trx
+{
+  "script": {
+    "lang": "painless",
+    "source": """ 
+def _c = ctx._source;
+
+// ** user-id and brand-name need another script to update...
+_c.k_user_id = "tbd";
+_c.s_brand_name = "tbd";
+// ** so is hf_price_suggested
+_c.hf_price_suggested = 0f;
+
+_c.k_category = _c.category;
+_c.t_description = _c.description;
+_c.k_invoice_no = _c.invoice_no;
+_c.k_photo = _c.photo;
+_c.dt_invoice_date = _c.invoice_date;
+
+// random assign user.k_last_name, user.k_first_name plus assign country to user.k_country_reside
+
+def _lname=[
+  "White", "Stone", "D.Milto", "Chan", "Lee",    "Cook", "Donovan", "Maximoff", "Sue"  
+  ];
+def _fname=[
+  "Peter","Jane", "Patrick", "Sandy","Samuel",
+  "Saurice", "Alice", "Matt", "Jason","Joyce",
+  "Lilian", "Bennie","Maurice", "Kate",
+  "Laruen"  
+  ];
+def _lIdx = new Random(System.currentTimeMillis()).nextInt(_lname.length);
+def _fIdx = new Random(System.currentTimeMillis()).nextInt(_fname.length);
+
+_c.user = [
+  "k_last_name": _lname[_lIdx],
+  "k_first_name": _fname[_fIdx],
+  "k_country_reside": _c.country,
+  "s_full_name": _fname[_fIdx] + " " + _lname[_lIdx]
+  ];
+
+// to random create i_quantity, i_rating
+def _qty = new Random(System.currentTimeMillis()).nextInt(9)+1;
+def _rating = new Random(System.currentTimeMillis()).nextInt(4)+1;
+
+_c.i_rating = _rating;
+_c.i_qty = _qty;
+
+_c.remove('category');
+_c.remove('description');
+_c.remove('invoice_no');
+_c.remove('photo');
+_c.remove('country');
+_c.remove('quantity');
+_c.remove('unit_price');
+_c.remove('invoice_date');
+_c.remove('customer');
+
+ctx._type="doc";
+    """
+  }
+}
+
+POST _reindex
+{
+  "source": {
+    "index": "odt_shopexpress_real_trx",
+    "type": "trx"
+  },
+  "dest": {
+    "index": "odt_jeymart_user_trx"
+  },
+  "script": {
+    "id": "fix_jeymart_user_trx_from_shopexpress_real_trx"
+  }
+}
+
+
