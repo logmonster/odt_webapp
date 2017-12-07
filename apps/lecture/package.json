@@ -12,8 +12,8 @@
     "lecture",
     "demo"
   ],
-  "author": "Jason.Wong@elastic",
-  "license": "MIT",
+  "author": "jason.wong@elastic.co",
+  "license": "Apache-2.0",
   "dependencies": {
     "elastic-builder": "^1.1.1",
     "elasticsearch": "^13.3.1",
