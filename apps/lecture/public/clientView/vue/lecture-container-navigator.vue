@@ -10,9 +10,9 @@
     <div class="lecture-container-navigation-subtitle" @click="homeClicked()">
       home
     </div>
-    <div class="lecture-container-navigation-subtitle lecture-container-navigation-subtitle-clicked">
+    <!--div class="lecture-container-navigation-subtitle lecture-container-navigation-subtitle-clicked">
       demo
-    </div>
+    </div -->
     <!-- right hand side icons or menu items -->
     <div class="lecture-container-navigation-pull-right-section" style="">
       <div class="lecture-container-navigation-pull-right-section-vis">

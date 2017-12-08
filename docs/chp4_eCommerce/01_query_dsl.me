@@ -1,0 +1,294 @@
+GET _cat/indices?h=index&s=index
+
+GET odt_jeymart_items/_search
+GET odt_jeymart_user_trx/_search
+
+# all categories
+GET odt_jeymart_items/_search
+{
+  "size": 0,
+  "aggs": {
+    "_cats": {
+      "terms": {
+        "field": "k_category",
+        "size": 20,
+        "order": {
+          "_key": "asc"
+        }
+      }
+    }
+  }
+}
+
+# best selling categories (top 5)
+GET odt_jeymart_user_trx/_search
+{
+  "size": 0,
+  "aggs": {
+    "_cats": {
+      "terms": {
+        "field": "k_category",
+        "size": 5,
+        "order": {
+          "_qty": "desc"
+        }
+      },
+      "aggs": {
+        "_qty": {
+          "sum": {
+            "field": "i_qty"
+          }
+        }
+      }
+    }
+  }
+}
+# stats based on category
+GET odt_jeymart_user_trx/_search
+{"size":0,"aggs":{"_cats":{"terms":{"field":"k_category","size":20},"aggs":{"_statsQty":{"stats":{"field":"i_qty"}},"_statsPrice":{"stats":{"field":"hf_price_suggested"}}}}}}
+
+# --- search
+
+# get back green necklaces but also earrings...
+GET odt_jeymart_items/_search
+{
+  "size": 20, 
+  "query": {
+    "match": {
+      "t_description": "necklace green "
+    }
+  }
+}
+# restricting only "green necklace", no more earrings
+GET odt_jeymart_items/_search
+{
+  "size": 20, 
+  "query": {
+    "match": {
+      "t_description": {
+        "query": "necklace green ",
+        "operator": "and"
+      }
+    }
+  }
+}
+# restricting too many non-relevant matches by minimum_should_match; 1 vs 2 vs 3 (the number of results)
+GET odt_jeymart_items/_search
+{
+  "size": 20, 
+  "query": {
+    "match": {
+      "t_description": {
+        "query": "green earring necklace",
+        "minimum_should_match": 2
+      }
+    }
+  }
+}
+
+# phrase... won't work as position is important
+GET odt_jeymart_items/_search
+{
+  "size": 20, 
+  "query": {
+    "match_phrase": {
+      "t_description": {
+        "query": "vintage earring green"
+      }
+    }
+  }
+}
+GET odt_jeymart_items/_search
+{
+  "size": 20, 
+  "query": {
+    "match_phrase": {
+      "t_description": {
+        "query": "green vintage earring"
+      }
+    }
+  }
+}
+
+# won't work as it is matched as a phrase...
+GET odt_jeymart_items/_search
+{
+  "size": 20, 
+  "query": {
+    "match_phrase": {
+      "t_description": {
+        "query": "green earring"
+      }
+    }
+  }
+}
+# slop helps on this; try 1 vs 2
+GET odt_jeymart_items/_search
+{
+  "size": 20, 
+  "query": {
+    "match_phrase": {
+      "t_description": {
+        "query": "green earring",
+        "slop": 1
+      }
+    }
+  }
+}
+GET odt_jeymart_items/_search
+{
+  "size": 20, 
+  "query": {
+    "match_phrase": {
+      "t_description": {
+        "query": "green earring",
+        "slop": 2
+      }
+    }
+  }
+}
+
+# multi fields search
+GET odt_jeymart_items/_search
+{
+  "size": 20,
+  "query": {
+    "multi_match": {
+      "query": "design",
+      "fields": [
+        "t_description",
+        "s_brand_name"
+      ]
+    }
+  },
+  "highlight": {
+    "fields": {
+      "s_brand_name": {},
+      "t_description": {}
+    }
+  }
+}
+
+# multi terms search
+GET odt_jeymart_items/_search
+{
+  "size": 20,
+  "query": {
+    "terms": {
+      "t_description": [
+        "cake",
+        "design"
+      ]
+    }
+  },
+  "highlight": {
+    "fields": {
+      "t_description": {}
+    }
+  }
+}
+
+# optional...
+# post_filter; cake + aggregated results from all brands; post_filter: red
+GET odt_jeymart_items/_search
+{
+  "size": 20,
+  "query": {
+    "match": {
+      "t_description": "cake"
+    }
+  },
+  "aggs": {
+    "_brands": {
+      "terms": {
+        "field": "s_brand_name.keyword",
+        "size": 20
+      }
+    }
+  },
+  "post_filter": {
+    "term": {
+      "t_description": "red"
+    }
+  }
+}
+
+# ------------- suggetion
+# normal term suggestion using "missing" mode; illustrate the normal behaviour
+GET odt_jeymart_items/_search
+{
+  "query": {
+    "match": {
+      "t_description": "coke"
+    }
+  },
+  "suggest": {
+    "_descSuggest": {
+      "text": "coke",
+      "term": {
+        "field": "t_description"
+      }
+    }
+  }
+}
+# cake is found, so there is no "suggestion"
+GET odt_jeymart_items/_search
+{
+  "query": {
+    "match": {
+      "t_description": "cone"
+    }
+  },
+  "suggest": {
+    "_descSuggest": {
+      "text": "cone",
+      "term": {
+        "field": "t_description"
+      }
+    }
+  }
+}
+# cake is found, change the mode to popular
+GET odt_jeymart_items/_search
+{
+  "query": {
+    "match": {
+      "t_description": "cone"
+    }
+  },
+  "suggest": {
+    "_descSuggest": {
+      "text": "cone",
+      "term": {
+        "field": "t_description",
+        "suggest_mode": "popular"
+      }
+    }
+  }
+}
+
+
+# UI options
+# size : number validation
+# highlight : optionBox (yes or no)
+# query type
+#   -> match => sub-options
+#             operator "or" or "and"
+#             minimum_should_match : number
+#   -> match_phrase => sub-options
+#             slop : number
+#
+#   -> multi_match => sub-options
+#             fields (brand_name, desc): checkbox
+#   -> post_filter => post => term : text
+
+# suggestion (term)
+#   suggest_mode => sub-option
+#           missing, popular, always
+#           text : string (string for suggestion)
+
+
+
+
+
+

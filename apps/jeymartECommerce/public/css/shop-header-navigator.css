@@ -1,0 +1,100 @@
+
+.header-navigation {
+  width: 100%;
+  background: #eee;
+  padding-left: 4px; padding-right: 4px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  border-radius: 0 0 2px 2px;
+  box-shadow: 1px 2px 2px #aaa;
+}
+
+.header-navigation-title {
+  display: inline-block;
+  font-size: 22px;
+  color: #555;
+  padding-left: 14px; padding-right: 18px;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.header-navigation-subtitle {
+  display: inline-block;
+  font-size: 16px;
+  color: #555;
+  padding-left: 8px; padding-right: 8px;
+  padding-top: 2px; padding-bottom: 2px;
+  font-weight: 200;
+  cursor: pointer;
+}
+.header-navigation-subtitle-clicked {
+  background: #fff;
+  border-radius: 4px;
+  color: #777;
+  box-shadow: 1px 2px 1px #aaa;
+}
+
+.header-navigation-pull-right-section {
+  float: right;
+  padding-right: 8px;
+}
+.header-navigation-icon {
+  font-size: 16px;
+  color: #555;
+  padding-left: 0px; padding-right: 0px;
+  /* padding top 14px -> 2px + container's padding-top 12px = 14px; */
+  /*padding-top: 14px; padding-bottom: 14px;*/
+  font-weight: 200;
+  cursor: pointer;
+}
+.header-navigator-icon-label {
+  padding-right: 2px;
+}
+
+.header-navigator-searchbar {
+  display: inline-block;
+}
+.header-navigator-searchbar-text {
+  border: 1px solid #ccc;
+  border-radius: 4px 0 0 4px;
+  min-width: 200px;
+  font-size: 14px;
+  padding-left: 6px; padding-right: 6px;
+  color: #666;
+}
+.header-navigator-searchbar-icon {
+  position: relative;
+  left: -5px;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 0 4px 4px 0;
+  padding-left: 2px; padding-right: 2px;
+  padding-top: 4px; padding-bottom: 4.5px;
+  font-size: 14px;
+}
+
+
+@media only screen and (max-width: 499px) {
+  .header-navigation-pull-right-section-vis {
+    display: none;
+  }
+  .header-navigation-pull-right-section-min {
+    display: inline-block;
+  }
+
+  .header-navigation-pull-right-section-top-padding {
+    padding-top: 8px;
+  }
+}
+@media only screen and (min-width: 500px) {
+  .header-navigation-pull-right-section-vis {
+    display: inline-block;
+  }
+  .header-navigation-pull-right-section-min {
+    display: none;
+  }
+
+  .header-navigation-pull-right-section-top-padding {
+    padding-top: 8px;
+  }
+}

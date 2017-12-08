@@ -1,2 +1,2 @@
 # jeyMart eCommerce website
-browserify -t vueify -e public/clientView/lectureHome.js -o public/clientView/build/build-lectureHome.js
+browserify -t vueify -e public/clientView/shopMain.js -o public/clientView/build/build-shopMain.js

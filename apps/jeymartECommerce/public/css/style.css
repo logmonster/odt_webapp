@@ -1,0 +1,14 @@
+
+.pointer {
+  cursor: pointer;
+}
+
+.hiding {
+  display: none;
+}
+.showing {
+  display: block;
+}
+.showing-inline {
+  display: inline-block;
+}

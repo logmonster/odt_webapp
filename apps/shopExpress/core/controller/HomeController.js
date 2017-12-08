@@ -10,7 +10,7 @@ var _client=null;
 function _getClient() {
   if (!_client) {
     _client=new _es.Client({
-      host: ['localhost:9200'],
+      host: ['localhost:9201'],
       log: 'debug'
     });
   }
