@@ -7,37 +7,6 @@
       Jey-mart
       <i class="fa fa-shopping-cart" aria-hidden="true"></i>
     </div>
-
-    <!-- basic search textInput -->
-    <div class="header-navigator-searchbar">
-
-<!-- ### change to popup somehow -->
-      <a class="nav-link dropdown-toggle waves-effect waves-light _s_header_font_color"
-        id="navbarDropdownMenuLink" data-toggle="dropdown"
-        aria-haspopup="true" aria-expanded="true">
-        <span class='_s_header_font_color'> Categories</span>
-      </a>
-      <div class="dropdown-menu dropdown-default dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
-        <div>
-          <a class="dropdown-item waves-effect waves-light" href="#">all</a>
-          <a class="dropdown-item waves-effect waves-light" href="#">fashion</a>
-        </div>
-      </div>
-<!-- ### change to popup somehow -->
-
-      <input class='header-navigator-searchbar-text' />
-      <div class="header-navigator-searchbar-icon">
-        <i class="fa fa-search" aria-hidden="true"></i>
-      </div>
-    </div>
-    <!-- original -->
-    <!-- div class="header-navigator-searchbar">
-      <input class='header-navigator-searchbar-text' />
-      <div class="header-navigator-searchbar-icon">
-        <i class="fa fa-search" aria-hidden="true"></i>
-      </div>
-    </div -->
-
     <!--div class="header-navigation-subtitle" @click="homeClicked()">
       home
     </div-->

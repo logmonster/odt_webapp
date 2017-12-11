@@ -12,3 +12,8 @@
 .showing-inline {
   display: inline-block;
 }
+
+.main-container {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}

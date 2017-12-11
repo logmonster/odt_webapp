@@ -2857,7 +2857,7 @@ if (inBrowser && window.Vue) {
 module.exports = VueRouter;
 
 }).call(this,require('_process'))
-},{"_process":9}],3:[function(require,module,exports){
+},{"_process":11}],3:[function(require,module,exports){
 (function (process,global){
 /*!
  * Vue.js v2.5.9
@@ -10721,7 +10721,7 @@ Vue$3.nextTick(function () {
 module.exports = Vue$3;
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":9}],4:[function(require,module,exports){
+},{"_process":11}],4:[function(require,module,exports){
 
 var Vue = require('vue')
 var Shop = require('./vue/shop-main.vue')
@@ -10729,6 +10729,7 @@ var Shop = require('./vue/shop-main.vue')
 // registration (important)
 //Vue.component('lecture-code-snippet', require('./vue/lecture-code-snippet-component.vue'));
 Vue.component('shop-header-navigator', require('./vue/component/shop-header-navigator.vue'));
+Vue.component('shop-searchbar', require('./vue/component/shop-searchbar.vue'));
 
 // setup Router
 var Router = require('vue-router');
@@ -10742,6 +10743,7 @@ var router = new Router(Routes);
 // # setup a "bus" for inter-components communication (MUST for bundled apps)
 window.Vue = new Vue();
 window.VueRouter = router;
+window.ajaxUtil = require('./vue/util/jQueryAjaxUtil.vue');
 
 let app = new Vue({
   el: '#shop-app',
@@ -10751,43 +10753,8 @@ let app = new Vue({
   }
 });
 
-},{"./vue/component/shop-header-navigator.vue":5,"./vue/router.vue":6,"./vue/shop-main.vue":8,"vue":3,"vue-router":2}],5:[function(require,module,exports){
+},{"./vue/component/shop-header-navigator.vue":5,"./vue/component/shop-searchbar.vue":6,"./vue/router.vue":7,"./vue/shop-main.vue":9,"./vue/util/jQueryAjaxUtil.vue":10,"vue":3,"vue-router":2}],5:[function(require,module,exports){
 ;(function(){
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -10850,7 +10817,7 @@ if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
 __vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _vm._m(0,false,false)}
-__vue__options__.staticRenderFns = [function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"header-navigation"},[_c('div',{staticClass:"header-navigation-title"},[_vm._v("\n    Jey-mart\n    "),_c('i',{staticClass:"fa fa-shopping-cart",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('div',{staticClass:"header-navigator-searchbar"},[_c('a',{staticClass:"nav-link dropdown-toggle waves-effect waves-light _s_header_font_color",attrs:{"id":"navbarDropdownMenuLink","data-toggle":"dropdown","aria-haspopup":"true","aria-expanded":"true"}},[_c('span',{staticClass:"_s_header_font_color"},[_vm._v(" Categories")])]),_vm._v(" "),_c('div',{staticClass:"dropdown-menu dropdown-default dropdown-menu-right",attrs:{"aria-labelledby":"navbarDropdownMenuLink","data-dropdown-in":"fadeIn","data-dropdown-out":"fadeOut"}},[_c('div',[_c('a',{staticClass:"dropdown-item waves-effect waves-light",attrs:{"href":"#"}},[_vm._v("all")]),_vm._v(" "),_c('a',{staticClass:"dropdown-item waves-effect waves-light",attrs:{"href":"#"}},[_vm._v("fashion")])])]),_vm._v(" "),_c('select',[_c('option',{attrs:{"value":"all"}},[_vm._v("all departments")]),_vm._v(" "),_c('option',{attrs:{"value":"fashion"}},[_vm._v("fashion")])]),_vm._v(" "),_c('input',{staticClass:"header-navigator-searchbar-text"}),_vm._v(" "),_c('div',{staticClass:"header-navigator-searchbar-icon"},[_c('i',{staticClass:"fa fa-search",attrs:{"aria-hidden":"true"}})])]),_vm._v(" "),_c('div',{staticClass:"header-navigation-pull-right-section"},[_c('div',{staticClass:"header-navigation-pull-right-section-vis header-navigation-pull-right-section-top-padding"},[_c('i',{staticClass:"fa fa-shopping-bag header-navigation-icon",attrs:{"aria-hidden":"true"}}),_vm._v(" "),_c('i',{staticClass:"fa fa-wrench header-navigation-icon",attrs:{"aria-hidden":"true"}}),_vm._v(" "),_c('span',{staticClass:"header-navigator-icon-label"},[_vm._v("Categories")]),_vm._v(" "),_c('i',{staticClass:"fa fa-envelope header-navigation-icon"}),_vm._v(" "),_c('span',{staticClass:"header-navigator-icon-label"},[_vm._v("Promotion")])]),_vm._v(" "),_c('div',{staticClass:"header-navigation-pull-right-section-min"},[_c('i',{staticClass:"fa fa-navicon header-navigation-icon",attrs:{"aria-hidden":"true"}})])])])}]
+__vue__options__.staticRenderFns = [function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"header-navigation"},[_c('div',{staticClass:"header-navigation-title"},[_vm._v("\n    Jey-mart\n    "),_c('i',{staticClass:"fa fa-shopping-cart",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('div',{staticClass:"header-navigation-pull-right-section"},[_c('div',{staticClass:"header-navigation-pull-right-section-vis header-navigation-pull-right-section-top-padding"},[_c('i',{staticClass:"fa fa-shopping-bag header-navigation-icon",attrs:{"aria-hidden":"true"}}),_vm._v(" "),_c('i',{staticClass:"fa fa-wrench header-navigation-icon",attrs:{"aria-hidden":"true"}}),_vm._v(" "),_c('span',{staticClass:"header-navigator-icon-label"},[_vm._v("Categories")]),_vm._v(" "),_c('i',{staticClass:"fa fa-envelope header-navigation-icon"}),_vm._v(" "),_c('span',{staticClass:"header-navigator-icon-label"},[_vm._v("Promotion")])]),_vm._v(" "),_c('div',{staticClass:"header-navigation-pull-right-section-min"},[_c('i',{staticClass:"fa fa-navicon header-navigation-icon",attrs:{"aria-hidden":"true"}})])])])}]
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
@@ -10862,6 +10829,154 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   }
 })()}
 },{"vue":3,"vue-hot-reload-api":1}],6:[function(require,module,exports){
+;(function(){
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+// model
+function _model_shop_searchbar(_instance) {
+  return {
+    'instance': _instance,
+    'isDropdownVisible': false,
+    'isModalCanvasVisible': false,
+    'category': 'all'
+  };
+}
+
+module.exports = {
+  name: 'shop-searchbar',
+  data: function() {
+    return new _model_shop_searchbar(this);
+  },
+  props: [],
+  methods: {
+    /**
+     *  method to toggle the visibility of the dropdown part
+     */
+    toggleCategoriesDropdown: function() {
+      this.isDropdownVisible = !this.isDropdownVisible;
+      if (this.isDropdownVisible) {
+        this.isModalCanvasVisible = true;
+      } else {
+        this.isModalCanvasVisible = false;
+      }
+      console.log('** inside toggle category dropdown => '+this.isDropdownVisible);
+    },
+    
+    // return the css class(s) for the dropdown
+    getCssClassForCategoriesDropdown: function() {
+      if (this.isDropdownVisible) {
+        return {
+          'searchbar-category-dropdown-outer': true,
+          'hiding': false,
+          'showing': true
+        }
+      } else {
+        return {
+          'searchbar-category-dropdown-outer': true,
+          'hiding': true,
+          'showing': false
+        }
+      }
+    },
+    // return the css class(s) for the modal canvas
+    getCssClassForModalCanvas: function() {
+      if (this.isModalCanvasVisible) {
+        return {
+          'blocking-modal-canvas': true,
+          'showing': true,
+          'hiding': false
+        };
+      } else {
+        return {
+          'blocking-modal-canvas': true,
+          'showing': false,
+          'hiding': true
+        };
+      }
+    },
+
+    // set the category picked plus toggle dropdown visiblity
+    pickCategory: function(_category) {
+      this.category=_category;
+      this.toggleCategoriesDropdown();
+    }
+
+  }
+};
+
+})()
+if (module.exports.__esModule) module.exports = module.exports.default
+var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
+if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"searchbar-container"},[_c('div',{staticClass:"pointer searchbar-category-dropdown",on:{"click":function($event){_vm.toggleCategoriesDropdown()}}},[_vm._v("\n      Categories "),_c('i',{staticClass:"fa fa-caret-down",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('input',{staticClass:"searchbar-text"}),_vm._v(" "),_vm._m(0,false,false),_vm._v(" "),_c('div',{class:_vm.getCssClassForCategoriesDropdown()},[_c('div',{staticClass:"searchbar-category-dropdown-inner"},[_c('div',{staticClass:"pointer searchbar-category-dropdown-item",on:{"click":function($event){_vm.pickCategory("all")}}},[_vm._v("all")]),_vm._v(" "),_c('div',{staticClass:"pointer searchbar-category-dropdown-item",on:{"click":function($event){_vm.pickCategory("fashion")}}},[_vm._v("fashion activity")]),_vm._v(" "),_c('div',{staticClass:"pointer searchbar-category-dropdown-item"},[_vm._v("all")]),_vm._v(" "),_c('div',{staticClass:"pointer searchbar-category-dropdown-item"},[_vm._v("fashion")]),_vm._v(" "),_c('div',{staticClass:"pointer searchbar-category-dropdown-item"},[_vm._v("all")]),_vm._v(" "),_c('div',{staticClass:"pointer searchbar-category-dropdown-item"},[_vm._v("fashion")]),_vm._v(" "),_c('div',{staticClass:"pointer searchbar-category-dropdown-item"},[_vm._v("all")]),_vm._v(" "),_c('div',{staticClass:"pointer searchbar-category-dropdown-item"},[_vm._v("fashion")]),_vm._v(" "),_c('div',{staticClass:"pointer searchbar-category-dropdown-item"},[_vm._v("all")]),_vm._v(" "),_c('div',{staticClass:"pointer searchbar-category-dropdown-item"},[_vm._v("fashion")]),_vm._v(" "),_c('div',{staticClass:"pointer searchbar-category-dropdown-item"},[_vm._v("all")]),_vm._v(" "),_c('div',{staticClass:"pointer searchbar-category-dropdown-item"},[_vm._v("fashion")])])]),_vm._v(" "),_c('div',{class:_vm.getCssClassForModalCanvas()},[_vm._v(" ")])])}
+__vue__options__.staticRenderFns = [function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"searchbar-icon"},[_c('i',{staticClass:"fa fa-search",attrs:{"aria-hidden":"true"}})])}]
+if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-d20f0ce2", __vue__options__)
+  } else {
+    hotAPI.reload("data-v-d20f0ce2", __vue__options__)
+  }
+})()}
+},{"vue":3,"vue-hot-reload-api":1}],7:[function(require,module,exports){
 ;(function(){
 
 /* ------------------------------------------------------------------------
@@ -10891,7 +11006,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-4c0c66f2", __vue__options__)
   }
 })()}
-},{"./shop-help.vue":7,"vue":3,"vue-hot-reload-api":1,"vue-router":2}],7:[function(require,module,exports){
+},{"./shop-help.vue":8,"vue":3,"vue-hot-reload-api":1,"vue-router":2}],8:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -10947,10 +11062,8 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-0fa9f71f", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],8:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],9:[function(require,module,exports){
 ;(function(){
-//
-//
 //
 //
 //
@@ -10981,6 +11094,21 @@ module.exports={
   },
   mounted: function() {
     // anything you need to load during mounted event (sort of like when the view is attached)
+    //console.log(window.ajaxUtil);
+    // run a msearch query so that multiple init query(s) could be run during the "mounted" event
+    window.ajaxUtil.GET(
+      '/api/shopInitGet',
+      null,
+      function(_data, _status, _jqXHR) {
+        console.log(_data);
+      },
+      function(_jqXHR, _status, _err) {
+        console.log('* shit happened');
+        console.log(_err);
+      }
+    );
+
+
   },
   methods: {
     testing: function() {
@@ -10994,7 +11122,7 @@ module.exports={
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('shop-header-navigator'),_vm._v("\n\n\nmain content\n\n\n    ")],1)}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('shop-header-navigator'),_vm._v(" "),_c('div',{staticClass:"main-container"},[_c('shop-searchbar'),_vm._v(" "),_c('p'),_vm._v("main content\n  ")],1)],1)}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -11006,7 +11134,43 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-3e3c3197", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],9:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],10:[function(require,module,exports){
+;(function(){
+//
+
+module.exports = {
+  /**
+   *  running a GET operation against the backend
+   */
+  GET: function(_url, _payloads, _doneCallback, _failCallback) {
+    if (!jQuery.ajax) {
+      console.log('** jQuery is not available~!! **');
+      return;
+    }
+
+    jQuery.ajax(_url, {}).done(function(_data, _status, _jqXHR) {
+      _doneCallback(_data, _status, _jqXHR);
+    }).fail(function(_jqXHR, _status, _err) {
+      _failCallback(_jqXHR, _status, _err);
+    });
+  }
+
+};
+
+})()
+if (module.exports.__esModule) module.exports = module.exports.default
+var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
+if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-440cc2b4", __vue__options__)
+  } else {
+    hotAPI.reload("data-v-440cc2b4", __vue__options__)
+  }
+})()}
+},{"vue":3,"vue-hot-reload-api":1}],11:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 

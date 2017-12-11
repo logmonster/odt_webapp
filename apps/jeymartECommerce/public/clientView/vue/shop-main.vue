@@ -2,15 +2,13 @@
 
 <template>
   <div>
+    <!-- common header -->
     <shop-header-navigator></shop-header-navigator>
-
-
-main content
-
-
+    <div class="main-container">
+      <shop-searchbar></shop-searchbar>
+      <p/>main content
+    </div>
     <!--router-view></router-view-->
-
-
   </div>
 </template>
 
@@ -30,6 +28,21 @@ module.exports={
   },
   mounted: function() {
     // anything you need to load during mounted event (sort of like when the view is attached)
+    //console.log(window.ajaxUtil);
+    // run a msearch query so that multiple init query(s) could be run during the "mounted" event
+    window.ajaxUtil.GET(
+      '/api/shopInitGet',
+      null,
+      function(_data, _status, _jqXHR) {
+        console.log(_data);
+      },
+      function(_jqXHR, _status, _err) {
+        console.log('* shit happened');
+        console.log(_err);
+      }
+    );
+
+
   },
   methods: {
     testing: function() {

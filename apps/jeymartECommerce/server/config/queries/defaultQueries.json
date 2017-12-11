@@ -1,0 +1,33 @@
+{
+  "shopInitGet": [
+    {
+      "id": "getAllAvailableCategories",
+      "meta": {
+        "index": "odt_jeymart_items",
+        "type": "doc"
+      },
+      "steps": [
+        { "id": 1, "method": "size", "param": 0 },
+        { "id": 2, "agg": "TermsAggregation",
+          "param": [ "_cats", "k_category" ],
+          "size": 20,
+          "order": [ "_key", "asc" ]
+        }
+      ],
+      "query": {
+        "aggs": {
+          "_cats": {
+            "terms": {
+              "field": "k_category",
+              "size": 20,
+              "order": {
+                "_key": "asc"
+              }
+            }
+          }
+        }
+      }
+    }
+
+  ]
+}

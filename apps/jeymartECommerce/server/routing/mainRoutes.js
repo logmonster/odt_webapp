@@ -1,7 +1,8 @@
 
 var _path=require('path');
 
-var MainRoutes = function(_client, _router, _eBuilder) {
+var MainRoutes = function(_client, _router, _eBuilder, _defaultQueriesMap, _esInterpretorUtil) {
+
 
   let buildCRUD = function(_req, _resp) {
     _resp.send("hm... no server side CRUD operations");
@@ -86,6 +87,27 @@ var MainRoutes = function(_client, _router, _eBuilder) {
     });
   };
 
+  /**
+   *  method to get back all init related queries
+   */
+  let shopInitGet_queries = function(_req, _resp) {
+    let _eb = _eBuilder;
+    // get all the init query(s) for shopInitGet event
+    let _getAllAvailableCategories = _eb.requestBodySearch();
+    let _lst = _esInterpretorUtil.buildQueryByQueryId(
+      'shopInitGet',
+      'getAllAvailableCategories'
+    );
+
+    _client.msearch({
+      body: _lst
+    }).then(function(_data) {
+      _resp.send(_data);
+    }, function(_err) {
+      _resp.send(_err);
+    }); // end -- msearch
+  };
+
 
   return {
     // setup routes related to chp02
@@ -94,6 +116,12 @@ var MainRoutes = function(_client, _router, _eBuilder) {
         get(function(_req, _resp) {
           _resp.sendFile( _path.join(__dirname, "../../public/clientView/view/redirectToShop.html") );
           //buildCRUD(_req, _resp);
+        }
+      );
+      _router.route('/api/shopInitGet').
+        get(function(_req, _resp) {
+          // do a msearch on ... 1) get back the categories available
+          shopInitGet_queries(_req, _resp);
         }
       );
 

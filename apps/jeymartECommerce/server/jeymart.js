@@ -19,9 +19,18 @@ let _cfg = JSON.parse(
     __dirname,
     "config/es_config.json")).toString());
 
+// the default queries
+let _defaultQueriesMap = JSON.parse(
+  _fs.readFileSync(_path.join(
+    __dirname,
+    "config/queries/defaultQueries.json")).toString());
+
+let _esInterpretorUtil=require('./util/esQueryInterpretorUtil')(_defaultQueriesMap, _eBuilder);
+
+
 _client = new _es.Client(_cfg);
 
-_mainRoutes = _mainRoutes(_client, _express.Router(), _eBuilder);
+_mainRoutes = _mainRoutes(_client, _express.Router(), _eBuilder, _defaultQueriesMap, _esInterpretorUtil);
 _app.use('/', _mainRoutes.setup());
 
 // set _favIcon

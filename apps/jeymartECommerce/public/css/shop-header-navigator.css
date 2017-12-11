@@ -51,7 +51,7 @@
   padding-right: 2px;
 }
 
-.header-navigator-searchbar {
+/*.header-navigator-searchbar {
   display: inline-block;
 }
 .header-navigator-searchbar-text {
@@ -71,7 +71,7 @@
   padding-left: 2px; padding-right: 2px;
   padding-top: 4px; padding-bottom: 4.5px;
   font-size: 14px;
-}
+}*/
 
 
 @media only screen and (max-width: 499px) {

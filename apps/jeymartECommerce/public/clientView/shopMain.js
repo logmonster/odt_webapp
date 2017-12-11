@@ -5,6 +5,7 @@ var Shop = require('./vue/shop-main.vue')
 // registration (important)
 //Vue.component('lecture-code-snippet', require('./vue/lecture-code-snippet-component.vue'));
 Vue.component('shop-header-navigator', require('./vue/component/shop-header-navigator.vue'));
+Vue.component('shop-searchbar', require('./vue/component/shop-searchbar.vue'));
 
 // setup Router
 var Router = require('vue-router');
@@ -18,6 +19,7 @@ var router = new Router(Routes);
 // # setup a "bus" for inter-components communication (MUST for bundled apps)
 window.Vue = new Vue();
 window.VueRouter = router;
+window.ajaxUtil = require('./vue/util/jQueryAjaxUtil.vue');
 
 let app = new Vue({
   el: '#shop-app',
