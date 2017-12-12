@@ -3,11 +3,6 @@ var _path=require('path');
 
 var MainRoutes = function(_client, _router, _eBuilder, _defaultQueriesMap, _esInterpretorUtil) {
 
-
-  let buildCRUD = function(_req, _resp) {
-    _resp.send("hm... no server side CRUD operations");
-  };
-
   /*
    *  method to demonstrate how the term and match query are built
    */
@@ -93,10 +88,11 @@ var MainRoutes = function(_client, _router, _eBuilder, _defaultQueriesMap, _esIn
   let shopInitGet_queries = function(_req, _resp) {
     let _eb = _eBuilder;
     // get all the init query(s) for shopInitGet event
-    let _getAllAvailableCategories = _eb.requestBodySearch();
+    //let _getAllAvailableCategories = _eb.requestBodySearch();
     let _lst = _esInterpretorUtil.buildQueryByQueryId(
       'shopInitGet',
-      'getAllAvailableCategories'
+      'getAllAvailableCategories',
+      null
     );
 
     _client.msearch({
@@ -108,6 +104,25 @@ var MainRoutes = function(_client, _router, _eBuilder, _defaultQueriesMap, _esIn
     }); // end -- msearch
   };
 
+  let getSearchbarTextAutoCompletions = function(_req, _resp) {
+    let _eb = _eBuilder;
+    // get all the init query(s) for shopInitGet event
+    let _lst = _esInterpretorUtil.buildQueryByQueryId(
+      'searchbarTextAutoCompletionSuggestionsGet',
+      'getSearchbarTextAutoCompletions',
+      {
+        'prefix': _req.query['prefix']
+      }
+    );
+
+    _client.msearch({
+      body: _lst
+    }).then(function(_data) {
+      _resp.send(_data);
+    }, function(_err) {
+      _resp.send(_err);
+    }); // end -- msearch
+  };
 
   return {
     // setup routes related to chp02
@@ -122,6 +137,12 @@ var MainRoutes = function(_client, _router, _eBuilder, _defaultQueriesMap, _esIn
         get(function(_req, _resp) {
           // do a msearch on ... 1) get back the categories available
           shopInitGet_queries(_req, _resp);
+        }
+      );
+      _router.route('/api/searchbarTextAutoCompletionSuggestionsGet').
+        get(function(_req, _resp) {
+          // do a msearch on ... 1) get back the categories available
+          getSearchbarTextAutoCompletions(_req, _resp);
         }
       );
 

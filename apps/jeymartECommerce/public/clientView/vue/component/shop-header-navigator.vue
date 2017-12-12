@@ -3,10 +3,11 @@
 
 <template>
   <div class='header-navigation' style="">
-    <div class='header-navigation-title' style="">
+    <div class='header-navigation-title pull-left' style="">
       Jey-mart
       <i class="fa fa-shopping-cart" aria-hidden="true"></i>
     </div>
+    <shop-searchbar style='margin-top: 4px;' :data="data" ></shop-searchbar>
     <!--div class="header-navigation-subtitle" @click="homeClicked()">
       home
     </div-->
@@ -46,7 +47,7 @@ module.exports = {
   data: function() {
     return new _model_shop_header_navigator(this);
   },
-  props: [ 'menuItemSelected' ],
+  props: [ 'menuItemSelected', 'data' ],
   methods: {
     homeClicked: () => {
       VueRouter.push({ name: '/' });

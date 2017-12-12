@@ -3,9 +3,11 @@
 <template>
   <div>
     <!-- common header -->
-    <shop-header-navigator></shop-header-navigator>
+    <shop-header-navigator :data="data.init"  ></shop-header-navigator>
     <div class="main-container">
-      <shop-searchbar></shop-searchbar>
+      <div class="mx-auto" style="width: 320px;">
+
+      </div>
       <p/>main content
     </div>
     <!--router-view></router-view-->
@@ -18,7 +20,13 @@
  */
 function _model_shop_main(_instance) {
   return {
-    'instance': _instance
+    'instance': _instance,
+    'data': {
+      'init': ''
+    },
+
+    'throttleUtil': new window.throttleUtil(),
+    'searchbarText': ''
   };
 }
 
@@ -27,27 +35,78 @@ module.exports={
     return new _model_shop_main(this);
   },
   mounted: function() {
-    // anything you need to load during mounted event (sort of like when the view is attached)
-    //console.log(window.ajaxUtil);
-    // run a msearch query so that multiple init query(s) could be run during the "mounted" event
+    let _instance = this;
+
+    // start throttleUtil timer
+    this.throttleUtil.start(
+      this.getSearchbarText,
+      this.getAutoCompletionSuggestionsBySearchbarText);
+    /*
+     *  run a msearch query so that multiple init query(s) could be run
+     *  during the "mounted" event
+     */
     window.ajaxUtil.GET(
       '/api/shopInitGet',
       null,
       function(_data, _status, _jqXHR) {
-        console.log(_data);
+        // update the data structure, so that the value would be passed to the child components
+        _instance.data.init=_data['responses'];
       },
       function(_jqXHR, _status, _err) {
-        console.log('* shit happened');
+        console.log('* something wrong happened ~ ');
         console.log(_err);
       }
     );
 
-
+    /*
+     *  define $on events (parent-child component communication model)
+     */
+    window.Vue.$on('searchbartextkeyup', function(_keyObject) {
+      _instance.searchbarText = _keyObject.text;
+      _instance.throttleUtil.isTimeout();
+    });
   },
   methods: {
-    testing: function() {
-      return this;
+    /*
+     *  return the searchbarText value
+     *  (this is a function callback for the throttleUtil)
+     */
+    getSearchbarText: function() {
+      return this.searchbarText;
+    },
+    /*
+     *  GET from es on the auto completion suggestion
+     *  (also used as a function callback for the throttleUtil)
+     */
+    getAutoCompletionSuggestionsBySearchbarText: function() {
+      let _instance = this;
+
+      if (!this.throttleUtil.getTimeoutCallbackInProgress()) {
+        this.throttleUtil.setTimeoutCallbackInProgress(true);
+
+        window.ajaxUtil.GET(
+          '/api/searchbarTextAutoCompletionSuggestionsGet',
+          { 'prefix': this.searchbarText },
+          function(_data, _status, _jqXHR) {
+            console.log(_data);
+          },
+          function(_jqXHR, _status, _err) {
+            console.log('* something wrong happened ~ ');
+            console.log(_err);
+          },
+          function(_data, _status, _err) {
+            if (_instance) {
+              setTimeout(function() {
+                _instance.throttleUtil.setTimeoutCallbackInProgress(false);
+                _instance.throttleUtil.reset();
+              }, 1000);
+
+            }
+          }
+        );
+      }
     }
+
   }
 };
 

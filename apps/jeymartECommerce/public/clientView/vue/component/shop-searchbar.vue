@@ -2,57 +2,35 @@
   <!-- basic search textInput -->
   <div class="searchbar-container">
 
-<!-- ### change to popup somehow -->
-    <!--a class="nav-link dropdown-toggle waves-effect waves-light"
-      id="navbarDropdownMenuLink" data-toggle="dropdown"
-      aria-haspopup="true" aria-expanded="true">
-      <span class=''> Categories</span>
-    </a>
-    <div class="dropdown-menu dropdown-default dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
-      <div>
-        <a class="dropdown-item waves-effect waves-light" href="#">all</a>
-        <a class="dropdown-item waves-effect waves-light" href="#">fashion</a>
-      </div>
-    </div-->
-<!-- ### change to popup somehow -->
-
     <div class="pointer searchbar-category-dropdown" @click='toggleCategoriesDropdown()'>
-      Categories <i class="fa fa-caret-down" aria-hidden="true"></i>
+      {{category}} <i class="fa fa-caret-down" aria-hidden="true"></i>
     </div>
-    <input class='searchbar-text' />
+    <input class='searchbar-text'
+      v-model='searchbarText'
+      v-on:keyup='handleKeyup($event)' />
     <div class="searchbar-icon">
       <i class="fa fa-search" aria-hidden="true"></i>
     </div>
 
-<!-- TODO get the list through query -->
+    <!-- get the list through query -->
     <div :class="getCssClassForCategoriesDropdown()">
       <div class="searchbar-category-dropdown-inner">
-        <div class="pointer searchbar-category-dropdown-item" @click='pickCategory("all")'>all</div>
-        <div class="pointer searchbar-category-dropdown-item" @click='pickCategory("fashion")'>fashion activity</div>
-        <div class="pointer searchbar-category-dropdown-item">all</div>
-        <div class="pointer searchbar-category-dropdown-item">fashion</div>
-        <div class="pointer searchbar-category-dropdown-item">all</div>
-        <div class="pointer searchbar-category-dropdown-item">fashion</div>
-        <div class="pointer searchbar-category-dropdown-item">all</div>
-        <div class="pointer searchbar-category-dropdown-item">fashion</div>
-        <div class="pointer searchbar-category-dropdown-item">all</div>
-        <div class="pointer searchbar-category-dropdown-item">fashion</div>
-        <div class="pointer searchbar-category-dropdown-item">all</div>
-        <div class="pointer searchbar-category-dropdown-item">fashion</div>
+        <div class='pointer searchbar-category-dropdown-item'
+          @click='pickCategory("all")'>all</div>
+
+        <div v-for="_item in getCategoriesFromData()"
+          @click='pickCategory(_item.key)'
+          class='pointer searchbar-category-dropdown-item'>
+          {{ _item.key }}
+        </div>
       </div>
     </div>
 
-<!-- the blocking grey background to simulate modal -->
+    <!-- the blocking grey background to simulate modal -->
     <div :class="getCssClassForModalCanvas()">&nbsp;</div>
+    <!-- *{{data}}* -->
+    <!-- {{getCategoriesFromData()}} -->
   </div>
-
-  <!-- original -->
-  <!-- div class="header-navigator-searchbar">
-    <input class='header-navigator-searchbar-text' />
-    <div class="header-navigator-searchbar-icon">
-      <i class="fa fa-search" aria-hidden="true"></i>
-    </div>
-  </div -->
 </template>
 
 <script>
@@ -62,7 +40,8 @@ function _model_shop_searchbar(_instance) {
     'instance': _instance,
     'isDropdownVisible': false,
     'isModalCanvasVisible': false,
-    'category': 'all'
+    'category': 'all',
+    'searchbarText': ''
   };
 }
 
@@ -71,7 +50,7 @@ module.exports = {
   data: function() {
     return new _model_shop_searchbar(this);
   },
-  props: [],
+  props: [ 'data' ],
   methods: {
     /**
      *  method to toggle the visibility of the dropdown part
@@ -83,9 +62,9 @@ module.exports = {
       } else {
         this.isModalCanvasVisible = false;
       }
-      console.log('** inside toggle category dropdown => '+this.isDropdownVisible);
+      //console.log('** inside toggle category dropdown => '+this.isDropdownVisible);
     },
-    
+
     // return the css class(s) for the dropdown
     getCssClassForCategoriesDropdown: function() {
       if (this.isDropdownVisible) {
@@ -123,8 +102,46 @@ module.exports = {
     pickCategory: function(_category) {
       this.category=_category;
       this.toggleCategoriesDropdown();
+      //console.log(this.category);
+    },
+
+    // return the "buckets" of the categories
+    getCategoriesFromData: function() {
+      let _buckets = [];
+      if (this.data) {
+          _buckets = this.data[0]['aggregations']['_cats']['buckets'];
+      }
+      return _buckets;
+    },
+
+    handleKeyup: function(_event) {
+      // throttling required??? (assume no throttling needed in this case)
+      if (_event) {
+        // only emit based on alphanumeric characters
+        // key => Backspace ; keyCode = 8
+        let _keyCode = _event.keyCode;
+        if (_keyCode != 8 && // backspace
+          _keyCode != 39 && // right, left, up, down
+          _keyCode != 37 &&
+          _keyCode != 38 &&
+          _keyCode != 40) {
+
+          window.Vue.$emit(
+            'searchbartextkeyup',
+            {
+              'key': _event.key,
+              'text': this.searchbarText
+            }
+          );
+        }
+      } // end -- if (_event is valid)
     }
 
   }
 };
 </script>
+
+<!--
+(window.Vue.$emit); => emit an event for parent component to catch
+(window.Vue.$on); => the parent component who is interested in a specific event type
+-->

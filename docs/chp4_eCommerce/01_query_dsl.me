@@ -287,8 +287,87 @@ GET odt_jeymart_items/_search
 #           missing, popular, always
 #           text : string (string for suggestion)
 
+# adding auto-completion suggestor field
+POST odt_jeymart_items/_mapping/doc
+{
+  "properties": {
+    "t_description": {
+      "type": "text", 
+      "analyzer": "ana_standard_stem", 
+      "fields": {
+        "suggest": {
+          "type": "completion"
+        }
+      }
+    }
+  }
+}
+GET odt_jeymart_items/_search
+{
+  "suggest": {
+    "1": {
+      "prefix": "pea",
+      "completion": {
+        "field": "t_description.suggest"
+      }
+    }
+  }
+}
 
 
+# suggest by significant terms vs suggest api
+# suggestion by sig terms
+# tiffany's vs avery works
+GET odt_jeymart_user_trx/_search
+{
+  "size": 0,
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match": {
+            "s_brand_name": "avery works"
+          }
+        },
+        {
+          "range": {
+            "i_rating": {
+              "gte": 4
+            }
+          }
+        }
+      ]
+    }
+  },
+  "aggs": {
+    "_t": {
+      "terms": {
+        "field": "k_category",
+        "size": 10
+      },
+      "aggs": {
+        "_t_tops": {
+          "top_hits": {
+            "size": 2
+          }
+        }
+      }
+    },
+    "_sig_t": {
+      "significant_terms": {
+        "field": "k_category",
+        "size": 10
+      },
+      "aggs": {
+        "_sig_top": {
+          "top_hits": {
+            "size": 2
+          }
+        }
+      }
+    }
+  }
+}
 
 
 

@@ -2857,7 +2857,7 @@ if (inBrowser && window.Vue) {
 module.exports = VueRouter;
 
 }).call(this,require('_process'))
-},{"_process":11}],3:[function(require,module,exports){
+},{"_process":12}],3:[function(require,module,exports){
 (function (process,global){
 /*!
  * Vue.js v2.5.9
@@ -10721,7 +10721,7 @@ Vue$3.nextTick(function () {
 module.exports = Vue$3;
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":11}],4:[function(require,module,exports){
+},{"_process":12}],4:[function(require,module,exports){
 
 var Vue = require('vue')
 var Shop = require('./vue/shop-main.vue')
@@ -10744,6 +10744,7 @@ var router = new Router(Routes);
 window.Vue = new Vue();
 window.VueRouter = router;
 window.ajaxUtil = require('./vue/util/jQueryAjaxUtil.vue');
+window.throttleUtil = require('./vue/util/uiThrottleUtil.vue');
 
 let app = new Vue({
   el: '#shop-app',
@@ -10753,8 +10754,9 @@ let app = new Vue({
   }
 });
 
-},{"./vue/component/shop-header-navigator.vue":5,"./vue/component/shop-searchbar.vue":6,"./vue/router.vue":7,"./vue/shop-main.vue":9,"./vue/util/jQueryAjaxUtil.vue":10,"vue":3,"vue-router":2}],5:[function(require,module,exports){
+},{"./vue/component/shop-header-navigator.vue":5,"./vue/component/shop-searchbar.vue":6,"./vue/router.vue":7,"./vue/shop-main.vue":9,"./vue/util/jQueryAjaxUtil.vue":10,"./vue/util/uiThrottleUtil.vue":11,"vue":3,"vue-router":2}],5:[function(require,module,exports){
 ;(function(){
+//
 //
 //
 //
@@ -10803,7 +10805,7 @@ module.exports = {
   data: function() {
     return new _model_shop_header_navigator(this);
   },
-  props: [ 'menuItemSelected' ],
+  props: [ 'menuItemSelected', 'data' ],
   methods: {
     homeClicked: () => {
       VueRouter.push({ name: '/' });
@@ -10816,8 +10818,8 @@ module.exports = {
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _vm._m(0,false,false)}
-__vue__options__.staticRenderFns = [function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"header-navigation"},[_c('div',{staticClass:"header-navigation-title"},[_vm._v("\n    Jey-mart\n    "),_c('i',{staticClass:"fa fa-shopping-cart",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('div',{staticClass:"header-navigation-pull-right-section"},[_c('div',{staticClass:"header-navigation-pull-right-section-vis header-navigation-pull-right-section-top-padding"},[_c('i',{staticClass:"fa fa-shopping-bag header-navigation-icon",attrs:{"aria-hidden":"true"}}),_vm._v(" "),_c('i',{staticClass:"fa fa-wrench header-navigation-icon",attrs:{"aria-hidden":"true"}}),_vm._v(" "),_c('span',{staticClass:"header-navigator-icon-label"},[_vm._v("Categories")]),_vm._v(" "),_c('i',{staticClass:"fa fa-envelope header-navigation-icon"}),_vm._v(" "),_c('span',{staticClass:"header-navigator-icon-label"},[_vm._v("Promotion")])]),_vm._v(" "),_c('div',{staticClass:"header-navigation-pull-right-section-min"},[_c('i',{staticClass:"fa fa-navicon header-navigation-icon",attrs:{"aria-hidden":"true"}})])])])}]
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"header-navigation"},[_vm._m(0,false,false),_vm._v(" "),_c('shop-searchbar',{staticStyle:{"margin-top":"4px"},attrs:{"data":_vm.data}}),_vm._v(" "),_vm._m(1,false,false)],1)}
+__vue__options__.staticRenderFns = [function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"header-navigation-title pull-left"},[_vm._v("\n    Jey-mart\n    "),_c('i',{staticClass:"fa fa-shopping-cart",attrs:{"aria-hidden":"true"}})])},function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"header-navigation-pull-right-section"},[_c('div',{staticClass:"header-navigation-pull-right-section-vis header-navigation-pull-right-section-top-padding"},[_c('i',{staticClass:"fa fa-shopping-bag header-navigation-icon",attrs:{"aria-hidden":"true"}}),_vm._v(" "),_c('i',{staticClass:"fa fa-wrench header-navigation-icon",attrs:{"aria-hidden":"true"}}),_vm._v(" "),_c('span',{staticClass:"header-navigator-icon-label"},[_vm._v("Categories")]),_vm._v(" "),_c('i',{staticClass:"fa fa-envelope header-navigation-icon"}),_vm._v(" "),_c('span',{staticClass:"header-navigator-icon-label"},[_vm._v("Promotion")])]),_vm._v(" "),_c('div',{staticClass:"header-navigation-pull-right-section-min"},[_c('i',{staticClass:"fa fa-navicon header-navigation-icon",attrs:{"aria-hidden":"true"}})])])}]
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
@@ -10865,28 +10867,6 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 // model
 function _model_shop_searchbar(_instance) {
@@ -10894,7 +10874,8 @@ function _model_shop_searchbar(_instance) {
     'instance': _instance,
     'isDropdownVisible': false,
     'isModalCanvasVisible': false,
-    'category': 'all'
+    'category': 'all',
+    'searchbarText': ''
   };
 }
 
@@ -10903,7 +10884,7 @@ module.exports = {
   data: function() {
     return new _model_shop_searchbar(this);
   },
-  props: [],
+  props: [ 'data' ],
   methods: {
     /**
      *  method to toggle the visibility of the dropdown part
@@ -10915,9 +10896,9 @@ module.exports = {
       } else {
         this.isModalCanvasVisible = false;
       }
-      console.log('** inside toggle category dropdown => '+this.isDropdownVisible);
+      //console.log('** inside toggle category dropdown => '+this.isDropdownVisible);
     },
-    
+
     // return the css class(s) for the dropdown
     getCssClassForCategoriesDropdown: function() {
       if (this.isDropdownVisible) {
@@ -10955,6 +10936,39 @@ module.exports = {
     pickCategory: function(_category) {
       this.category=_category;
       this.toggleCategoriesDropdown();
+      //console.log(this.category);
+    },
+
+    // return the "buckets" of the categories
+    getCategoriesFromData: function() {
+      let _buckets = [];
+      if (this.data) {
+          _buckets = this.data[0]['aggregations']['_cats']['buckets'];
+      }
+      return _buckets;
+    },
+
+    handleKeyup: function(_event) {
+      // throttling required??? (assume no throttling needed in this case)
+      if (_event) {
+        // only emit based on alphanumeric characters
+        // key => Backspace ; keyCode = 8
+        let _keyCode = _event.keyCode;
+        if (_keyCode != 8 && // backspace
+          _keyCode != 39 && // right, left, up, down
+          _keyCode != 37 &&
+          _keyCode != 38 &&
+          _keyCode != 40) {
+
+          window.Vue.$emit(
+            'searchbartextkeyup',
+            {
+              'key': _event.key,
+              'text': this.searchbarText
+            }
+          );
+        }
+      } // end -- if (_event is valid)
     }
 
   }
@@ -10964,7 +10978,7 @@ module.exports = {
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"searchbar-container"},[_c('div',{staticClass:"pointer searchbar-category-dropdown",on:{"click":function($event){_vm.toggleCategoriesDropdown()}}},[_vm._v("\n      Categories "),_c('i',{staticClass:"fa fa-caret-down",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('input',{staticClass:"searchbar-text"}),_vm._v(" "),_vm._m(0,false,false),_vm._v(" "),_c('div',{class:_vm.getCssClassForCategoriesDropdown()},[_c('div',{staticClass:"searchbar-category-dropdown-inner"},[_c('div',{staticClass:"pointer searchbar-category-dropdown-item",on:{"click":function($event){_vm.pickCategory("all")}}},[_vm._v("all")]),_vm._v(" "),_c('div',{staticClass:"pointer searchbar-category-dropdown-item",on:{"click":function($event){_vm.pickCategory("fashion")}}},[_vm._v("fashion activity")]),_vm._v(" "),_c('div',{staticClass:"pointer searchbar-category-dropdown-item"},[_vm._v("all")]),_vm._v(" "),_c('div',{staticClass:"pointer searchbar-category-dropdown-item"},[_vm._v("fashion")]),_vm._v(" "),_c('div',{staticClass:"pointer searchbar-category-dropdown-item"},[_vm._v("all")]),_vm._v(" "),_c('div',{staticClass:"pointer searchbar-category-dropdown-item"},[_vm._v("fashion")]),_vm._v(" "),_c('div',{staticClass:"pointer searchbar-category-dropdown-item"},[_vm._v("all")]),_vm._v(" "),_c('div',{staticClass:"pointer searchbar-category-dropdown-item"},[_vm._v("fashion")]),_vm._v(" "),_c('div',{staticClass:"pointer searchbar-category-dropdown-item"},[_vm._v("all")]),_vm._v(" "),_c('div',{staticClass:"pointer searchbar-category-dropdown-item"},[_vm._v("fashion")]),_vm._v(" "),_c('div',{staticClass:"pointer searchbar-category-dropdown-item"},[_vm._v("all")]),_vm._v(" "),_c('div',{staticClass:"pointer searchbar-category-dropdown-item"},[_vm._v("fashion")])])]),_vm._v(" "),_c('div',{class:_vm.getCssClassForModalCanvas()},[_vm._v(" ")])])}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"searchbar-container"},[_c('div',{staticClass:"pointer searchbar-category-dropdown",on:{"click":function($event){_vm.toggleCategoriesDropdown()}}},[_vm._v("\n    "+_vm._s(_vm.category)+" "),_c('i',{staticClass:"fa fa-caret-down",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.searchbarText),expression:"searchbarText"}],staticClass:"searchbar-text",domProps:{"value":(_vm.searchbarText)},on:{"keyup":function($event){_vm.handleKeyup($event)},"input":function($event){if($event.target.composing){ return; }_vm.searchbarText=$event.target.value}}}),_vm._v(" "),_vm._m(0,false,false),_vm._v(" "),_c('div',{class:_vm.getCssClassForCategoriesDropdown()},[_c('div',{staticClass:"searchbar-category-dropdown-inner"},[_c('div',{staticClass:"pointer searchbar-category-dropdown-item",on:{"click":function($event){_vm.pickCategory("all")}}},[_vm._v("all")]),_vm._v(" "),_vm._l((_vm.getCategoriesFromData()),function(_item){return _c('div',{staticClass:"pointer searchbar-category-dropdown-item",on:{"click":function($event){_vm.pickCategory(_item.key)}}},[_vm._v("\n        "+_vm._s(_item.key)+"\n      ")])})],2)]),_vm._v(" "),_c('div',{class:_vm.getCssClassForModalCanvas()},[_vm._v(" ")])])}
 __vue__options__.staticRenderFns = [function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"searchbar-icon"},[_c('i',{staticClass:"fa fa-search",attrs:{"aria-hidden":"true"}})])}]
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -11078,13 +11092,21 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 //
 //
 //
+//
+//
 
 /*
  *  model
  */
 function _model_shop_main(_instance) {
   return {
-    'instance': _instance
+    'instance': _instance,
+    'data': {
+      'init': ''
+    },
+
+    'throttleUtil': new window.throttleUtil(),
+    'searchbarText': ''
   };
 }
 
@@ -11093,27 +11115,78 @@ module.exports={
     return new _model_shop_main(this);
   },
   mounted: function() {
-    // anything you need to load during mounted event (sort of like when the view is attached)
-    //console.log(window.ajaxUtil);
-    // run a msearch query so that multiple init query(s) could be run during the "mounted" event
+    let _instance = this;
+
+    // start throttleUtil timer
+    this.throttleUtil.start(
+      this.getSearchbarText,
+      this.getAutoCompletionSuggestionsBySearchbarText);
+    /*
+     *  run a msearch query so that multiple init query(s) could be run
+     *  during the "mounted" event
+     */
     window.ajaxUtil.GET(
       '/api/shopInitGet',
       null,
       function(_data, _status, _jqXHR) {
-        console.log(_data);
+        // update the data structure, so that the value would be passed to the child components
+        _instance.data.init=_data['responses'];
       },
       function(_jqXHR, _status, _err) {
-        console.log('* shit happened');
+        console.log('* something wrong happened ~ ');
         console.log(_err);
       }
     );
 
-
+    /*
+     *  define $on events (parent-child component communication model)
+     */
+    window.Vue.$on('searchbartextkeyup', function(_keyObject) {
+      _instance.searchbarText = _keyObject.text;
+      _instance.throttleUtil.isTimeout();
+    });
   },
   methods: {
-    testing: function() {
-      return this;
+    /*
+     *  return the searchbarText value
+     *  (this is a function callback for the throttleUtil)
+     */
+    getSearchbarText: function() {
+      return this.searchbarText;
+    },
+    /*
+     *  GET from es on the auto completion suggestion
+     *  (also used as a function callback for the throttleUtil)
+     */
+    getAutoCompletionSuggestionsBySearchbarText: function() {
+      let _instance = this;
+
+      if (!this.throttleUtil.getTimeoutCallbackInProgress()) {
+        this.throttleUtil.setTimeoutCallbackInProgress(true);
+
+        window.ajaxUtil.GET(
+          '/api/searchbarTextAutoCompletionSuggestionsGet',
+          { 'prefix': this.searchbarText },
+          function(_data, _status, _jqXHR) {
+            console.log(_data);
+          },
+          function(_jqXHR, _status, _err) {
+            console.log('* something wrong happened ~ ');
+            console.log(_err);
+          },
+          function(_data, _status, _err) {
+            if (_instance) {
+              setTimeout(function() {
+                _instance.throttleUtil.setTimeoutCallbackInProgress(false);
+                _instance.throttleUtil.reset();
+              }, 1000);
+
+            }
+          }
+        );
+      }
     }
+
   }
 };
 
@@ -11122,8 +11195,8 @@ module.exports={
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('shop-header-navigator'),_vm._v(" "),_c('div',{staticClass:"main-container"},[_c('shop-searchbar'),_vm._v(" "),_c('p'),_vm._v("main content\n  ")],1)],1)}
-__vue__options__.staticRenderFns = []
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('shop-header-navigator',{attrs:{"data":_vm.data.init}}),_vm._v(" "),_vm._m(0,false,false)],1)}
+__vue__options__.staticRenderFns = [function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"main-container"},[_c('div',{staticClass:"mx-auto",staticStyle:{"width":"320px"}}),_vm._v(" "),_c('p'),_vm._v("main content\n  ")])}]
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
@@ -11142,16 +11215,31 @@ module.exports = {
   /**
    *  running a GET operation against the backend
    */
-  GET: function(_url, _payloads, _doneCallback, _failCallback) {
+  GET: function(_url, _payloads, _doneCallback, _failCallback, _finallyCallback) {
     if (!jQuery.ajax) {
       console.log('** jQuery is not available~!! **');
       return;
     }
 
-    jQuery.ajax(_url, {}).done(function(_data, _status, _jqXHR) {
+    if (_payloads) {
+      _data = _payloads;
+    } else {
+      _data = {}
+    }
+
+    let _fCb = _finallyCallback;
+    if (!_fCb) {
+      // empty function
+      _fCb = function() {};
+    }
+
+    jQuery.ajax(_url, { 'data': _data }).
+      done(function(_data, _status, _jqXHR) {
       _doneCallback(_data, _status, _jqXHR);
     }).fail(function(_jqXHR, _status, _err) {
       _failCallback(_jqXHR, _status, _err);
+    }).always(function(_data, _status, _err) {
+      _fCb(_data, _status, _err);
     });
   }
 
@@ -11171,6 +11259,114 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   }
 })()}
 },{"vue":3,"vue-hot-reload-api":1}],11:[function(require,module,exports){
+;(function(){
+
+/*
+ *  how to use?
+ *  a) create a new instance
+ *  b) call "start" method with a given timestamp (should be current for most cases)
+ *  c) call "isTimeout" method to check if timeout has been elapsed; the startTS would be updated to the given TS for evaluation
+ *  d) call "pause" method if you want to stop throttling (always return false during "isTimeout" calls)
+ */
+let UIThrottleUtil = function() {
+  let _elapseConfig={
+    'previousValue': '',
+    'isInitial': true,
+    'initialBackOff': 2000,
+    'previousBackOff': 0,
+    'backOffFactor': 500,
+    'maxBackOff': 3000,
+    'hasStart': false,
+    'previousValueCallback': null,
+    'timeoutCallback': null,
+    'isTimeoutCallbackInProgress': false
+  };
+
+  let _isTimeout = function() {
+    if (_elapseConfig.previousValueCallback) {
+      let _currentValue = _elapseConfig.previousValueCallback();
+      if (_currentValue != _elapseConfig.previousValue) {
+        //console.log('** not the same '+_currentValue +' v '+_elapseConfig.previousValue);
+        _elapseConfig.previousValue = _currentValue;
+        // check if backOffFactor should be applied or not
+        let _timeout = _elapseConfig.initialBackOff;
+        if (_elapseConfig.isInitial == true) {
+          _elapseConfig.isInitial = false;
+          _elapseConfig.previousBackOff = _timeout;
+        } else {
+          _timeout = _elapseConfig.previousValue + _elapseConfig.backOffFactor;
+          if (_timeout > _elapseConfig.maxBackOff) {
+            _timeout = _elapseConfig.maxBackOff;
+          }
+          _elapseConfig.previousBackOff = _timeout;
+        }
+        setTimeout(function() {
+          _isTimeout();
+        }, _timeout);
+
+      } else {
+        //console.log(_elapseConfig.isTimeoutCallbackInProgress);
+        if (_elapseConfig.timeoutCallback && !_elapseConfig.isTimeoutCallbackInProgress) {
+          _elapseConfig.timeoutCallback();
+        }
+      } // end -- if (timeout criteria matched)
+    }
+  };
+
+  let _reset = function() {
+    //_elapseConfig.previousValue = '';
+    _elapseConfig.isInitial = true;
+    _elapseConfig.initialBackOff = 2000;
+    _elapseConfig.previousBackOff = 0;
+    _elapseConfig.maxBackOff = 3000;
+  };
+
+  // return minimal functions and members to the caller
+  return {
+    start: function(_previousValueCallback, _timeoutCallback) {
+      _elapseConfig.previousValueCallback = _previousValueCallback;
+      _elapseConfig.timeoutCallback = _timeoutCallback;
+      _elapseConfig.hasStart=true;
+    },
+    pause: function() {
+      _elapseConfig.hasStart=false;
+    },
+    isTimeout: function() {
+      _isTimeout();
+    },
+    // hasStart is ignored
+    reset: function() {
+      _reset();
+    },
+    setTimeoutCallbackInProgress: function(_bool) {
+      _elapseConfig.isTimeoutCallbackInProgress = _bool;
+    },
+    getTimeoutCallbackInProgress: function() {
+      return _elapseConfig.isTimeoutCallbackInProgress;
+    }
+
+  };
+};
+
+/*
+ *  "new" an instance instead of singleton fashion
+ */
+module.exports = UIThrottleUtil;
+
+})()
+if (module.exports.__esModule) module.exports = module.exports.default
+var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
+if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-73698a58", __vue__options__)
+  } else {
+    hotAPI.reload("data-v-73698a58", __vue__options__)
+  }
+})()}
+},{"vue":3,"vue-hot-reload-api":1}],12:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 

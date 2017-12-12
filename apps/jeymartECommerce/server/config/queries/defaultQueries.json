@@ -3,7 +3,7 @@
     {
       "id": "getAllAvailableCategories",
       "meta": {
-        "index": "odt_jeymart_items",
+        "index": "jeymart_item",
         "type": "doc"
       },
       "steps": [
@@ -28,6 +28,28 @@
         }
       }
     }
-
+  ],
+  "searchbarTextAutoCompletionSuggestionsGet": [
+    {
+      "id": "getSearchbarTextAutoCompletions",
+      "meta": {
+        "index": "jeymart_item",
+        "type": "doc"
+      },
+      "steps": [
+        { "id": 1, "suggest": "completion",
+          "label": "_suggestions",
+          "field": "t_description.suggest"
+        }
+      ],
+      "suggest": {
+        "_suggestions": {
+          "prefix": "pea",
+          "completion": {
+            "field": "t_description.suggest"
+          }
+        }
+      }
+    }
   ]
 }

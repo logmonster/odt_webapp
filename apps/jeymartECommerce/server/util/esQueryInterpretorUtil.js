@@ -43,7 +43,6 @@ let Util = function(_defaultQueriesMap, _eb) {
       let _param = _step['param'];  // this is a MUST
       let _size = (_step['size']!=null)?parseInt(_step['size'], 10):-1;
       let _order = (_step['order']!=null)?_step['order']:null;
-      // TermsAggregation
       let _agg = new _eb.TermsAggregation(
         _param[0],
         _param[1]
@@ -60,12 +59,32 @@ let Util = function(_defaultQueriesMap, _eb) {
     return _queryObj;
   };
 
+  /**
+   *  handling of suggest setup
+   */
+  let _handleSuggest = function(_suggestType, _step, _queryObj, _payloads) {
+    // depending on the suggest type, the syntax would be different
+    if (_suggestType=='completion') {
+      let _label = _step['label'];
+      let _field = _step['field'];
+      let _prefix = _payloads['prefix'];
+      let _sugg = new _eb.CompletionSuggester(_label, _field);
+
+      _prefix=(_prefix)?_prefix:'';
+      _sugg.prefix(_prefix);
+
+      // add back to the query object
+      _queryObj.suggest(_sugg);
+    }
+    return _queryObj;
+  };
+
   // return the minimum methods and attributes for the caller
   return {
     /**
      *  build the body list for msearch query
      */
-    buildQueryByQueryId: function(_qName, _qId) {
+    buildQueryByQueryId: function(_qName, _qId, _payloads) {
       let _msearchLst=[];
       let _queryList = _extractJsonByQueryName(_qName);
       let _querySection = (_queryList!=null)?_extractJsonByQueryId(_queryList, _qId):null;
@@ -85,16 +104,22 @@ let Util = function(_defaultQueriesMap, _eb) {
             _queryObj=_handleQueryMethods(_step['method'], _step, _queryObj);
           } else if (_step['agg']) {
             _queryObj=_handleAgg(_step['agg'], _step, _queryObj);
+          } else if (_step['suggest']) {
+            _queryObj=_handleSuggest(_step['suggest'], _step, _queryObj, _payloads);
           }
         });
         _msearchLst.push(_meta);
         _msearchLst.push(_queryObj.toJSON());
 
       } else {
-        console.log('** the requested queryName or queryId is not available ** qName: '+_qName+"; qId: "+_qId);
+        console.log(
+          '** the requested queryName or queryId is not available ** qName: '+
+          _qName+"; qId: "+_qId
+        );
       } // end -- if (_querySection valid)
       return _msearchLst;
     }
+
 
   };
 };
