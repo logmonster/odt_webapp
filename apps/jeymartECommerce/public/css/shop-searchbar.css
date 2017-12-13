@@ -39,9 +39,11 @@
 }
 .searchbar-category-dropdown-outer {
   z-index: 100;
-  position: relative;
+  /*position: relative;
   top: -24px;
   left: 1px;
+  */
+  position: absolute;
   height: 200px;
   min-width: 100px;
   max-width: 140px;
@@ -74,4 +76,27 @@
   top: 0;
   left: 0;
   background: rgba(160,160,160,0.3);
+}
+
+/* ------------------------- */
+/*  suggestion related css   */
+/* ------------------------- */
+.suggestion-container {
+  border-radius: 3px 3px 3px 3px;
+  border: 1px solid #33b5e5;
+
+  z-index: 100;
+  position: absolute;
+}
+
+.suggestion-item {
+  padding-left: 3px; padding-right: 3px;
+  padding-top: 3px; padding-bottom: 3px;
+  background-color: #fff;
+}
+.suggestion-item:hover {
+  background-color: rgba(220, 220, 220, 0.4);
+}
+.suggestion-match {
+  background-color: #ffbb33;
 }

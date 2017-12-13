@@ -10,15 +10,19 @@ let UIThrottleUtil = function() {
   let _elapseConfig={
     'previousValue': '',
     'isInitial': true,
-    'initialBackOff': 2000,
+    'initialBackOff': 500,
     'previousBackOff': 0,
     'backOffFactor': 500,
-    'maxBackOff': 3000,
+    'maxBackOff': 2000,
     'hasStart': false,
     'previousValueCallback': null,
     'timeoutCallback': null,
     'isTimeoutCallbackInProgress': false
   };
+  /*
+   *  initialBackOff 2000,
+   *  maxBackOff 3000
+   */
 
   let _isTimeout = function() {
     if (_elapseConfig.previousValueCallback) {

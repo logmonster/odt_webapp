@@ -3,7 +3,10 @@
 <template>
   <div>
     <!-- common header -->
-    <shop-header-navigator :data="data.init"  ></shop-header-navigator>
+    <shop-header-navigator
+      :data="data.init"
+      :dataSuggest="data.searchbarTextSuggestions"
+      ></shop-header-navigator>
     <div class="main-container">
       <div class="mx-auto" style="width: 320px;">
 
@@ -22,7 +25,8 @@ function _model_shop_main(_instance) {
   return {
     'instance': _instance,
     'data': {
-      'init': ''
+      'init': '',
+      'searchbarTextSuggestions': ''
     },
 
     'throttleUtil': new window.throttleUtil(),
@@ -88,7 +92,7 @@ module.exports={
           '/api/searchbarTextAutoCompletionSuggestionsGet',
           { 'prefix': this.searchbarText },
           function(_data, _status, _jqXHR) {
-            console.log(_data);
+            _instance.data.searchbarTextSuggestions = _data['responses'];
           },
           function(_jqXHR, _status, _err) {
             console.log('* something wrong happened ~ ');

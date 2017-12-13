@@ -10792,6 +10792,9 @@ let app = new Vue({
 //
 //
 //
+//
+//
+//
 
 function _model_shop_header_navigator(_instance) {
   return {
@@ -10805,7 +10808,7 @@ module.exports = {
   data: function() {
     return new _model_shop_header_navigator(this);
   },
-  props: [ 'menuItemSelected', 'data' ],
+  props: [ 'menuItemSelected', 'data', 'dataSuggest' ],
   methods: {
     homeClicked: () => {
       VueRouter.push({ name: '/' });
@@ -10818,7 +10821,7 @@ module.exports = {
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"header-navigation"},[_vm._m(0,false,false),_vm._v(" "),_c('shop-searchbar',{staticStyle:{"margin-top":"4px"},attrs:{"data":_vm.data}}),_vm._v(" "),_vm._m(1,false,false)],1)}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"header-navigation"},[_vm._m(0,false,false),_vm._v(" "),_c('shop-searchbar',{staticStyle:{"margin-top":"4px"},attrs:{"data":_vm.data,"dataSuggest":_vm.dataSuggest}}),_vm._v(" "),_vm._m(1,false,false)],1)}
 __vue__options__.staticRenderFns = [function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"header-navigation-title pull-left"},[_vm._v("\n    Jey-mart\n    "),_c('i',{staticClass:"fa fa-shopping-cart",attrs:{"aria-hidden":"true"}})])},function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"header-navigation-pull-right-section"},[_c('div',{staticClass:"header-navigation-pull-right-section-vis header-navigation-pull-right-section-top-padding"},[_c('i',{staticClass:"fa fa-shopping-bag header-navigation-icon",attrs:{"aria-hidden":"true"}}),_vm._v(" "),_c('i',{staticClass:"fa fa-wrench header-navigation-icon",attrs:{"aria-hidden":"true"}}),_vm._v(" "),_c('span',{staticClass:"header-navigator-icon-label"},[_vm._v("Categories")]),_vm._v(" "),_c('i',{staticClass:"fa fa-envelope header-navigation-icon"}),_vm._v(" "),_c('span',{staticClass:"header-navigator-icon-label"},[_vm._v("Promotion")])]),_vm._v(" "),_c('div',{staticClass:"header-navigation-pull-right-section-min"},[_c('i',{staticClass:"fa fa-navicon header-navigation-icon",attrs:{"aria-hidden":"true"}})])])}]
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -10867,6 +10870,15 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 // model
 function _model_shop_searchbar(_instance) {
@@ -10875,7 +10887,9 @@ function _model_shop_searchbar(_instance) {
     'isDropdownVisible': false,
     'isModalCanvasVisible': false,
     'category': 'all',
-    'searchbarText': ''
+    'searchbarText': '',
+
+    'canShowSuggestionContainer': false
   };
 }
 
@@ -10884,7 +10898,7 @@ module.exports = {
   data: function() {
     return new _model_shop_searchbar(this);
   },
-  props: [ 'data' ],
+  props: [ 'data', 'dataSuggest' ],
   methods: {
     /**
      *  method to toggle the visibility of the dropdown part
@@ -10954,7 +10968,7 @@ module.exports = {
         // only emit based on alphanumeric characters
         // key => Backspace ; keyCode = 8
         let _keyCode = _event.keyCode;
-        if (_keyCode != 8 && // backspace
+        if (//_keyCode != 8 && // backspace
           _keyCode != 39 && // right, left, up, down
           _keyCode != 37 &&
           _keyCode != 38 &&
@@ -10969,6 +10983,48 @@ module.exports = {
           );
         }
       } // end -- if (_event is valid)
+    },
+
+    /*
+     *  get back the suggestion options (could be 0 length array)
+     */
+    getSearchbarTextSuggestions: function() {
+      let _options = [];
+      let _instance = this;
+
+      if (this.dataSuggest) {
+        // however this is a parent array (bea => beach, beat options)
+        //  per term suggested will have another array named options
+        let _opts = this.dataSuggest[0]['suggest']['_suggestions'];
+
+        _opts.forEach(function(_parentSugg, _idx_1) {
+          _parentSugg['options'].forEach(function(_childSugg, _idx_2) {
+            let _val = _childSugg.text;
+            // apply style to the "matched" part
+            if (_val && _instance.searchbarText) {
+              let _idx_3 = _val.toLowerCase().indexOf(_instance.searchbarText.toLowerCase());
+              if (_idx_3!=-1) {
+                _val = _val.substring(0, _idx_3)+
+                  "<span class='suggestion-match'>"+
+                  _val.substring(_idx_3, _idx_3+_instance.searchbarText.length)+
+                  "</span>"+
+                  _val.substring(_idx_3+_instance.searchbarText.length);
+              }
+            }
+            if (_options.indexOf(_val) == -1) {
+              _options.push(_val);
+            }
+          }); // 2nd level (options)
+        }); // 1st level (_suggestions)
+        // * original approach... didn't work too well
+        //_options = this.dataSuggest[0]['suggest']['_suggestions'];
+      }
+      if (_options.length>0) {
+        this.canShowSuggestionContainer = true;
+      } else {
+        this.canShowSuggestionContainer = false;
+      }
+      return _options;
     }
 
   }
@@ -10978,7 +11034,7 @@ module.exports = {
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"searchbar-container"},[_c('div',{staticClass:"pointer searchbar-category-dropdown",on:{"click":function($event){_vm.toggleCategoriesDropdown()}}},[_vm._v("\n    "+_vm._s(_vm.category)+" "),_c('i',{staticClass:"fa fa-caret-down",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.searchbarText),expression:"searchbarText"}],staticClass:"searchbar-text",domProps:{"value":(_vm.searchbarText)},on:{"keyup":function($event){_vm.handleKeyup($event)},"input":function($event){if($event.target.composing){ return; }_vm.searchbarText=$event.target.value}}}),_vm._v(" "),_vm._m(0,false,false),_vm._v(" "),_c('div',{class:_vm.getCssClassForCategoriesDropdown()},[_c('div',{staticClass:"searchbar-category-dropdown-inner"},[_c('div',{staticClass:"pointer searchbar-category-dropdown-item",on:{"click":function($event){_vm.pickCategory("all")}}},[_vm._v("all")]),_vm._v(" "),_vm._l((_vm.getCategoriesFromData()),function(_item){return _c('div',{staticClass:"pointer searchbar-category-dropdown-item",on:{"click":function($event){_vm.pickCategory(_item.key)}}},[_vm._v("\n        "+_vm._s(_item.key)+"\n      ")])})],2)]),_vm._v(" "),_c('div',{class:_vm.getCssClassForModalCanvas()},[_vm._v(" ")])])}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"searchbar-container"},[_c('div',{staticClass:"pointer searchbar-category-dropdown",on:{"click":function($event){_vm.toggleCategoriesDropdown()}}},[_vm._v("\n    "+_vm._s(_vm.category)+" "),_c('i',{staticClass:"fa fa-caret-down",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.searchbarText),expression:"searchbarText"}],staticClass:"searchbar-text",domProps:{"value":(_vm.searchbarText)},on:{"keyup":function($event){_vm.handleKeyup($event)},"input":function($event){if($event.target.composing){ return; }_vm.searchbarText=$event.target.value}}}),_vm._v(" "),_vm._m(0,false,false),_vm._v(" "),_c('div',{staticClass:"suggestion-container",class:{ 'showing': _vm.canShowSuggestionContainer, 'hiding': !_vm.canShowSuggestionContainer }},_vm._l((_vm.getSearchbarTextSuggestions()),function(_sugg){return _c('div',{staticClass:"suggestion-item pointer"},[_c('span',{domProps:{"innerHTML":_vm._s(_sugg)}})])})),_vm._v(" "),_c('div',{class:_vm.getCssClassForCategoriesDropdown()},[_c('div',{staticClass:"searchbar-category-dropdown-inner"},[_c('div',{staticClass:"pointer searchbar-category-dropdown-item",on:{"click":function($event){_vm.pickCategory("all")}}},[_vm._v("all")]),_vm._v(" "),_vm._l((_vm.getCategoriesFromData()),function(_item){return _c('div',{staticClass:"pointer searchbar-category-dropdown-item",on:{"click":function($event){_vm.pickCategory(_item.key)}}},[_vm._v("\n        "+_vm._s(_item.key)+"\n      ")])})],2)]),_vm._v(" "),_c('div',{class:_vm.getCssClassForModalCanvas()},[_vm._v(" ")])])}
 __vue__options__.staticRenderFns = [function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"searchbar-icon"},[_c('i',{staticClass:"fa fa-search",attrs:{"aria-hidden":"true"}})])}]
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -11094,6 +11150,9 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 //
 //
 //
+//
+//
+//
 
 /*
  *  model
@@ -11102,7 +11161,8 @@ function _model_shop_main(_instance) {
   return {
     'instance': _instance,
     'data': {
-      'init': ''
+      'init': '',
+      'searchbarTextSuggestions': ''
     },
 
     'throttleUtil': new window.throttleUtil(),
@@ -11168,7 +11228,7 @@ module.exports={
           '/api/searchbarTextAutoCompletionSuggestionsGet',
           { 'prefix': this.searchbarText },
           function(_data, _status, _jqXHR) {
-            console.log(_data);
+            _instance.data.searchbarTextSuggestions = _data['responses'];
           },
           function(_jqXHR, _status, _err) {
             console.log('* something wrong happened ~ ');
@@ -11195,7 +11255,7 @@ module.exports={
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('shop-header-navigator',{attrs:{"data":_vm.data.init}}),_vm._v(" "),_vm._m(0,false,false)],1)}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('shop-header-navigator',{attrs:{"data":_vm.data.init,"dataSuggest":_vm.data.searchbarTextSuggestions}}),_vm._v(" "),_vm._m(0,false,false)],1)}
 __vue__options__.staticRenderFns = [function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"main-container"},[_c('div',{staticClass:"mx-auto",staticStyle:{"width":"320px"}}),_vm._v(" "),_c('p'),_vm._v("main content\n  ")])}]
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -11272,15 +11332,19 @@ let UIThrottleUtil = function() {
   let _elapseConfig={
     'previousValue': '',
     'isInitial': true,
-    'initialBackOff': 2000,
+    'initialBackOff': 500,
     'previousBackOff': 0,
     'backOffFactor': 500,
-    'maxBackOff': 3000,
+    'maxBackOff': 2000,
     'hasStart': false,
     'previousValueCallback': null,
     'timeoutCallback': null,
     'isTimeoutCallbackInProgress': false
   };
+  /*
+   *  initialBackOff 2000,
+   *  maxBackOff 3000
+   */
 
   let _isTimeout = function() {
     if (_elapseConfig.previousValueCallback) {
