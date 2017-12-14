@@ -30,7 +30,8 @@ function _model_shop_main(_instance) {
     },
 
     'throttleUtil': new window.throttleUtil(),
-    'searchbarText': ''
+    'searchbarText': '',
+    'searchbarCategory': ''
   };
 }
 
@@ -62,13 +63,34 @@ module.exports={
       }
     );
 
-    /*
-     *  define $on events (parent-child component communication model)
-     */
+    /* ---------------------------------------------------------------- */
+    /*  define $on events (parent-child component communication model)  */
+    /* ---------------------------------------------------------------- */
+
+    // handle searchbarText keyup event
     window.Vue.$on('searchbartextkeyup', function(_keyObject) {
       _instance.searchbarText = _keyObject.text;
+      _instance.searchbarCategory = _keyObject.category;
       _instance.throttleUtil.isTimeout();
     });
+
+    // when the searchbarText has been replaced by picking one of the suggestions
+    window.Vue.$on('searchbartextupdated', function() {
+      _instance.data.searchbarTextSuggestions=null;
+    });
+
+    // handle the searchbarText category change; similar to a keyup event, need to search for the new suggestions
+    window.Vue.$on('searchbarcategorychanged', function(_eventObject) {
+      _instance.searchbarText = _eventObject.text;
+      _instance.searchbarCategory = _eventObject.category;
+      _instance.throttleUtil.isTimeout();
+    });
+
+// TODO: to be coded
+    window.Vue.$on('searchbarIconClick', function(_searchbarText) {
+      console.log(_searchbarText);
+    });
+
   },
   methods: {
     /*
@@ -90,7 +112,10 @@ module.exports={
 
         window.ajaxUtil.GET(
           '/api/searchbarTextAutoCompletionSuggestionsGet',
-          { 'prefix': this.searchbarText },
+          {
+            'prefix': this.searchbarText,
+            'searchbarCategory': this.searchbarCategory
+          },
           function(_data, _status, _jqXHR) {
             _instance.data.searchbarTextSuggestions = _data['responses'];
           },

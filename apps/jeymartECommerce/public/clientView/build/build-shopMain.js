@@ -10879,6 +10879,8 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 //
 //
 //
+//
+//
 
 // model
 function _model_shop_searchbar(_instance) {
@@ -10950,7 +10952,13 @@ module.exports = {
     pickCategory: function(_category) {
       this.category=_category;
       this.toggleCategoriesDropdown();
-      //console.log(this.category);
+      window.Vue.$emit(
+        'searchbarcategorychanged',
+        {
+          'category': this.category,
+          'text': this.searchbarText
+        }
+      );
     },
 
     // return the "buckets" of the categories
@@ -10963,10 +10971,11 @@ module.exports = {
     },
 
     handleKeyup: function(_event) {
-      // throttling required??? (assume no throttling needed in this case)
       if (_event) {
-        // only emit based on alphanumeric characters
-        // key => Backspace ; keyCode = 8
+        /*
+         *  only emit based on alphanumeric characters
+         *  key => Backspace ; keyCode = 8
+         */
         let _keyCode = _event.keyCode;
         if (//_keyCode != 8 && // backspace
           _keyCode != 39 && // right, left, up, down
@@ -10978,7 +10987,8 @@ module.exports = {
             'searchbartextkeyup',
             {
               'key': _event.key,
-              'text': this.searchbarText
+              'text': this.searchbarText,
+              'category': this.category
             }
           );
         }
@@ -11025,6 +11035,25 @@ module.exports = {
         this.canShowSuggestionContainer = false;
       }
       return _options;
+    },
+
+    /*
+     *  update the searchbar text to the chosen option
+     *  remove suggestions
+     */
+    handleSuggestionItemClick: function(_val) {
+      let _fVal = _val.replace("<span class='suggestion-match'>", "").
+        replace("</span>", "");
+
+      this.searchbarText = _fVal;
+      window.Vue.$emit('searchbartextupdated');
+    },
+
+    /*
+     *  emit a "search icon" clicked event to the parent
+     */
+    handleSearchIconClick: function() {
+      window.Vue.$emit('searchbarIconClick', this.searchbarText);
     }
 
   }
@@ -11034,8 +11063,8 @@ module.exports = {
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"searchbar-container"},[_c('div',{staticClass:"pointer searchbar-category-dropdown",on:{"click":function($event){_vm.toggleCategoriesDropdown()}}},[_vm._v("\n    "+_vm._s(_vm.category)+" "),_c('i',{staticClass:"fa fa-caret-down",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.searchbarText),expression:"searchbarText"}],staticClass:"searchbar-text",domProps:{"value":(_vm.searchbarText)},on:{"keyup":function($event){_vm.handleKeyup($event)},"input":function($event){if($event.target.composing){ return; }_vm.searchbarText=$event.target.value}}}),_vm._v(" "),_vm._m(0,false,false),_vm._v(" "),_c('div',{staticClass:"suggestion-container",class:{ 'showing': _vm.canShowSuggestionContainer, 'hiding': !_vm.canShowSuggestionContainer }},_vm._l((_vm.getSearchbarTextSuggestions()),function(_sugg){return _c('div',{staticClass:"suggestion-item pointer"},[_c('span',{domProps:{"innerHTML":_vm._s(_sugg)}})])})),_vm._v(" "),_c('div',{class:_vm.getCssClassForCategoriesDropdown()},[_c('div',{staticClass:"searchbar-category-dropdown-inner"},[_c('div',{staticClass:"pointer searchbar-category-dropdown-item",on:{"click":function($event){_vm.pickCategory("all")}}},[_vm._v("all")]),_vm._v(" "),_vm._l((_vm.getCategoriesFromData()),function(_item){return _c('div',{staticClass:"pointer searchbar-category-dropdown-item",on:{"click":function($event){_vm.pickCategory(_item.key)}}},[_vm._v("\n        "+_vm._s(_item.key)+"\n      ")])})],2)]),_vm._v(" "),_c('div',{class:_vm.getCssClassForModalCanvas()},[_vm._v(" ")])])}
-__vue__options__.staticRenderFns = [function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"searchbar-icon"},[_c('i',{staticClass:"fa fa-search",attrs:{"aria-hidden":"true"}})])}]
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"searchbar-container"},[_c('div',{staticClass:"pointer searchbar-category-dropdown",on:{"click":function($event){_vm.toggleCategoriesDropdown()}}},[_vm._v("\n    "+_vm._s(_vm.category)+" "),_c('i',{staticClass:"fa fa-caret-down",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.searchbarText),expression:"searchbarText"}],staticClass:"searchbar-text",domProps:{"value":(_vm.searchbarText)},on:{"keyup":function($event){_vm.handleKeyup($event)},"input":function($event){if($event.target.composing){ return; }_vm.searchbarText=$event.target.value}}}),_vm._v(" "),_c('div',{staticClass:"searchbar-icon pointer",on:{"click":function($event){_vm.handleSearchIconClick()}}},[_c('i',{staticClass:"fa fa-search",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('div',{staticClass:"suggestion-container",class:{ 'showing': _vm.canShowSuggestionContainer, 'hiding': !_vm.canShowSuggestionContainer }},_vm._l((_vm.getSearchbarTextSuggestions()),function(_sugg){return _c('div',{staticClass:"suggestion-item pointer",on:{"click":function($event){_vm.handleSuggestionItemClick(_sugg)}}},[_c('span',{domProps:{"innerHTML":_vm._s(_sugg)}})])})),_vm._v(" "),_c('div',{class:_vm.getCssClassForCategoriesDropdown()},[_c('div',{staticClass:"searchbar-category-dropdown-inner"},[_c('div',{staticClass:"pointer searchbar-category-dropdown-item",on:{"click":function($event){_vm.pickCategory("all")}}},[_vm._v("all")]),_vm._v(" "),_vm._l((_vm.getCategoriesFromData()),function(_item){return _c('div',{staticClass:"pointer searchbar-category-dropdown-item",on:{"click":function($event){_vm.pickCategory(_item.key)}}},[_vm._v("\n        "+_vm._s(_item.key)+"\n      ")])})],2)]),_vm._v(" "),_c('div',{class:_vm.getCssClassForModalCanvas()},[_vm._v(" ")])])}
+__vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
@@ -11166,7 +11195,8 @@ function _model_shop_main(_instance) {
     },
 
     'throttleUtil': new window.throttleUtil(),
-    'searchbarText': ''
+    'searchbarText': '',
+    'searchbarCategory': ''
   };
 }
 
@@ -11198,13 +11228,34 @@ module.exports={
       }
     );
 
-    /*
-     *  define $on events (parent-child component communication model)
-     */
+    /* ---------------------------------------------------------------- */
+    /*  define $on events (parent-child component communication model)  */
+    /* ---------------------------------------------------------------- */
+
+    // handle searchbarText keyup event
     window.Vue.$on('searchbartextkeyup', function(_keyObject) {
       _instance.searchbarText = _keyObject.text;
+      _instance.searchbarCategory = _keyObject.category;
       _instance.throttleUtil.isTimeout();
     });
+
+    // when the searchbarText has been replaced by picking one of the suggestions
+    window.Vue.$on('searchbartextupdated', function() {
+      _instance.data.searchbarTextSuggestions=null;
+    });
+
+    // handle the searchbarText category change; similar to a keyup event, need to search for the new suggestions
+    window.Vue.$on('searchbarcategorychanged', function(_eventObject) {
+      _instance.searchbarText = _eventObject.text;
+      _instance.searchbarCategory = _eventObject.category;
+      _instance.throttleUtil.isTimeout();
+    });
+
+// TODO: to be coded
+    window.Vue.$on('searchbarIconClick', function(_searchbarText) {
+      console.log(_searchbarText);
+    });
+
   },
   methods: {
     /*
@@ -11226,7 +11277,10 @@ module.exports={
 
         window.ajaxUtil.GET(
           '/api/searchbarTextAutoCompletionSuggestionsGet',
-          { 'prefix': this.searchbarText },
+          {
+            'prefix': this.searchbarText,
+            'searchbarCategory': this.searchbarCategory
+          },
           function(_data, _status, _jqXHR) {
             _instance.data.searchbarTextSuggestions = _data['responses'];
           },

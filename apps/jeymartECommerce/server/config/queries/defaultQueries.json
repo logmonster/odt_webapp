@@ -39,7 +39,8 @@
       "steps": [
         { "id": 1, "suggest": "completion",
           "label": "_suggestions",
-          "field": "t_description.suggest"
+          "field": "t_description.suggest",
+          "size": 20
         }
       ],
       "suggest": {

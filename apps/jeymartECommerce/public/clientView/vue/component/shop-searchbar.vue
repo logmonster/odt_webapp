@@ -8,21 +8,23 @@
     <input class='searchbar-text'
       v-model='searchbarText'
       v-on:keyup='handleKeyup($event)' />
-    <div class="searchbar-icon">
+    <div @click='handleSearchIconClick()'
+      class="searchbar-icon pointer">
       <i class="fa fa-search" aria-hidden="true"></i>
     </div>
 
-    <!-- create the auto completion suggestions here -->
+    <!-- create the auto completion suggestions here SUGGESTIONS -->
     <div
       :class="{ 'showing': canShowSuggestionContainer, 'hiding': !canShowSuggestionContainer }"
       class="suggestion-container">
       <div v-for="_sugg in getSearchbarTextSuggestions()"
+        @click="handleSuggestionItemClick(_sugg)"
         class='suggestion-item pointer' >
         <span v-html='_sugg'></span>
       </div>
     </div>
 
-    <!-- get the list through query -->
+    <!-- get the list through query CATEGORIES -->
     <div :class="getCssClassForCategoriesDropdown()">
       <div class="searchbar-category-dropdown-inner">
         <div class='pointer searchbar-category-dropdown-item'
@@ -113,7 +115,13 @@ module.exports = {
     pickCategory: function(_category) {
       this.category=_category;
       this.toggleCategoriesDropdown();
-      //console.log(this.category);
+      window.Vue.$emit(
+        'searchbarcategorychanged',
+        {
+          'category': this.category,
+          'text': this.searchbarText
+        }
+      );
     },
 
     // return the "buckets" of the categories
@@ -142,7 +150,8 @@ module.exports = {
             'searchbartextkeyup',
             {
               'key': _event.key,
-              'text': this.searchbarText
+              'text': this.searchbarText,
+              'category': this.category
             }
           );
         }
@@ -189,6 +198,25 @@ module.exports = {
         this.canShowSuggestionContainer = false;
       }
       return _options;
+    },
+
+    /*
+     *  update the searchbar text to the chosen option
+     *  remove suggestions
+     */
+    handleSuggestionItemClick: function(_val) {
+      let _fVal = _val.replace("<span class='suggestion-match'>", "").
+        replace("</span>", "");
+
+      this.searchbarText = _fVal;
+      window.Vue.$emit('searchbartextupdated');
+    },
+
+    /*
+     *  emit a "search icon" clicked event to the parent
+     */
+    handleSearchIconClick: function() {
+      window.Vue.$emit('searchbarIconClick', this.searchbarText);
     }
 
   }

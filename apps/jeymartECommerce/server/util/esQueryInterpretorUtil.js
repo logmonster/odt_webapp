@@ -68,10 +68,14 @@ let Util = function(_defaultQueriesMap, _eb) {
       let _label = _step['label'];
       let _field = _step['field'];
       let _prefix = _payloads['prefix'];
+      let _size = _step['size']
       let _sugg = new _eb.CompletionSuggester(_label, _field);
 
       _prefix=(_prefix)?_prefix:'';
       _sugg.prefix(_prefix);
+
+      _size=(_size)?parseInt(_size, 10):10;
+      _sugg.size(_size);
 
       // add back to the query object
       _queryObj.suggest(_sugg);

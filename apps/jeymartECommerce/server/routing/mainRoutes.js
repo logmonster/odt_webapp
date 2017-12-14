@@ -118,6 +118,38 @@ var MainRoutes = function(_client, _router, _eBuilder, _defaultQueriesMap, _esIn
     _client.msearch({
       body: _lst
     }).then(function(_data) {
+      /*
+       *  need to filter out non related "categories" suggestion ...
+       *  unless you are using context-bounded auto-completion (e.g. categories: HOME, FASHION)
+       */
+      let _chosenCat = _req.query['searchbarCategory'];
+      if (_chosenCat!="all") {
+        // TODO: assume only 1 msearch for suggestions
+        let _parentArr = _data.responses[0]['suggest']['_suggestions'];
+
+        _parentArr.forEach(function(_parentItem, _idx_1) {
+          let _childArr = _parentItem['options'];
+          let _arrSize = _childArr.length;
+          let _idx_2 = 0;
+
+          for (_idx_2=(_arrSize-1); _idx_2>=0; _idx_2--) {
+            let _childItem = _childArr[_idx_2];
+            let _categoryArr = _childItem['_source']['k_category'];
+            let _catMatched = false;
+            let _idx_3=0;
+
+            for (_idx_3=0; _idx_3<_categoryArr.length; _idx_3++) {
+              if (_chosenCat == _categoryArr[_idx_3].toLowerCase()) {
+                _catMatched = true;
+                break;
+              }
+            }
+            if (!_catMatched) {
+              _childArr.splice(_idx_2, 1);
+            }
+          } // end -- for (childItem loop in reverse)
+        });
+      } // end -- if (category is not "all")
       _resp.send(_data);
     }, function(_err) {
       _resp.send(_err);
