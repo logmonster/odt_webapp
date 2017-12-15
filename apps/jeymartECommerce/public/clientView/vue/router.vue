@@ -8,6 +8,10 @@ module.exports = {
   routes: [
     { path: '/',
       name: '/',
+      component: require('./shop-landing.vue')
+    },
+    { path: '/help',
+      name: '/help',
       component: require('./shop-help.vue')
     }
   ]

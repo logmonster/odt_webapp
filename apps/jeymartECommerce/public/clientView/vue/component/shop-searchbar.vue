@@ -216,7 +216,12 @@ module.exports = {
      *  emit a "search icon" clicked event to the parent
      */
     handleSearchIconClick: function() {
-      window.Vue.$emit('searchbarIconClick', this.searchbarText);
+      window.Vue.$emit(
+        'searchbarIconClick', {
+          'text': this.searchbarText,
+          'category': this.category
+        }
+      );
     }
 
   }

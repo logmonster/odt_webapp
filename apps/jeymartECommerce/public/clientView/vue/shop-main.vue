@@ -8,10 +8,12 @@
       :dataSuggest="data.searchbarTextSuggestions"
       ></shop-header-navigator>
     <div class="main-container">
-      <div class="mx-auto" style="width: 320px;">
+      <router-view></router-view>
 
-      </div>
-      <p/>main content
+      <!--div class="mx-auto" style="width: 320px;">
+        <p/>main content
+      </div-->
+
     </div>
     <!--router-view></router-view-->
   </div>
@@ -79,7 +81,10 @@ module.exports={
       _instance.data.searchbarTextSuggestions=null;
     });
 
-    // handle the searchbarText category change; similar to a keyup event, need to search for the new suggestions
+    /*
+     *  handle the searchbarText category change; similar to a keyup event,
+     *  need to search for the new suggestions
+     */
     window.Vue.$on('searchbarcategorychanged', function(_eventObject) {
       _instance.searchbarText = _eventObject.text;
       _instance.searchbarCategory = _eventObject.category;
@@ -87,8 +92,8 @@ module.exports={
     });
 
 // TODO: to be coded
-    window.Vue.$on('searchbarIconClick', function(_searchbarText) {
-      console.log(_searchbarText);
+    window.Vue.$on('searchbarIconClick', function(_eventObject) {
+      console.log(_eventObject);
     });
 
   },

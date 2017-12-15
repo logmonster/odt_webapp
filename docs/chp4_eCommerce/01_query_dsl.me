@@ -370,4 +370,49 @@ GET odt_jeymart_user_trx/_search
 }
 
 
+# ---- side menu (aggs) for every page
+# by category (item), how many products we have
+GET jeymart_item/_search
+{
+  "size": 0,
+  "aggs": {
+    "_cats": {
+      "terms": {
+        "field": "k_category",
+        "size": 20
+      }
+    }
+  }
+}
+
+# by brands (item), how many products under per brand
+GET jeymart_item/_search
+{
+  "size": 0,
+  "aggs": {
+    "_brands": {
+      "terms": {
+        "field": "s_brand_name.keyword",
+        "size": 20
+      }
+    }
+  }
+}
+
+# based on ratings (per star level)
+GET jeymart_user_trx/_search
+{
+  "size": 0,
+  "aggs": {
+    "_ratings": {
+      "terms": {
+        "field": "i_rating",
+        "size": 10,
+        "order": {
+          "_key": "asc"
+        }
+      }
+    }
+  }
+}
 
