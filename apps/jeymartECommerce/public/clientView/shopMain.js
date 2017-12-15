@@ -7,6 +7,7 @@ var Shop = require('./vue/shop-main.vue')
 Vue.component('shop-header-navigator', require('./vue/component/shop-header-navigator.vue'));
 Vue.component('shop-searchbar', require('./vue/component/shop-searchbar.vue'));
 Vue.component('shop-carousel', require('./vue/component/shop-carousel.vue'));
+Vue.component('shop-spy-panel', require('./vue/component/shop-spy-panel.vue'));
 
 // setup Router
 var Router = require('vue-router');

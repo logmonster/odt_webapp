@@ -96,7 +96,7 @@ module.exports = {
   props: [ 'images' ],
   methods: {
     fwdToListingViewByCategory: function(_category) {
-      // change the vue router to show the correct page
+// TODO: change the vue router to show the correct page
       console.log('* category selected => '+_category);
     }
 

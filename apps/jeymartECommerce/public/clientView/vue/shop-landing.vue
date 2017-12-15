@@ -1,6 +1,8 @@
 <template>
   <div>
+    <!-- carousel component -->
     <shop-carousel :images='carouselImages' ></shop-carousel>
+    
   </div>
 </template>
 

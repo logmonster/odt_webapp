@@ -1,0 +1,18 @@
+
+.spy-panel-icon {
+  margin-left: 4px;
+  font-size: 18px;
+}
+
+.spy-panel-container {
+  border: 2px solid #ccc;
+  border-radius: 4px 4px 0 0;
+  min-height: 150px;
+  max-height: 250px;
+
+  overflow: scroll;
+}
+
+.spy-panel-inner-container {
+  overflow: hidden;
+}

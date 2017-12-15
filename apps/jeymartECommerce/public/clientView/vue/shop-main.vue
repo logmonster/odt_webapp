@@ -10,12 +10,12 @@
     <div class="main-container">
       <router-view></router-view>
 
+      <shop-spy-panel></shop-spy-panel>
+
       <!--div class="mx-auto" style="width: 320px;">
         <p/>main content
       </div-->
-
     </div>
-    <!--router-view></router-view-->
   </div>
 </template>
 

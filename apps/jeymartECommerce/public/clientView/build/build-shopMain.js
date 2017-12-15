@@ -2857,7 +2857,7 @@ if (inBrowser && window.Vue) {
 module.exports = VueRouter;
 
 }).call(this,require('_process'))
-},{"_process":14}],3:[function(require,module,exports){
+},{"_process":15}],3:[function(require,module,exports){
 (function (process,global){
 /*!
  * Vue.js v2.5.9
@@ -10721,7 +10721,7 @@ Vue$3.nextTick(function () {
 module.exports = Vue$3;
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":14}],4:[function(require,module,exports){
+},{"_process":15}],4:[function(require,module,exports){
 
 var Vue = require('vue')
 var Shop = require('./vue/shop-main.vue')
@@ -10731,6 +10731,7 @@ var Shop = require('./vue/shop-main.vue')
 Vue.component('shop-header-navigator', require('./vue/component/shop-header-navigator.vue'));
 Vue.component('shop-searchbar', require('./vue/component/shop-searchbar.vue'));
 Vue.component('shop-carousel', require('./vue/component/shop-carousel.vue'));
+Vue.component('shop-spy-panel', require('./vue/component/shop-spy-panel.vue'));
 
 // setup Router
 var Router = require('vue-router');
@@ -10755,7 +10756,7 @@ let app = new Vue({
   }
 });
 
-},{"./vue/component/shop-carousel.vue":5,"./vue/component/shop-header-navigator.vue":6,"./vue/component/shop-searchbar.vue":7,"./vue/router.vue":8,"./vue/shop-main.vue":11,"./vue/util/jQueryAjaxUtil.vue":12,"./vue/util/uiThrottleUtil.vue":13,"vue":3,"vue-router":2}],5:[function(require,module,exports){
+},{"./vue/component/shop-carousel.vue":5,"./vue/component/shop-header-navigator.vue":6,"./vue/component/shop-searchbar.vue":7,"./vue/component/shop-spy-panel.vue":8,"./vue/router.vue":9,"./vue/shop-main.vue":12,"./vue/util/jQueryAjaxUtil.vue":13,"./vue/util/uiThrottleUtil.vue":14,"vue":3,"vue-router":2}],5:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -10855,7 +10856,7 @@ module.exports = {
   props: [ 'images' ],
   methods: {
     fwdToListingViewByCategory: function(_category) {
-      // change the vue router to show the correct page
+// TODO: change the vue router to show the correct page
       console.log('* category selected => '+_category);
     }
 
@@ -11210,6 +11211,102 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 })()}
 },{"vue":3,"vue-hot-reload-api":1}],8:[function(require,module,exports){
 ;(function(){
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+// model
+function _model_shop_spy_panel(_instance) {
+  return {
+    'instance': _instance,
+    'isPanelShown': false
+  };
+}
+
+module.exports = {
+  'name': 'shop-spy-panel',
+  data: function() {
+    return new _model_shop_spy_panel(this);
+  },
+  mounted: function() {
+    // endable tooltip (need to uncomment the shop.html entry for popper.js)
+    //$('.spy-panel-icon').tooltip();
+  },
+  props: [],
+  methods: {
+    /*
+     *  toggle the visibility of the spy panel
+     */
+    togglePanelVisibility: function() {
+      this.isPanelShown = !this.isPanelShown;
+    }
+  }
+};
+
+})()
+if (module.exports.__esModule) module.exports = module.exports.default
+var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
+if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"fixed-bottom"},[_c('span',{staticClass:"spy-panel-icon",class:{ 'showing-inline': !_vm.isPanelShown, 'hiding': _vm.isPanelShown },attrs:{"data-toggle":"tooltip","data-placement":"top","title":"\"spy panel\" - toggle to see the various queries on this page"},on:{"click":function($event){_vm.togglePanelVisibility()}}},[_c('i',{staticClass:"fa fa-arrow-circle-up pointer",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('span',{staticClass:"spy-panel-icon",class:{ 'showing-inline': _vm.isPanelShown, 'hiding': !_vm.isPanelShown },attrs:{"data-toggle":"tooltip","data-placement":"top","title":"\"spy panel\" - toggle to see the various queries on this page"},on:{"click":function($event){_vm.togglePanelVisibility()}}},[_c('i',{staticClass:"fa fa-arrow-circle-down pointer",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('span',{staticClass:"pointer",staticStyle:{"padding-left":"6px"},on:{"click":function($event){_vm.togglePanelVisibility()}}},[_vm._v("\n    \"spy panel\" - toggle to see the various queries on this page")]),_vm._v(" "),_c('div',{staticClass:"spy-panel-container",class:{ 'showing': _vm.isPanelShown, 'hiding': !_vm.isPanelShown }},[_vm._m(0,false,false)])])}
+__vue__options__.staticRenderFns = [function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"spy-panel-inner-container"},[_vm._v("\n      yo man, the \"spy panel\" showing queries"),_c('p'),_vm._v("\n      yo man, the \"spy panel\" showing queries"),_c('p'),_vm._v("\n      yo man, the \"spy panel\" showing queries"),_c('p'),_vm._v("\n      yo man, the \"spy panel\" showing queries"),_c('p'),_vm._v("\n      yo man, the \"spy panel\" showing queries"),_c('p'),_vm._v("\n      yo man, the \"spy panel\" showing queries"),_c('p'),_vm._v("\n      yo man, the \"spy panel\" showing queries"),_c('p'),_vm._v("\n      yo man, the \"spy panel\" showing queries"),_c('p'),_vm._v("\n      yo man, the \"spy panel\" showing queries"),_c('p'),_vm._v("\n      yo man, the \"spy panel\" showing queries"),_c('p'),_vm._v("\n      yo man, the \"spy panel\" showing queries"),_c('p'),_vm._v("\n      yo man, the \"spy panel\" showing queries"),_c('p'),_vm._v("\n      yo man, the \"spy panel\" showing queries"),_c('p'),_vm._v("\n      yo man, the \"spy panel\" showing queries"),_c('p'),_vm._v("\n      yo man, the \"spy panel\" showing queries"),_c('p'),_vm._v("\n      yo man, the \"spy panel\" showing queries"),_c('p')])}]
+if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-3adaded7", __vue__options__)
+  } else {
+    hotAPI.reload("data-v-3adaded7", __vue__options__)
+  }
+})()}
+},{"vue":3,"vue-hot-reload-api":1}],9:[function(require,module,exports){
+;(function(){
 
 /* ------------------------------------------------------------------------
  *  aim: setup the paths and its corresponding Components for vue-router
@@ -11242,7 +11339,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-4c0c66f2", __vue__options__)
   }
 })()}
-},{"./shop-help.vue":9,"./shop-landing.vue":10,"vue":3,"vue-hot-reload-api":1,"vue-router":2}],9:[function(require,module,exports){
+},{"./shop-help.vue":10,"./shop-landing.vue":11,"vue":3,"vue-hot-reload-api":1,"vue-router":2}],10:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -11298,8 +11395,10 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-0fa9f71f", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],10:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],11:[function(require,module,exports){
 ;(function(){
+//
+//
 //
 //
 //
@@ -11346,7 +11445,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-79fe24ae", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],11:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],12:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -11499,7 +11598,7 @@ module.exports={
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('shop-header-navigator',{attrs:{"data":_vm.data.init,"dataSuggest":_vm.data.searchbarTextSuggestions}}),_vm._v(" "),_c('div',{staticClass:"main-container"},[_c('router-view')],1)],1)}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('shop-header-navigator',{attrs:{"data":_vm.data.init,"dataSuggest":_vm.data.searchbarTextSuggestions}}),_vm._v(" "),_c('div',{staticClass:"main-container"},[_c('router-view'),_vm._v(" "),_c('shop-spy-panel')],1)],1)}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -11511,7 +11610,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-3e3c3197", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],12:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],13:[function(require,module,exports){
 ;(function(){
 //
 
@@ -11562,7 +11661,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-440cc2b4", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],13:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],14:[function(require,module,exports){
 ;(function(){
 
 /*
@@ -11674,7 +11773,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-73698a58", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],14:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],15:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
