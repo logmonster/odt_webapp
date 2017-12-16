@@ -2,6 +2,11 @@
 .carousel_image_dimen {
   /*width: 940px; height: 650px;*/
 
+
   max-width: 1200px;
   height: 280px;
+  /*  the images should have a very long width and a short height; like panorama photos
+  max-width: 2400px;
+  height: 280px;
+  */
 }
