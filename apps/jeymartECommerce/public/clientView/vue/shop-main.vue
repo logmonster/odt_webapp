@@ -7,10 +7,13 @@
       :data="data.init"
       :dataSuggest="data.searchbarTextSuggestions"
       ></shop-header-navigator>
+
+    <!-- main container, router-view plus spy-panel component -->
     <div class="main-container">
       <router-view></router-view>
-
-      <shop-spy-panel></shop-spy-panel>
+      
+      <!-- spy panel for sample code display -->
+      <shop-spy-panel :viewFile='spyPanelViewFile' ></shop-spy-panel>
 
       <!--div class="mx-auto" style="width: 320px;">
         <p/>main content
@@ -30,10 +33,17 @@ function _model_shop_main(_instance) {
       'init': '',
       'searchbarTextSuggestions': ''
     },
-
+    /*
+     *  searchbar component related properties
+     */
     'throttleUtil': new window.throttleUtil(),
     'searchbarText': '',
-    'searchbarCategory': ''
+    'searchbarCategory': '',
+    /*
+     *  update this property when the router-view changes
+     *  so that the correct code sample is displayed!
+     */
+    'spyPanelViewFile': '/clientView/code/landingPage.code'
   };
 }
 

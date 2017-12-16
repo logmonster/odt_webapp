@@ -25,22 +25,10 @@
       :class="{ 'showing': isPanelShown, 'hiding': !isPanelShown }">
 
       <div class="spy-panel-inner-container">
-        yo man, the "spy panel" showing queries<p/>
-        yo man, the "spy panel" showing queries<p/>
-        yo man, the "spy panel" showing queries<p/>
-        yo man, the "spy panel" showing queries<p/>
-        yo man, the "spy panel" showing queries<p/>
-        yo man, the "spy panel" showing queries<p/>
-        yo man, the "spy panel" showing queries<p/>
-        yo man, the "spy panel" showing queries<p/>
-        yo man, the "spy panel" showing queries<p/>
-        yo man, the "spy panel" showing queries<p/>
-        yo man, the "spy panel" showing queries<p/>
-        yo man, the "spy panel" showing queries<p/>
-        yo man, the "spy panel" showing queries<p/>
-        yo man, the "spy panel" showing queries<p/>
-        yo man, the "spy panel" showing queries<p/>
-        yo man, the "spy panel" showing queries<p/>
+        <div v-html='viewFileContent' ></div>
+
+        <!-- check on the code for multiple router-view(s) displays @router.vue -->
+        <!-- router-view name='rvSpyPanel'></router-view -->
       </div>
 
     </div>
@@ -52,7 +40,8 @@
 function _model_shop_spy_panel(_instance) {
   return {
     'instance': _instance,
-    'isPanelShown': false
+    'isPanelShown': false,
+    'viewFileContent': ''
   };
 }
 
@@ -62,10 +51,24 @@ module.exports = {
     return new _model_shop_spy_panel(this);
   },
   mounted: function() {
+    let _instance = this;
     // endable tooltip (need to uncomment the shop.html entry for popper.js)
     //$('.spy-panel-icon').tooltip();
+
+    // load the given viewFile (containing the code samples for the relevant page)
+    window.ajaxUtil.GET(
+      this.viewFile,
+      {},
+      function(_data, _status, _jqXHR) {
+        _instance.viewFileContent=_data;
+      },
+      function(_jqXHR, _status, _err) {
+        _instance.viewFileContent=_err;
+      }
+    );
+
   },
-  props: [],
+  props: [ 'viewFile' ],
   methods: {
     /*
      *  toggle the visibility of the spy panel

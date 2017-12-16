@@ -11248,24 +11248,13 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 // model
 function _model_shop_spy_panel(_instance) {
   return {
     'instance': _instance,
-    'isPanelShown': false
+    'isPanelShown': false,
+    'viewFileContent': ''
   };
 }
 
@@ -11275,10 +11264,24 @@ module.exports = {
     return new _model_shop_spy_panel(this);
   },
   mounted: function() {
+    let _instance = this;
     // endable tooltip (need to uncomment the shop.html entry for popper.js)
     //$('.spy-panel-icon').tooltip();
+
+    // load the given viewFile (containing the code samples for the relevant page)
+    window.ajaxUtil.GET(
+      this.viewFile,
+      {},
+      function(_data, _status, _jqXHR) {
+        _instance.viewFileContent=_data;
+      },
+      function(_jqXHR, _status, _err) {
+        _instance.viewFileContent=_err;
+      }
+    );
+
   },
-  props: [],
+  props: [ 'viewFile' ],
   methods: {
     /*
      *  toggle the visibility of the spy panel
@@ -11293,8 +11296,8 @@ module.exports = {
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"fixed-bottom"},[_c('span',{staticClass:"spy-panel-icon",class:{ 'showing-inline': !_vm.isPanelShown, 'hiding': _vm.isPanelShown },attrs:{"data-toggle":"tooltip","data-placement":"top","title":"\"spy panel\" - toggle to see the various queries on this page"},on:{"click":function($event){_vm.togglePanelVisibility()}}},[_c('i',{staticClass:"fa fa-arrow-circle-up pointer",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('span',{staticClass:"spy-panel-icon",class:{ 'showing-inline': _vm.isPanelShown, 'hiding': !_vm.isPanelShown },attrs:{"data-toggle":"tooltip","data-placement":"top","title":"\"spy panel\" - toggle to see the various queries on this page"},on:{"click":function($event){_vm.togglePanelVisibility()}}},[_c('i',{staticClass:"fa fa-arrow-circle-down pointer",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('span',{staticClass:"pointer",staticStyle:{"padding-left":"6px"},on:{"click":function($event){_vm.togglePanelVisibility()}}},[_vm._v("\n    \"spy panel\" - toggle to see the various queries on this page")]),_vm._v(" "),_c('div',{staticClass:"spy-panel-container",class:{ 'showing': _vm.isPanelShown, 'hiding': !_vm.isPanelShown }},[_vm._m(0,false,false)])])}
-__vue__options__.staticRenderFns = [function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"spy-panel-inner-container"},[_vm._v("\n      yo man, the \"spy panel\" showing queries"),_c('p'),_vm._v("\n      yo man, the \"spy panel\" showing queries"),_c('p'),_vm._v("\n      yo man, the \"spy panel\" showing queries"),_c('p'),_vm._v("\n      yo man, the \"spy panel\" showing queries"),_c('p'),_vm._v("\n      yo man, the \"spy panel\" showing queries"),_c('p'),_vm._v("\n      yo man, the \"spy panel\" showing queries"),_c('p'),_vm._v("\n      yo man, the \"spy panel\" showing queries"),_c('p'),_vm._v("\n      yo man, the \"spy panel\" showing queries"),_c('p'),_vm._v("\n      yo man, the \"spy panel\" showing queries"),_c('p'),_vm._v("\n      yo man, the \"spy panel\" showing queries"),_c('p'),_vm._v("\n      yo man, the \"spy panel\" showing queries"),_c('p'),_vm._v("\n      yo man, the \"spy panel\" showing queries"),_c('p'),_vm._v("\n      yo man, the \"spy panel\" showing queries"),_c('p'),_vm._v("\n      yo man, the \"spy panel\" showing queries"),_c('p'),_vm._v("\n      yo man, the \"spy panel\" showing queries"),_c('p'),_vm._v("\n      yo man, the \"spy panel\" showing queries"),_c('p')])}]
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"fixed-bottom"},[_c('span',{staticClass:"spy-panel-icon",class:{ 'showing-inline': !_vm.isPanelShown, 'hiding': _vm.isPanelShown },attrs:{"data-toggle":"tooltip","data-placement":"top","title":"\"spy panel\" - toggle to see the various queries on this page"},on:{"click":function($event){_vm.togglePanelVisibility()}}},[_c('i',{staticClass:"fa fa-arrow-circle-up pointer",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('span',{staticClass:"spy-panel-icon",class:{ 'showing-inline': _vm.isPanelShown, 'hiding': !_vm.isPanelShown },attrs:{"data-toggle":"tooltip","data-placement":"top","title":"\"spy panel\" - toggle to see the various queries on this page"},on:{"click":function($event){_vm.togglePanelVisibility()}}},[_c('i',{staticClass:"fa fa-arrow-circle-down pointer",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('span',{staticClass:"pointer",staticStyle:{"padding-left":"6px"},on:{"click":function($event){_vm.togglePanelVisibility()}}},[_vm._v("\n    \"spy panel\" - toggle to see the various queries on this page")]),_vm._v(" "),_c('div',{staticClass:"spy-panel-container",class:{ 'showing': _vm.isPanelShown, 'hiding': !_vm.isPanelShown }},[_c('div',{staticClass:"spy-panel-inner-container"},[_c('div',{domProps:{"innerHTML":_vm._s(_vm.viewFileContent)}})])])])}
+__vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
@@ -11318,6 +11321,11 @@ module.exports = {
     { path: '/',
       name: '/',
       component: require('./shop-landing.vue')
+      /* useful when you need multiple router-view(s) to be shown at the same level
+      components: {
+        default: require('./shop-landing.vue'),
+        rvSpyPanel: require('./shop-help.vue')
+      }*/
     },
     { path: '/help',
       name: '/help',
@@ -11341,6 +11349,10 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 })()}
 },{"./shop-help.vue":10,"./shop-landing.vue":11,"vue":3,"vue-hot-reload-api":1,"vue-router":2}],10:[function(require,module,exports){
 ;(function(){
+//
+//
+//
+//
 //
 //
 //
@@ -11383,7 +11395,7 @@ module.exports = {
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_vm._v("\n  so called shop-help component (empty for now)\n  "),_c('p'),_vm._v("\n  "+_vm._s(_vm.testMessage())+"\n")])}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_vm._v("\n  so called shop-help component (empty for now)\n  "),_c('p'),_vm._v("\n  "+_vm._s(_vm.testMessage())),_c('p'),_vm._v(" "),_c('router-link',{attrs:{"to":"help"}},[_vm._v("\n    fwd to \"help.vue\" again\n  ")])],1)}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -11468,6 +11480,9 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 //
 //
 //
+//
+//
+//
 
 /*
  *  model
@@ -11479,10 +11494,17 @@ function _model_shop_main(_instance) {
       'init': '',
       'searchbarTextSuggestions': ''
     },
-
+    /*
+     *  searchbar component related properties
+     */
     'throttleUtil': new window.throttleUtil(),
     'searchbarText': '',
-    'searchbarCategory': ''
+    'searchbarCategory': '',
+    /*
+     *  update this property when the router-view changes
+     *  so that the correct code sample is displayed!
+     */
+    'spyPanelViewFile': '/clientView/code/landingPage.code'
   };
 }
 
@@ -11598,7 +11620,7 @@ module.exports={
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('shop-header-navigator',{attrs:{"data":_vm.data.init,"dataSuggest":_vm.data.searchbarTextSuggestions}}),_vm._v(" "),_c('div',{staticClass:"main-container"},[_c('router-view'),_vm._v(" "),_c('shop-spy-panel')],1)],1)}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('shop-header-navigator',{attrs:{"data":_vm.data.init,"dataSuggest":_vm.data.searchbarTextSuggestions}}),_vm._v(" "),_c('div',{staticClass:"main-container"},[_c('router-view'),_vm._v(" "),_c('shop-spy-panel',{attrs:{"viewFile":_vm.spyPanelViewFile}})],1)],1)}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)

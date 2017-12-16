@@ -15,4 +15,5 @@
 
 .spy-panel-inner-container {
   overflow: hidden;
+  padding: 4px;
 }

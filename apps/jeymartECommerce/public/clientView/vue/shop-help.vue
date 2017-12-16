@@ -4,7 +4,11 @@
   <div>
     so called shop-help component (empty for now)
     <p/>
-    {{testMessage()}}
+    {{testMessage()}}<p/>
+    <router-link to="help">
+      fwd to "help.vue" again
+    </router-link>
+
   </div>
 </template>
 
