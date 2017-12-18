@@ -11,7 +11,7 @@
     <!-- main container, router-view plus spy-panel component -->
     <div class="main-container">
       <router-view></router-view>
-      
+
       <!-- spy panel for sample code display -->
       <shop-spy-panel :viewFile='spyPanelViewFile' ></shop-spy-panel>
 
@@ -104,6 +104,28 @@ module.exports={
 // TODO: to be coded
     window.Vue.$on('searchbarIconClick', function(_eventObject) {
       console.log(_eventObject);
+    });
+
+    /*
+     *  handle the request for facets-data (aggs); usually it is the
+     *  LHS panel
+     */
+    window.Vue.$on('getFacetsData', function(_eventObject) {
+      window.ajaxUtil.GET(
+        '/api/shopFacetsGet',
+        _eventObject,
+        function(_data, _status, _jqXHR) {
+          // updates the data... might not work, use callback instead
+          //_instance.data.facets=_data['responses'];
+          if (_eventObject && _eventObject.callback) {
+            _eventObject.callback(_data);
+          }
+        },
+        function(_jqXHR, _status, _err) {
+          console.log('* something wrong happened ~ ');
+          console.log(_err);
+        }
+      );
     });
 
   },

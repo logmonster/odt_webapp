@@ -104,6 +104,10 @@ var MainRoutes = function(_client, _router, _eBuilder, _defaultQueriesMap, _esIn
     }); // end -- msearch
   };
 
+  /**
+   *  method to return the auto-completion suggestions
+   *  based on the given prefix
+   */
   let getSearchbarTextAutoCompletions = function(_req, _resp) {
     let _eb = _eBuilder;
     // get all the init query(s) for shopInitGet event
@@ -156,8 +160,56 @@ var MainRoutes = function(_client, _router, _eBuilder, _defaultQueriesMap, _esIn
     }); // end -- msearch
   };
 
+  /**
+   *  method to return the facets based on the request parameters
+   *  { categories, brands, ratings } 
+   */
+  let shopFacetsGet_queries = function(_req, _resp) {
+    let _eb = _eBuilder;
+    let _lst = [];
+
+    // if "categories" are required
+    if ('true' == _req.query['categories']) {
+      _lst = _lst.concat(
+        _esInterpretorUtil.buildQueryByQueryId(
+          'shopFacetsGet',
+          'getFacetsCategories',
+          null
+        )
+      );
+    }
+    // if "brands" are required
+    if ('true' == _req.query['brands']) {
+      _lst = _lst.concat(
+        _esInterpretorUtil.buildQueryByQueryId(
+          'shopFacetsGet',
+          'getFacetsBrands',
+          null
+        )
+      );
+    }
+    // if "ratings" are required
+    if ('true' == _req.query['ratings']) {
+      _lst = _lst.concat(
+        _esInterpretorUtil.buildQueryByQueryId(
+          'shopFacetsGet',
+          'getFacetsRatings',
+          null
+        )
+      );
+    }
+
+    _client.msearch({
+      body: _lst
+    }).then(function(_data) {
+      _resp.send(_data);
+    }, function(_err) {
+      _resp.send(_err);
+    }); // end -- msearch
+  };
+
   return {
-    // setup routes related to chp02
+    // setup routes related to Jeymart eCommerce app
     setup: () => {
       _router.route('/').
         get(function(_req, _resp) {
@@ -173,8 +225,14 @@ var MainRoutes = function(_client, _router, _eBuilder, _defaultQueriesMap, _esIn
       );
       _router.route('/api/searchbarTextAutoCompletionSuggestionsGet').
         get(function(_req, _resp) {
-          // do a msearch on ... 1) get back the categories available
+          // do a msearch on ...
           getSearchbarTextAutoCompletions(_req, _resp);
+        }
+      );
+      _router.route('/api/shopFacetsGet').
+        get(function(_req, _resp) {
+          // do a msearch on ...
+          shopFacetsGet_queries(_req, _resp);
         }
       );
 

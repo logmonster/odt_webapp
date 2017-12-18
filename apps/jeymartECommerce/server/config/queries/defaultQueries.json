@@ -52,5 +52,91 @@
         }
       }
     }
+  ],
+  "shopFacetsGet": [
+    {
+      "id": "getFacetsCategories",
+      "meta": {
+        "index": "jeymart_item",
+        "type": "doc"
+      },
+      "steps": [
+        { "id": 1, "method": "size", "param": 0 },
+        { "id": 2, "agg": "TermsAggregation",
+          "param": [ "_cats", "k_category" ],
+          "size": 20,
+          "order": [ "_count", "desc" ]
+        }
+      ],
+      "query": {
+        "aggs": {
+          "_cats": {
+            "terms": {
+              "field": "k_category",
+              "size": 20,
+              "order": {
+                "_count": "desc"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "getFacetsBrands",
+      "meta": {
+        "index": "jeymart_item",
+        "type": "doc"
+      },
+      "steps": [
+        { "id": 1, "method": "size", "param": 0 },
+        { "id": 2, "agg": "TermsAggregation",
+          "param": [ "_brands", "s_brand_name.keyword" ],
+          "size": 20,
+          "order": [ "_count", "desc" ]
+        }
+      ],
+      "query": {
+        "aggs": {
+          "_brands": {
+            "terms": {
+              "field": "s_brand_name.keyword",
+              "size": 20,
+              "order": {
+                "_count": "desc"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "getFacetsRatings",
+      "meta": {
+        "index": "jeymart_user_trx",
+        "type": "doc"
+      },
+      "steps": [
+        { "id": 1, "method": "size", "param": 0 },
+        { "id": 2, "agg": "TermsAggregation",
+          "param": [ "_ratings", "i_rating" ],
+          "size": 10,
+          "order": [ "_key", "desc" ]
+        }
+      ],
+      "query": {
+        "aggs": {
+          "_ratings": {
+            "terms": {
+              "field": "i_rating",
+              "size": 10,
+              "order": {
+                "_key": "desc"
+              }
+            }
+          }
+        }
+      }
+    }
   ]
 }

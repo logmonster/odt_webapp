@@ -17,7 +17,7 @@
       <i class="fa fa-arrow-circle-down pointer" aria-hidden="true"></i></span>
     <span @click='togglePanelVisibility()'
       class='pointer'
-      style="padding-left: 6px;">
+      style="padding-left: 6px; background-color: white;">
       "spy panel" - toggle to see the various queries on this page</span>
 
     <!-- actual display area for queries / tutorials -->

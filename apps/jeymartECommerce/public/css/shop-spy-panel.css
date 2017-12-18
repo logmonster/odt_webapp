@@ -11,6 +11,8 @@
   max-height: 250px;
 
   overflow: scroll;
+
+  background-color: white;
 }
 
 .spy-panel-inner-container {

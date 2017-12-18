@@ -16,4 +16,27 @@
 .main-container {
   padding-top: 4px;
   padding-bottom: 4px;
+  /* added for spy-panel (claim required height / room for it) */
+  margin-bottom: 250px;
+}
+
+/* ------------------------ */
+/* landing page related css */
+/* ------------------------ */
+
+.landing-main-container {
+  padding-top: 8px;
+  padding-bottom: : 8px;
+}
+
+.landing-left-panel-container {
+  max-width: 320px;
+  display: inline-block;
+
+  border: 1px solid #aaa;
+}
+.landing-right-panel-container {
+  width: 500px;
+  display: inline-block;
+  border: 1px solid #f00;
 }

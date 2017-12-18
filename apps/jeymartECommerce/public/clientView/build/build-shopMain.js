@@ -2857,7 +2857,7 @@ if (inBrowser && window.Vue) {
 module.exports = VueRouter;
 
 }).call(this,require('_process'))
-},{"_process":15}],3:[function(require,module,exports){
+},{"_process":18}],3:[function(require,module,exports){
 (function (process,global){
 /*!
  * Vue.js v2.5.9
@@ -10721,7 +10721,7 @@ Vue$3.nextTick(function () {
 module.exports = Vue$3;
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":15}],4:[function(require,module,exports){
+},{"_process":18}],4:[function(require,module,exports){
 
 var Vue = require('vue')
 var Shop = require('./vue/shop-main.vue')
@@ -10732,6 +10732,7 @@ Vue.component('shop-header-navigator', require('./vue/component/shop-header-navi
 Vue.component('shop-searchbar', require('./vue/component/shop-searchbar.vue'));
 Vue.component('shop-carousel', require('./vue/component/shop-carousel.vue'));
 Vue.component('shop-spy-panel', require('./vue/component/shop-spy-panel.vue'));
+Vue.component('shop-facets-control', require('./vue/component/shop-facets-control.vue'));
 
 // setup Router
 var Router = require('vue-router');
@@ -10756,7 +10757,7 @@ let app = new Vue({
   }
 });
 
-},{"./vue/component/shop-carousel.vue":5,"./vue/component/shop-header-navigator.vue":6,"./vue/component/shop-searchbar.vue":7,"./vue/component/shop-spy-panel.vue":8,"./vue/router.vue":9,"./vue/shop-main.vue":12,"./vue/util/jQueryAjaxUtil.vue":13,"./vue/util/uiThrottleUtil.vue":14,"vue":3,"vue-router":2}],5:[function(require,module,exports){
+},{"./vue/component/shop-carousel.vue":5,"./vue/component/shop-facets-control.vue":6,"./vue/component/shop-header-navigator.vue":7,"./vue/component/shop-searchbar.vue":10,"./vue/component/shop-spy-panel.vue":11,"./vue/router.vue":12,"./vue/shop-main.vue":15,"./vue/util/jQueryAjaxUtil.vue":16,"./vue/util/uiThrottleUtil.vue":17,"vue":3,"vue-router":2}],5:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -10911,6 +10912,151 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 //
 //
 //
+
+// model
+function _model_shop_facets_control(_inst) {
+  return {
+    'instance': _inst,
+
+    'css': {
+      'canShowItems': true
+    },
+
+    'chosenItemList': []
+  };
+}
+
+module.exports = {
+  name: 'shop_facets_control',
+  data: function() {
+    return new _model_shop_facets_control(this);
+  },
+  // mode: button (click and go), checkbox (multi-check and go)
+  props: [ 'label', 'mode', 'data' ],
+  methods: {
+    /*
+     *  method to toggle the visiblility of the facets item list
+     */
+    toggleItemsVisibility: function() {
+      this.css.canShowItems = !this.css.canShowItems;
+    },
+
+    /*
+     *  return the css class required for the facets item list
+     */
+    getFacetsItemCss: function(_item) {
+      let _css = {
+        'showing': this.css.canShowItems,
+        'hiding': !this.css.canShowItems,
+        'facets-control-item-chosen': false,
+        'facets-control-item': true
+      };
+      let _idx=0;
+      for (; _idx<this.chosenItemList.length; _idx++) {
+        if (_item.key == this.chosenItemList[_idx]) {
+          _css['facets-control-item-chosen']=true;
+          _css['facets-control-item']=false;
+        }
+      }
+      return _css;
+    },
+
+    /*
+     *  handle the click on item(s); in actual, updates the chosenItemList
+     */
+    handleItemClick: function(_key) {
+      let _idx_1 = 0;
+      let _exists = false;
+
+      // check if _key is within the chosenItemList
+      for (; _idx_1<this.chosenItemList.length; _idx_1++) {
+        if (_key == this.chosenItemList[_idx_1]) {
+          _exists = true;
+          break;
+        }
+      }
+      // update the chosenItemList
+      // * button mode => only "1" item could be chosen
+      if ('button' == this.mode) {
+        this.chosenItemList = [];
+        if (!_exists) {
+          this.chosenItemList.push(_key);
+        }
+      } else {
+        // * checkbox mode, multiple item(s) could be chosen
+        if (_exists) {
+          this.chosenItemList.splice(_idx_1, 1);
+        } else {
+          this.chosenItemList.push(_key);
+        }
+      } // end -- if (mode = button / checkbox)
+      /*
+       *  emit event for router change,
+       *  a "random" hash MUST be provided so that the router-view would be
+       *  refreshed everytime (if not... vue.js will re-use the existing
+       *  components)
+       */
+      let _eventObject = {
+        'view': 'listing/:hash',
+        'hash': parseInt(new Date().getTime()*Math.random(), 10)
+      };
+      if (this.label == 'categories') {
+        _eventObject['catList'] = this.chosenItemList;
+      } else if (this.label == 'brands') {
+        _eventObject['brandList'] = this.chosenItemList;
+      } else if (this.label == 'ratings') {
+        _eventObject['ratingList'] = this.chosenItemList;
+      }
+      window.Vue.$emit('changeRouterView', _eventObject);
+    }
+
+  }
+};
+
+})()
+if (module.exports.__esModule) module.exports = module.exports.default
+var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
+if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('div',{staticClass:"facets-control-header pointer",on:{"click":function($event){_vm.toggleItemsVisibility()}}},[_vm._v("\n      "+_vm._s(_vm.label)+"\n    ")]),_vm._v(" "),(_vm.mode=='button')?_c('div',_vm._l((_vm.data),function(_item,_idx){return _c('div',{staticClass:" pointer",class:_vm.getFacetsItemCss(_item),on:{"click":function($event){_vm.handleItemClick(_item["key"])}}},[_vm._v("\n        "+_vm._s(_item['key'])+"\n        "),_c('span',{staticClass:"pull-right badge badge-pill green badge-rounded"},[_vm._v("\n          "+_vm._s(_item['doc_count']))])])})):_vm._e(),_vm._v(" "),(_vm.mode=='checkbox')?_c('div',[_vm._v("\n      checkbox\n    ")]):_vm._e()])}
+__vue__options__.staticRenderFns = []
+if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-15a0d338", __vue__options__)
+  } else {
+    hotAPI.reload("data-v-15a0d338", __vue__options__)
+  }
+})()}
+},{"vue":3,"vue-hot-reload-api":1}],7:[function(require,module,exports){
+;(function(){
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -10962,7 +11108,83 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-604764ba", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],7:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],8:[function(require,module,exports){
+;(function(){
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+function _model_shop_landing_info(_inst) {
+  return {
+    'instance': _inst
+  };
+}
+
+module.exports={
+  name: 'shop_landing_info',
+  data: function() {
+    return new _model_shop_landing_info(this);
+  },
+  props: [],
+  methods: {
+
+  }
+};
+
+})()
+if (module.exports.__esModule) module.exports = module.exports.default
+var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
+if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_vm._v("\n  landing info page~~~~\n  TBD"),_c('p'),_vm._v(" "),_c('router-link',{attrs:{"to":"listing"}},[_vm._v("\n    fwd to \"help.vue\" again\n  ")])],1)}
+__vue__options__.staticRenderFns = []
+if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-41f1b8b0", __vue__options__)
+  } else {
+    hotAPI.reload("data-v-41f1b8b0", __vue__options__)
+  }
+})()}
+},{"vue":3,"vue-hot-reload-api":1}],9:[function(require,module,exports){
+;(function(){
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+})()
+if (module.exports.__esModule) module.exports = module.exports.default
+var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
+if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_vm._v("\n  hi there\n  "+_vm._s(_vm.$route.params.catList)),_c('br'),_vm._v("\n  "+_vm._s(_vm.$route.params.brandList)),_c('br'),_vm._v("\n  "+_vm._s(_vm.$route.params.ratingList)),_c('br'),_vm._v("\n  # hi there $\n")])}
+__vue__options__.staticRenderFns = []
+if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-a9e3db1c", __vue__options__)
+  } else {
+    hotAPI.reload("data-v-a9e3db1c", __vue__options__)
+  }
+})()}
+},{"vue":3,"vue-hot-reload-api":1}],10:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -11209,7 +11431,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-d20f0ce2", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],8:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],11:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -11296,7 +11518,7 @@ module.exports = {
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"fixed-bottom"},[_c('span',{staticClass:"spy-panel-icon",class:{ 'showing-inline': !_vm.isPanelShown, 'hiding': _vm.isPanelShown },attrs:{"data-toggle":"tooltip","data-placement":"top","title":"\"spy panel\" - toggle to see the various queries on this page"},on:{"click":function($event){_vm.togglePanelVisibility()}}},[_c('i',{staticClass:"fa fa-arrow-circle-up pointer",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('span',{staticClass:"spy-panel-icon",class:{ 'showing-inline': _vm.isPanelShown, 'hiding': !_vm.isPanelShown },attrs:{"data-toggle":"tooltip","data-placement":"top","title":"\"spy panel\" - toggle to see the various queries on this page"},on:{"click":function($event){_vm.togglePanelVisibility()}}},[_c('i',{staticClass:"fa fa-arrow-circle-down pointer",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('span',{staticClass:"pointer",staticStyle:{"padding-left":"6px"},on:{"click":function($event){_vm.togglePanelVisibility()}}},[_vm._v("\n    \"spy panel\" - toggle to see the various queries on this page")]),_vm._v(" "),_c('div',{staticClass:"spy-panel-container",class:{ 'showing': _vm.isPanelShown, 'hiding': !_vm.isPanelShown }},[_c('div',{staticClass:"spy-panel-inner-container"},[_c('div',{domProps:{"innerHTML":_vm._s(_vm.viewFileContent)}})])])])}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"fixed-bottom"},[_c('span',{staticClass:"spy-panel-icon",class:{ 'showing-inline': !_vm.isPanelShown, 'hiding': _vm.isPanelShown },attrs:{"data-toggle":"tooltip","data-placement":"top","title":"\"spy panel\" - toggle to see the various queries on this page"},on:{"click":function($event){_vm.togglePanelVisibility()}}},[_c('i',{staticClass:"fa fa-arrow-circle-up pointer",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('span',{staticClass:"spy-panel-icon",class:{ 'showing-inline': _vm.isPanelShown, 'hiding': !_vm.isPanelShown },attrs:{"data-toggle":"tooltip","data-placement":"top","title":"\"spy panel\" - toggle to see the various queries on this page"},on:{"click":function($event){_vm.togglePanelVisibility()}}},[_c('i',{staticClass:"fa fa-arrow-circle-down pointer",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('span',{staticClass:"pointer",staticStyle:{"padding-left":"6px","background-color":"white"},on:{"click":function($event){_vm.togglePanelVisibility()}}},[_vm._v("\n    \"spy panel\" - toggle to see the various queries on this page")]),_vm._v(" "),_c('div',{staticClass:"spy-panel-container",class:{ 'showing': _vm.isPanelShown, 'hiding': !_vm.isPanelShown }},[_c('div',{staticClass:"spy-panel-inner-container"},[_c('div',{domProps:{"innerHTML":_vm._s(_vm.viewFileContent)}})])])])}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -11308,7 +11530,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-3adaded7", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],9:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],12:[function(require,module,exports){
 ;(function(){
 
 /* ------------------------------------------------------------------------
@@ -11320,7 +11542,22 @@ module.exports = {
   routes: [
     { path: '/',
       name: '/',
-      component: require('./shop-landing.vue')
+      component: require('./shop-landing.vue'),
+      children: [
+        { path: '',
+          name: '',
+          component: require('./component/shop-landing-info.vue')
+        },
+        /* original approach (without parameters on the path)
+        { path: 'listing',
+          name: 'listing',
+          component: require('./component/shop-landing-listing.vue')
+        }*/
+        { path: 'listing/:hash',
+          name: 'listing/:hash',
+          component: require('./component/shop-landing-listing.vue')
+        }
+      ]
       /* useful when you need multiple router-view(s) to be shown at the same level
       components: {
         default: require('./shop-landing.vue'),
@@ -11347,7 +11584,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-4c0c66f2", __vue__options__)
   }
 })()}
-},{"./shop-help.vue":10,"./shop-landing.vue":11,"vue":3,"vue-hot-reload-api":1,"vue-router":2}],10:[function(require,module,exports){
+},{"./component/shop-landing-info.vue":8,"./component/shop-landing-listing.vue":9,"./shop-help.vue":13,"./shop-landing.vue":14,"vue":3,"vue-hot-reload-api":1,"vue-router":2}],13:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -11407,8 +11644,35 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-0fa9f71f", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],11:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],14:[function(require,module,exports){
 ;(function(){
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -11421,12 +11685,20 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 function _model_shop_landing(_instance) {
   return {
     'instance': _instance,
+
     'carouselImages': [
       '/image/carousel/carousel01.jpeg',
       '/image/carousel/carousel02.jpeg',
       '/image/carousel/carousel03.jpeg',
       '/image/carousel/carousel04.jpeg'
-    ]
+    ],
+
+    'dataFacets': [],
+    'chosenFacetsCriteria': {
+      'catList': [],
+      'brandList': [],
+      'ratingList': []
+    }
   };
 }
 
@@ -11435,8 +11707,88 @@ module.exports = {
   data: function() {
     return new _model_shop_landing(this);
   },
-  props: [],
+  props: [  ],
+  mounted: function() {
+    let _instance = this;
+    /*
+     *  issue an event to the parent (since the left hand side panel results
+     *  occur more than once, the related logic should not be bounded by a
+     *  child component)
+     */
+    setTimeout(function() {
+      /*
+       *  ** due to the latency between a mounted component and a
+       *    parent component... need a very short timeout
+       */
+      window.Vue.$emit('getFacetsData', {
+        'categories': true,
+        'brands': true,
+        'ratings': true,
+        'callback': _instance.setFacetsData
+      });
+    }, 100);
+
+    /* -------------------- */
+    /*  parent child events */
+    /* -------------------- */
+
+    window.Vue.$on('changeRouterView', function(_eventObject) {
+      /*
+       *  prepare the correct facets criteria object
+       *  (preserve the other facets options)
+       */
+      if (_instance.chosenFacetsCriteria && _eventObject) {
+        if (_eventObject['catList']) {
+          _instance.chosenFacetsCriteria['catList']=_eventObject['catList'];
+        } else if (_eventObject['brandList']) {
+          _instance.chosenFacetsCriteria['brandList']=_eventObject['brandList'];
+        } else if (_eventObject['ratingList']) {
+          _instance.chosenFacetsCriteria['ratingList']=_eventObject['ratingList'];
+        }
+        window.VueRouter.push({
+          name: _eventObject['view'],
+          params: {
+            hash: _eventObject['hash'],
+            catList: _instance.chosenFacetsCriteria['catList'],
+            brandList: _instance.chosenFacetsCriteria['brandList'],
+            ratingList: _instance.chosenFacetsCriteria['ratingList'],
+          }
+        });
+      } // end -- if (chosenFacetsCriteria and _eventObject are valid)
+    });
+
+  },
   methods: {
+    /*
+     *  callback for getting back the facets data from the parent
+     */
+    setFacetsData: function(_data) {
+      if (_data && _data['responses']) {
+        this.dataFacets = _data['responses'];
+      }
+    },
+
+    /*
+     *  helper method to return the required "buckets" for display;
+     *  based on the given "_type"
+     */
+    getFacetsDataByType: function(_type) {
+      let _d=[];
+
+      if (this.dataFacets) {
+        let _idx=0;
+        for (; _idx<this.dataFacets.length; _idx++) {
+          let _facet = this.dataFacets[_idx];
+
+          if (_facet['aggregations'][_type]) {
+            _d = _facet['aggregations'][_type]['buckets'];
+          } // found~
+        } // end -- for(dataFacets length)
+      }
+
+      return _d;
+    }
+
 
   }
 };
@@ -11445,7 +11797,7 @@ module.exports = {
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('shop-carousel',{attrs:{"images":_vm.carouselImages}})],1)}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('shop-carousel',{attrs:{"images":_vm.carouselImages}}),_vm._v(" "),_c('div',{staticClass:"container-fluid landing-main-container"},[_c('div',{staticClass:"row"},[_c('div',{staticClass:"col-sm-12 col-md-3"},[_c('shop-facets-control',{attrs:{"mode":"button","data":_vm.getFacetsDataByType("_cats"),"label":"categories"}}),_vm._v(" "),_c('p'),_vm._v(" "),_c('shop-facets-control',{attrs:{"mode":"button","data":_vm.getFacetsDataByType("_brands"),"label":"brands"}}),_vm._v(" "),_c('p'),_vm._v(" "),_c('shop-facets-control',{attrs:{"mode":"button","data":_vm.getFacetsDataByType("_ratings"),"label":"ratings"}})],1),_vm._v(" "),_c('div',{staticClass:"col-sm-12 col-md-9"},[_c('router-view')],1)])])],1)}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -11457,7 +11809,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-79fe24ae", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],12:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],15:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -11567,6 +11919,28 @@ module.exports={
       console.log(_eventObject);
     });
 
+    /*
+     *  handle the request for facets-data (aggs); usually it is the
+     *  LHS panel
+     */
+    window.Vue.$on('getFacetsData', function(_eventObject) {
+      window.ajaxUtil.GET(
+        '/api/shopFacetsGet',
+        _eventObject,
+        function(_data, _status, _jqXHR) {
+          // updates the data... might not work, use callback instead
+          //_instance.data.facets=_data['responses'];
+          if (_eventObject && _eventObject.callback) {
+            _eventObject.callback(_data);
+          }
+        },
+        function(_jqXHR, _status, _err) {
+          console.log('* something wrong happened ~ ');
+          console.log(_err);
+        }
+      );
+    });
+
   },
   methods: {
     /*
@@ -11632,7 +12006,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-3e3c3197", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],13:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],16:[function(require,module,exports){
 ;(function(){
 //
 
@@ -11683,7 +12057,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-440cc2b4", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],14:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],17:[function(require,module,exports){
 ;(function(){
 
 /*
@@ -11795,7 +12169,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-73698a58", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],15:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],18:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
