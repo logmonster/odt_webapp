@@ -9,7 +9,7 @@
       <div v-for="(_item, _idx) in data"
         @click='handleItemClick(_item["key"])'
         :class='getFacetsItemCss(_item)'
-        class=" pointer">
+        class=" pointer text-truncate">
         {{_item['key']}}
         <span class="pull-right badge badge-pill green badge-rounded">
           {{_item['doc_count']}}</span>

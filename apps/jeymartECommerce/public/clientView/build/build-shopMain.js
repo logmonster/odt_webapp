@@ -2857,7 +2857,7 @@ if (inBrowser && window.Vue) {
 module.exports = VueRouter;
 
 }).call(this,require('_process'))
-},{"_process":19}],3:[function(require,module,exports){
+},{"_process":20}],3:[function(require,module,exports){
 (function (process,global){
 /*!
  * Vue.js v2.5.9
@@ -10721,7 +10721,7 @@ Vue$3.nextTick(function () {
 module.exports = Vue$3;
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":19}],4:[function(require,module,exports){
+},{"_process":20}],4:[function(require,module,exports){
 
 var Vue = require('vue')
 var Shop = require('./vue/shop-main.vue')
@@ -10734,6 +10734,7 @@ Vue.component('shop-carousel', require('./vue/component/shop-carousel.vue'));
 Vue.component('shop-spy-panel', require('./vue/component/shop-spy-panel.vue'));
 Vue.component('shop-facets-control', require('./vue/component/shop-facets-control.vue'));
 Vue.component('shop-product-display-top5', require('./vue/component/shop-product-display-top5.vue'));
+Vue.component('shop-product-item-small', require('./vue/component/shop-product-item-small.vue'));
 
 // setup Router
 var Router = require('vue-router');
@@ -10758,7 +10759,7 @@ let app = new Vue({
   }
 });
 
-},{"./vue/component/shop-carousel.vue":5,"./vue/component/shop-facets-control.vue":6,"./vue/component/shop-header-navigator.vue":7,"./vue/component/shop-product-display-top5.vue":10,"./vue/component/shop-searchbar.vue":11,"./vue/component/shop-spy-panel.vue":12,"./vue/router.vue":13,"./vue/shop-main.vue":16,"./vue/util/jQueryAjaxUtil.vue":17,"./vue/util/uiThrottleUtil.vue":18,"vue":3,"vue-router":2}],5:[function(require,module,exports){
+},{"./vue/component/shop-carousel.vue":5,"./vue/component/shop-facets-control.vue":6,"./vue/component/shop-header-navigator.vue":7,"./vue/component/shop-product-display-top5.vue":10,"./vue/component/shop-product-item-small.vue":11,"./vue/component/shop-searchbar.vue":12,"./vue/component/shop-spy-panel.vue":13,"./vue/router.vue":14,"./vue/shop-main.vue":17,"./vue/util/jQueryAjaxUtil.vue":18,"./vue/util/uiThrottleUtil.vue":19,"vue":3,"vue-router":2}],5:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -11018,7 +11019,7 @@ module.exports = {
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('div',{staticClass:"facets-control-header pointer",on:{"click":function($event){_vm.toggleItemsVisibility()}}},[_vm._v("\n      "+_vm._s(_vm.label)+"\n    ")]),_vm._v(" "),(_vm.mode=='button')?_c('div',_vm._l((_vm.data),function(_item,_idx){return _c('div',{staticClass:" pointer",class:_vm.getFacetsItemCss(_item),on:{"click":function($event){_vm.handleItemClick(_item["key"])}}},[_vm._v("\n        "+_vm._s(_item['key'])+"\n        "),_c('span',{staticClass:"pull-right badge badge-pill green badge-rounded"},[_vm._v("\n          "+_vm._s(_item['doc_count']))])])})):_vm._e(),_vm._v(" "),(_vm.mode=='checkbox')?_c('div',[_vm._v("\n      checkbox\n    ")]):_vm._e()])}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('div',{staticClass:"facets-control-header pointer",on:{"click":function($event){_vm.toggleItemsVisibility()}}},[_vm._v("\n      "+_vm._s(_vm.label)+"\n    ")]),_vm._v(" "),(_vm.mode=='button')?_c('div',_vm._l((_vm.data),function(_item,_idx){return _c('div',{staticClass:" pointer text-truncate",class:_vm.getFacetsItemCss(_item),on:{"click":function($event){_vm.handleItemClick(_item["key"])}}},[_vm._v("\n        "+_vm._s(_item['key'])+"\n        "),_c('span',{staticClass:"pull-right badge badge-pill green badge-rounded"},[_vm._v("\n          "+_vm._s(_item['doc_count']))])])})):_vm._e(),_vm._v(" "),(_vm.mode=='checkbox')?_c('div',[_vm._v("\n      checkbox\n    ")]):_vm._e()])}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -11245,6 +11246,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 //
 //
 //
+//
 
 function _model_shop_product_top5(_inst) {
   return {
@@ -11282,7 +11284,7 @@ module.exports={
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('span',{staticClass:"product-t6-label"},[_vm._v(_vm._s(_vm.getCategoryName()))]),_vm._v(" \n  more "),_vm._v(" "),_c('div',{staticClass:"container-fluid"},[_c('div',{staticClass:"row"},_vm._l((_vm.getTop6Hits()),function(_hit,_idx){return _c('div',{staticClass:"col-sm-4 col-md-2"},[_vm._v("\n\n        "+_vm._s(_hit['_source']['t_description'])+"\n\n      ")])}))])])}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('span',{staticClass:"product-t6-label"},[_vm._v(_vm._s(_vm.getCategoryName()))]),_vm._v(" \n  more "),_vm._v(" "),_c('div',{staticClass:"container-fluid"},[_c('div',{staticClass:"row"},_vm._l((_vm.getTop6Hits()),function(_hit,_idx){return _c('div',{staticClass:"col-sm-6 col-md-3",staticStyle:{"padding":"2px"}},[_c('shop-product-item-small',{attrs:{"item":_hit}})],1)}))])])}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -11295,6 +11297,104 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   }
 })()}
 },{"vue":3,"vue-hot-reload-api":1}],11:[function(require,module,exports){
+;(function(){
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+function _model_shop_product_item_sm(_inst) {
+  return {
+    'instance': _inst,
+    'imgId': ''
+  };
+} // end -- model
+
+module.exports = {
+  name: 'shop_product_item_sm',
+  data: function() {
+    return new _model_shop_product_item_sm(this);
+  },
+  props: [ 'item' ],
+  /*computed: {
+    *
+     *  a generated id (sort of hash) for the image component
+     *
+    generatedImgId: function() {
+      return 'img_'+parseInt(new Date().getTime()*Math.random(), 10);
+    }*
+  },*/
+  methods: {
+    /*
+     *  create the image component id (not using computed value)
+     */
+    getImgId: function() {
+      if (!this.imgId || this.imgId=='') {
+        this.imgId='img_'+parseInt(new Date().getTime()*Math.random(), 10);
+      }
+      return this.imgId;
+    },
+
+    /*
+     *  get the image
+     */
+    getImageUrl: function() {
+      return '/image/items/'+this.item["_source"]["k_photo"];
+    },
+
+    /*
+     *  [testing] update the image component's width:height to 4:3 ratio
+     */
+    getImgCss: function() {
+      let _jImg=jQuery('#'+this.getImgId());
+
+      if (_jImg.length>0) {
+        let _width=parseInt(_jImg.css('width'), 10);
+
+        if (_width>0) {
+          // 4:3 ratio
+          let _height=parseInt(_width*3/4, 10);
+
+          _jImg.css('height', _height+'px');
+        } // end -- if (_width is > 0)
+      } // end -- if (jQuery object is valid)
+      // return a dummy object...
+      return {};
+    }
+
+// TODO: try https://jsfiddle.net/hr77p7qb/3/ approach instead    
+
+  }
+};
+
+})()
+if (module.exports.__esModule) module.exports = module.exports.default
+var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
+if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"product-item-sm-container"},[_c('img',{class:_vm.getImgCss(),staticStyle:{"width":"calc(100%)"},attrs:{"id":_vm.getImgId(),"src":_vm.getImageUrl()}}),_vm._v(" "),_c('div',{staticClass:"text-truncate"},[_vm._v("\n    "+_vm._s(_vm.item["_source"]["t_description"]))]),_vm._v(" "),_c('div',[_vm._v("\n    "+_vm._s(_vm.item["_source"]["hf_price_suggested"])+"\n  ")])])}
+__vue__options__.staticRenderFns = []
+if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-e3d43e12", __vue__options__)
+  } else {
+    hotAPI.reload("data-v-e3d43e12", __vue__options__)
+  }
+})()}
+},{"vue":3,"vue-hot-reload-api":1}],12:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -11541,7 +11641,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-d20f0ce2", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],12:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],13:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -11640,7 +11740,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-3adaded7", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],13:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],14:[function(require,module,exports){
 ;(function(){
 
 /* ------------------------------------------------------------------------
@@ -11694,7 +11794,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-4c0c66f2", __vue__options__)
   }
 })()}
-},{"./component/shop-landing-info.vue":8,"./component/shop-landing-listing.vue":9,"./shop-help.vue":14,"./shop-landing.vue":15,"vue":3,"vue-hot-reload-api":1,"vue-router":2}],14:[function(require,module,exports){
+},{"./component/shop-landing-info.vue":8,"./component/shop-landing-listing.vue":9,"./shop-help.vue":15,"./shop-landing.vue":16,"vue":3,"vue-hot-reload-api":1,"vue-router":2}],15:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -11754,7 +11854,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-0fa9f71f", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],15:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],16:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -11964,7 +12064,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-79fe24ae", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],16:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],17:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -12180,7 +12280,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-3e3c3197", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],17:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],18:[function(require,module,exports){
 ;(function(){
 //
 
@@ -12231,7 +12331,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-440cc2b4", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],18:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],19:[function(require,module,exports){
 ;(function(){
 
 /*
@@ -12343,7 +12443,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-73698a58", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],19:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],20:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 

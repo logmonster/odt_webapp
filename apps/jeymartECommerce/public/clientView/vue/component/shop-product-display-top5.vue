@@ -4,10 +4,11 @@
     more <!-- similar to the linking of the shop-facets-control.vue -->
     <div class='container-fluid'>
       <div class='row'>
-        <div class='col-sm-6 col-md-2'
+        <div class='col-sm-6 col-md-3'
+          style='padding: 2px;'
           v-for="(_hit, _idx) in getTop6Hits()" >
-
-          {{_hit['_source']['t_description']}}
+          <!--{{_hit['_source']['t_description']}}-->
+          <shop-product-item-small :item="_hit"  ></shop-product-item-small>
 
         </div>
       </div>

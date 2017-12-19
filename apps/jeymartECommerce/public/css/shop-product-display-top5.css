@@ -4,3 +4,10 @@
   font-weight: 400;
   color: #aaa;
 }
+
+.product-item-sm-container {
+  border: 1px solid black;
+  border-radius: 3px 3px 3px 3px;
+
+  width: calc(100%);
+}
