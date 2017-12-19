@@ -162,7 +162,7 @@ var MainRoutes = function(_client, _router, _eBuilder, _defaultQueriesMap, _esIn
 
   /**
    *  method to return the facets based on the request parameters
-   *  { categories, brands, ratings } 
+   *  { categories, brands, ratings }
    */
   let shopFacetsGet_queries = function(_req, _resp) {
     let _eb = _eBuilder;
@@ -208,6 +208,26 @@ var MainRoutes = function(_client, _router, _eBuilder, _defaultQueriesMap, _esIn
     }); // end -- msearch
   };
 
+  /**
+   *  method to return the landing page information
+   *  (top 5 categories, top 5 hits)
+   */
+  let getTop5CategoryTop6HitsForLandingInfo = function(_req, _resp) {
+    let _eb = _eBuilder;
+    let _lst = _esInterpretorUtil.buildQueryByQueryId(
+      'shopLandingInfoGet',
+      'getTop5CategoryTop6HitsForLandingInfo',
+      null
+    );
+    _client.msearch({
+      body: _lst
+    }).then(function(_data) {
+      _resp.send(_data);
+    }, function(_err) {
+      _resp.send(_err);
+    }); // end -- msearch
+  };
+
   return {
     // setup routes related to Jeymart eCommerce app
     setup: () => {
@@ -233,6 +253,12 @@ var MainRoutes = function(_client, _router, _eBuilder, _defaultQueriesMap, _esIn
         get(function(_req, _resp) {
           // do a msearch on ...
           shopFacetsGet_queries(_req, _resp);
+        }
+      );
+      _router.route('/api/shopLandingInfoGet').
+        get(function(_req, _resp) {
+          // do a msearch on ...
+          getTop5CategoryTop6HitsForLandingInfo(_req, _resp);
         }
       );
 

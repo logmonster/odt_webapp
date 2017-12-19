@@ -1,7 +1,9 @@
 <template>
   <div>
     <!-- carousel component -->
-    <shop-carousel :images='carouselImages' ></shop-carousel>
+    <shop-carousel
+      :class="getCarouselCss()"
+      :images='carouselImages' ></shop-carousel>
     <!-- main promotion / information area -->
     <div class="container-fluid landing-main-container">
       <div class='row'>
@@ -37,6 +39,12 @@
 function _model_shop_landing(_instance) {
   return {
     'instance': _instance,
+
+    'css': {
+      'shouldCarouselHide': false
+    },
+    // controls when to add "showing" and "hiding" classes
+    'isCarouselHidden': false,
 
     'carouselImages': [
       '/image/carousel/carousel01.jpeg',
@@ -85,6 +93,11 @@ module.exports = {
     /* -------------------- */
 
     window.Vue.$on('changeRouterView', function(_eventObject) {
+      /*
+       *  "close" the carousel part (indirectly updating the css classes
+       *  for the carousel component)
+       */
+      _instance.css.shouldCarouselHide = true;
       /*
        *  prepare the correct facets criteria object
        *  (preserve the other facets options)
@@ -137,8 +150,40 @@ module.exports = {
           } // found~
         } // end -- for(dataFacets length)
       }
-
       return _d;
+    },
+
+    /**
+     *  method to create the correct css class for the carousel component
+     */
+    getCarouselCss: function() {
+      let _css={};
+      let _instance=this;
+
+      if (this.css.shouldCarouselHide) {
+        _css['animated'] = true;
+        _css['fadeOutUp'] = true;
+        /*
+         *  slightly 600ms after the transition
+         *  (if you set showing and hiding directly... no transition could be
+         *  noticed before the carousel is hidden)
+         */
+        setTimeout(function() {
+          _instance.isCarouselHidden = true;
+        }, 600);
+      } else {
+        this.isCarouselHidden = false;
+      }
+
+      if (this.isCarouselHidden) {
+        _css['showing'] = false;
+        _css['hiding'] = true;
+      } else {
+        _css['showing'] = true;
+        _css['hiding'] = false;
+      }
+
+      return _css;
     }
 
 

@@ -138,5 +138,57 @@
         }
       }
     }
+  ],
+  "shopLandingInfoGet": [
+    {
+      "id": "getTop5CategoryTop6HitsForLandingInfo",
+      "meta": {
+        "index": "jeymart_user_trx",
+        "type": "doc"
+      },
+      "steps": [
+        { "id": 1, "method": "size", "param": 0 },
+        { "id": 2, "agg": "TermsAggregation",
+          "param": [ "_cats", "k_category" ],
+          "size": 5,
+          "order": [ "_qty", "desc" ],
+          "subAggs": [
+            { "agg": "SumAggregation",
+              "param": [ "_qty", "i_qty" ]
+            },
+            { "agg": "TopHitsAggregation",
+              "param": [ "_top6" ],
+              "size": 6
+            }
+          ]
+        }
+      ],
+      "query": {
+        "aggs": {
+          "_cats": {
+            "terms": {
+              "field": "k_category",
+              "size": 5,
+              "order": {
+                "_qty": "desc"
+              }
+            },
+            "aggs": {
+              "_qty": {
+                "sum": {
+                  "field": "i_qty"
+                }
+              },
+              "_top5": {
+                "top_hits": {
+                  "size": 6
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   ]
+
 }

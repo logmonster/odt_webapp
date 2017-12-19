@@ -128,6 +128,25 @@ module.exports={
       );
     });
 
+    /*
+     *  handle request for landing page info data retrieval
+     */
+    window.Vue.$on('getLandingInfoData', function(_eventObject) {
+      window.ajaxUtil.GET(
+        '/api/shopLandingInfoGet',
+        null,
+        function(_data, _status, _jqXHR) {
+          if (_eventObject && _eventObject.callback) {
+            _eventObject.callback(_data);
+          }
+        },
+        function(_jqXHR, _status, _err) {
+          console.log('* something wrong happened ~ ');
+          console.log(_err);
+        }
+      );
+    });
+
   },
   methods: {
     /*

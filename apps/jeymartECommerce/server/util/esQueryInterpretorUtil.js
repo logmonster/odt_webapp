@@ -38,12 +38,27 @@ let Util = function(_defaultQueriesMap, _eb) {
    *  handling of agg setup
    */
   let _handleAgg = function(_aggType, _step, _queryObj) {
+    let _agg=_handleAggPerStep(_aggType, _step, _queryObj);
+
+    // add back to the _queryObj
+    _queryObj.agg(_agg);
+
+    return _queryObj;
+  };
+
+  /*
+   *  real action on handling an aggregation (plus sub-aggregations)
+   */
+  let _handleAggPerStep = function(_aggType, _step, _queryObj) {
+    let _agg = null;
     // depends on the agg type, different config might be applied
     if (_aggType == "TermsAggregation") {
       let _param = _step['param'];  // this is a MUST
       let _size = (_step['size']!=null)?parseInt(_step['size'], 10):-1;
       let _order = (_step['order']!=null)?_step['order']:null;
-      let _agg = new _eb.TermsAggregation(
+      let _subAgg = (_step['subAggs']!=null)?_step['subAggs']:null;
+
+      _agg = new _eb.TermsAggregation(
         _param[0],
         _param[1]
       );
@@ -53,10 +68,34 @@ let Util = function(_defaultQueriesMap, _eb) {
       if (_order!=null) {
         _agg.order(_order[0], _order[1]);
       }
-      // add back to the _queryObj
-      _queryObj.agg(_agg);
+      // handling of subAgg(s) if any
+      if (_subAgg!=null) {
+        let _subAggArray=[];
+        _subAgg.forEach(function(_subA, _idx_1) {
+          _subAggArray.push(_handleAggPerStep(_subA['agg'], _subA, _queryObj));
+        });
+        // add back to _agg...
+        _agg.aggs(_subAggArray);
+      }
+    } else if (_aggType=="SumAggregation") {
+      let _param = _step['param'];  // this is a MUST
+
+      _agg = new _eb.SumAggregation(
+        _param[0],
+        _param[1]
+      );
+    } else if (_aggType=="TopHitsAggregation") {
+      let _param = _step['param'];  // this is a MUST
+      let _size = (_step['size']!=null)?parseInt(_step['size'], 10):-1;
+
+      _agg = new _eb.TopHitsAggregation(
+        _param[0]
+      );
+      if (_size!=-1) {
+        _agg.size(_size);
+      }
     }
-    return _queryObj;
+    return _agg;
   };
 
   /**
