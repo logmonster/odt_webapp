@@ -3,7 +3,8 @@
 
 <template>
   <div class='header-navigation' style="">
-    <div class='header-navigation-title pull-left' style="">
+    <!-- TODO: check why default route is not displayed:  -->
+    <div class='header-navigation-title pull-left' style="" @click='handleHomeClick()' >
       Jey-mart
       <i class="fa fa-shopping-cart" aria-hidden="true"></i>
     </div>
@@ -52,9 +53,16 @@ module.exports = {
   },
   props: [ 'menuItemSelected', 'data', 'dataSuggest' ],
   methods: {
-    homeClicked: () => {
-      VueRouter.push({ name: '/' });
+    /*
+     *  go back to "home"
+     */
+    handleHomeClick: function() {
+      window.VueRouter.push({
+        name: "main"
+      });
+      //clientView/view/shop.html
     }
+
   }
 };
 

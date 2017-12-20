@@ -10,15 +10,10 @@ module.exports = {
       name: '/',
       component: require('./shop-landing.vue'),
       children: [
-        { path: '',
-          name: '',
+        { path: 'main',
+          name: 'main',
           component: require('./component/shop-landing-info.vue')
         },
-        /* original approach (without parameters on the path)
-        { path: 'listing',
-          name: 'listing',
-          component: require('./component/shop-landing-listing.vue')
-        }*/
         { path: 'listing/:hash',
           name: 'listing/:hash',
           component: require('./component/shop-landing-listing.vue')

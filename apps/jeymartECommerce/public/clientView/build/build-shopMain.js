@@ -10935,7 +10935,31 @@ module.exports = {
     return new _model_shop_facets_control(this);
   },
   // mode: button (click and go), checkbox (multi-check and go)
-  props: [ 'label', 'mode', 'data' ],
+  props: [ 'label', 'mode', 'data', 'preSelected' ],
+  watch: {
+    preSelected: function(_newValue) {
+      if (_newValue) {
+        if ('button' == this.mode) {
+          this.chosenItemList=[_newValue];
+        } else if ('checkbox' == this.mode) {
+          // check if exists or not...
+          let _idx=0;
+          let _lstSize = this.chosenItemList.length;
+          let _found = false;
+
+          for (; _idx<_lstSize; _idx++) {
+            if (_newValue == this.chosenItemList[_idx]) {
+              _found=true;
+            }
+          }
+          if (!_found) {
+            this.chosenItemList.push(_newValue);
+          }
+        }
+      } // end -- if (_newValue is valid)
+    }
+    
+  },
   methods: {
     /*
      *  method to toggle the visiblility of the facets item list
@@ -11010,7 +11034,7 @@ module.exports = {
       } else if (this.label == 'ratings') {
         _eventObject['ratingList'] = this.chosenItemList;
       }
-      window.Vue.$emit('changeRouterView', _eventObject);
+      window.Vue.$emit('changeRouterViewToListing', _eventObject);
     }
 
   }
@@ -11073,6 +11097,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 //
 //
 //
+//
 
 function _model_shop_header_navigator(_instance) {
   return {
@@ -11088,9 +11113,16 @@ module.exports = {
   },
   props: [ 'menuItemSelected', 'data', 'dataSuggest' ],
   methods: {
-    homeClicked: () => {
-      VueRouter.push({ name: '/' });
+    /*
+     *  go back to "home"
+     */
+    handleHomeClick: function() {
+      window.VueRouter.push({
+        name: "main"
+      });
+      //clientView/view/shop.html
     }
+
   }
 };
 
@@ -11099,8 +11131,8 @@ module.exports = {
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"header-navigation"},[_vm._m(0,false,false),_vm._v(" "),_c('shop-searchbar',{staticStyle:{"margin-top":"4px"},attrs:{"data":_vm.data,"dataSuggest":_vm.dataSuggest}}),_vm._v(" "),_vm._m(1,false,false)],1)}
-__vue__options__.staticRenderFns = [function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"header-navigation-title pull-left"},[_vm._v("\n    Jey-mart\n    "),_c('i',{staticClass:"fa fa-shopping-cart",attrs:{"aria-hidden":"true"}})])},function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"header-navigation-pull-right-section"},[_c('div',{staticClass:"header-navigation-pull-right-section-vis header-navigation-pull-right-section-top-padding"},[_c('i',{staticClass:"fa fa-shopping-bag header-navigation-icon",attrs:{"aria-hidden":"true"}}),_vm._v(" "),_c('i',{staticClass:"fa fa-wrench header-navigation-icon",attrs:{"aria-hidden":"true"}}),_vm._v(" "),_c('span',{staticClass:"header-navigator-icon-label"},[_vm._v("Categories")]),_vm._v(" "),_c('i',{staticClass:"fa fa-envelope header-navigation-icon"}),_vm._v(" "),_c('span',{staticClass:"header-navigator-icon-label"},[_vm._v("Promotion")])]),_vm._v(" "),_c('div',{staticClass:"header-navigation-pull-right-section-min"},[_c('i',{staticClass:"fa fa-navicon header-navigation-icon",attrs:{"aria-hidden":"true"}})])])}]
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"header-navigation"},[_c('div',{staticClass:"header-navigation-title pull-left",on:{"click":function($event){_vm.handleHomeClick()}}},[_vm._v("\n    Jey-mart\n    "),_c('i',{staticClass:"fa fa-shopping-cart",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('shop-searchbar',{staticStyle:{"margin-top":"4px"},attrs:{"data":_vm.data,"dataSuggest":_vm.dataSuggest}}),_vm._v(" "),_vm._m(0,false,false)],1)}
+__vue__options__.staticRenderFns = [function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"header-navigation-pull-right-section"},[_c('div',{staticClass:"header-navigation-pull-right-section-vis header-navigation-pull-right-section-top-padding"},[_c('i',{staticClass:"fa fa-shopping-bag header-navigation-icon",attrs:{"aria-hidden":"true"}}),_vm._v(" "),_c('i',{staticClass:"fa fa-wrench header-navigation-icon",attrs:{"aria-hidden":"true"}}),_vm._v(" "),_c('span',{staticClass:"header-navigator-icon-label"},[_vm._v("Categories")]),_vm._v(" "),_c('i',{staticClass:"fa fa-envelope header-navigation-icon"}),_vm._v(" "),_c('span',{staticClass:"header-navigator-icon-label"},[_vm._v("Promotion")])]),_vm._v(" "),_c('div',{staticClass:"header-navigation-pull-right-section-min"},[_c('i',{staticClass:"fa fa-navicon header-navigation-icon",attrs:{"aria-hidden":"true"}})])])}]
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
@@ -11250,6 +11282,11 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 //
 //
 //
+//
+//
+//
+//
+//
 
 function _model_shop_product_top5(_inst) {
   return {
@@ -11278,6 +11315,24 @@ module.exports={
         _d=this.catObject['_top6']['hits']['hits'];
       }
       return _d;
+    },
+
+    handleMoreClick: function() {
+      /*
+       *  emit event for router change,
+       *  a "random" hash MUST be provided so that the router-view would be
+       *  refreshed everytime (if not... vue.js will re-use the existing
+       *  components)
+       */
+      let _eventObject = {
+        'view': 'listing/:hash',
+        'hash': parseInt(new Date().getTime()*Math.random(), 10)
+      };
+      _eventObject['catList'] = [ this.catObject['key'] ];
+      // indicate it is from "shop_product_top5"
+      _eventObject['from'] = 'shop_product_top5';
+
+      window.Vue.$emit('changeRouterViewToListing', _eventObject);
     }
 
   }
@@ -11287,7 +11342,7 @@ module.exports={
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('span',{staticClass:"product-t6-label"},[_vm._v(_vm._s(_vm.getCategoryName()))]),_vm._v(" \n  more "),_vm._v(" "),_c('div',{staticClass:"container-fluid"},[_c('div',{staticClass:"row"},_vm._l((_vm.getTop6Hits()),function(_hit,_idx){return _c('div',{staticClass:"col-sm-6 col-md-3",staticStyle:{"padding":"2px"}},[_c('shop-product-item-small',{staticStyle:{"margin-bottom":"8px"},attrs:{"item":_hit}})],1)}))])])}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('span',{staticClass:"product-t6-label"},[_vm._v(_vm._s(_vm.getCategoryName()))]),_vm._v(" \n  "),_c('a',{attrs:{"href":"javascript:void(0);"},on:{"click":function($event){_vm.handleMoreClick()}}},[_c('span',{staticClass:"product-t6-more"},[_vm._v("\n      more... ")])]),_vm._v(" "),_c('div',{staticClass:"container-fluid"},[_c('div',{staticClass:"row"},_vm._l((_vm.getTop6Hits()),function(_hit,_idx){return _c('div',{staticClass:"col-sm-6 col-md-3",staticStyle:{"padding":"2px"}},[_c('shop-product-item-small',{staticStyle:{"margin-bottom":"8px"},attrs:{"item":_hit}})],1)}))])])}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -11301,6 +11356,8 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 })()}
 },{"vue":3,"vue-hot-reload-api":1}],11:[function(require,module,exports){
 ;(function(){
+//
+//
 //
 //
 //
@@ -11358,6 +11415,7 @@ module.exports = {
     fakeUpdateModel: function() {
       this.fakeIndicator = parseInt(new Date().getTime()*Math.random(), 10);
     },
+
     /*
      *  create the image component id (not using computed value)
      */
@@ -11367,14 +11425,12 @@ module.exports = {
       }
       return this.imgId;
     },
-
     /*
      *  get the image
      */
     getImageUrl: function() {
       return '/image/items/'+this.item["_source"]["k_photo"];
     },
-
     /*
      *  [testing] update the image component's width:height to 4:3 ratio
      */
@@ -11394,6 +11450,11 @@ module.exports = {
       // return a dummy object...
       let _c=this.fakeIndicator;
       return { _c: false };
+    },
+
+    handleItemClick: function() {
+// TODO:
+      console.log('## fwd to product-item-details page '+this.item['_source']['t_description']);
     }
 
 
@@ -11404,7 +11465,7 @@ module.exports = {
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"product-item-sm-container pointer"},[_c('img',{class:_vm.getImgCss(),staticStyle:{"width":"calc(100%)"},attrs:{"id":_vm.getImgId(),"src":_vm.getImageUrl()}}),_vm._v(" "),_c('div',{staticClass:"text-truncate product-item-sm-label",attrs:{"title":_vm.item["_source"]["t_description"]}},[_vm._v("\n    "+_vm._s(_vm.item["_source"]["t_description"]))]),_vm._v(" "),_c('div',{staticClass:"product-itme-sm-sublabel"},[_vm._v("\n    $"+_vm._s(_vm.item["_source"]["hf_price_suggested"].toFixed(3))+"\n  ")])])}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"product-item-sm-container pointer",on:{"click":function($event){_vm.handleItemClick()}}},[_c('img',{class:_vm.getImgCss(),staticStyle:{"width":"calc(100%)"},attrs:{"id":_vm.getImgId(),"src":_vm.getImageUrl()}}),_vm._v(" "),_c('div',{staticClass:"text-truncate product-item-sm-label",attrs:{"title":_vm.item["_source"]["t_description"]}},[_vm._v("\n    "+_vm._s(_vm.item["_source"]["t_description"]))]),_vm._v(" "),_c('div',{staticClass:"product-itme-sm-sublabel"},[_vm._v("\n    $"+_vm._s(_vm.item["_source"]["hf_price_suggested"].toFixed(3))+"\n  ")])])}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -11776,15 +11837,10 @@ module.exports = {
       name: '/',
       component: require('./shop-landing.vue'),
       children: [
-        { path: '',
-          name: '',
+        { path: 'main',
+          name: 'main',
           component: require('./component/shop-landing-info.vue')
         },
-        /* original approach (without parameters on the path)
-        { path: 'listing',
-          name: 'listing',
-          component: require('./component/shop-landing-listing.vue')
-        }*/
         { path: 'listing/:hash',
           name: 'listing/:hash',
           component: require('./component/shop-landing-listing.vue')
@@ -11915,6 +11971,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 //
 //
 //
+//
 
 function _model_shop_landing(_instance) {
   return {
@@ -11938,7 +11995,9 @@ function _model_shop_landing(_instance) {
       'catList': [],
       'brandList': [],
       'ratingList': []
-    }
+    },
+
+    'preSelectedCategory': ''
   };
 }
 
@@ -11972,7 +12031,7 @@ module.exports = {
     /*  parent child events */
     /* -------------------- */
 
-    window.Vue.$on('changeRouterView', function(_eventObject) {
+    window.Vue.$on('changeRouterViewToListing', function(_eventObject) {
       /*
        *  "close" the carousel part (indirectly updating the css classes
        *  for the carousel component)
@@ -11990,6 +12049,12 @@ module.exports = {
         } else if (_eventObject['ratingList']) {
           _instance.chosenFacetsCriteria['ratingList']=_eventObject['ratingList'];
         }
+
+        // special handling for top6 page
+        if ('shop_product_top5' == _eventObject['from'] && _eventObject['catList']) {
+          _instance.preSelectedCategory = _eventObject['catList'][0];
+        }
+
         window.VueRouter.push({
           name: _eventObject['view'],
           params: {
@@ -12074,7 +12139,7 @@ module.exports = {
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('shop-carousel',{class:_vm.getCarouselCss(),attrs:{"images":_vm.carouselImages}}),_vm._v(" "),_c('div',{staticClass:"container-fluid landing-main-container"},[_c('div',{staticClass:"row"},[_c('div',{staticClass:"col-sm-12 col-md-3"},[_c('shop-facets-control',{attrs:{"mode":"button","data":_vm.getFacetsDataByType("_cats"),"label":"categories"}}),_vm._v(" "),_c('p'),_vm._v(" "),_c('shop-facets-control',{attrs:{"mode":"button","data":_vm.getFacetsDataByType("_brands"),"label":"brands"}}),_vm._v(" "),_c('p'),_vm._v(" "),_c('shop-facets-control',{attrs:{"mode":"button","data":_vm.getFacetsDataByType("_ratings"),"label":"ratings"}})],1),_vm._v(" "),_c('div',{staticClass:"col-sm-12 col-md-9"},[_c('router-view')],1)])])],1)}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('shop-carousel',{class:_vm.getCarouselCss(),attrs:{"images":_vm.carouselImages}}),_vm._v(" "),_c('div',{staticClass:"container-fluid landing-main-container"},[_c('div',{staticClass:"row"},[_c('div',{staticClass:"col-sm-12 col-md-3"},[_c('shop-facets-control',{attrs:{"mode":"button","data":_vm.getFacetsDataByType("_cats"),"preSelected":_vm.preSelectedCategory,"label":"categories"}}),_vm._v(" "),_c('p'),_vm._v(" "),_c('shop-facets-control',{attrs:{"mode":"button","data":_vm.getFacetsDataByType("_brands"),"label":"brands"}}),_vm._v(" "),_c('p'),_vm._v(" "),_c('shop-facets-control',{attrs:{"mode":"button","data":_vm.getFacetsDataByType("_ratings"),"label":"ratings"}})],1),_vm._v(" "),_c('div',{staticClass:"col-sm-12 col-md-9"},[_c('router-view')],1)])])],1)}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)

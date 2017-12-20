@@ -1,7 +1,12 @@
 <template>
   <div>
     <span class="product-t6-label">{{getCategoryName()}}</span>&nbsp;
-    more <!-- similar to the linking of the shop-facets-control.vue -->
+    <a href='javascript:void(0);' @click='handleMoreClick()'>
+      <span class='product-t6-more'>
+        more... <!-- similar to the linking of the shop-facets-control.vue -->
+      </span>
+    </a>
+
     <div class='container-fluid'>
       <div class='row'>
         <div class='col-sm-6 col-md-3'
@@ -47,6 +52,24 @@ module.exports={
         _d=this.catObject['_top6']['hits']['hits'];
       }
       return _d;
+    },
+
+    handleMoreClick: function() {
+      /*
+       *  emit event for router change,
+       *  a "random" hash MUST be provided so that the router-view would be
+       *  refreshed everytime (if not... vue.js will re-use the existing
+       *  components)
+       */
+      let _eventObject = {
+        'view': 'listing/:hash',
+        'hash': parseInt(new Date().getTime()*Math.random(), 10)
+      };
+      _eventObject['catList'] = [ this.catObject['key'] ];
+      // indicate it is from "shop_product_top5"
+      _eventObject['from'] = 'shop_product_top5';
+
+      window.Vue.$emit('changeRouterViewToListing', _eventObject);
     }
 
   }

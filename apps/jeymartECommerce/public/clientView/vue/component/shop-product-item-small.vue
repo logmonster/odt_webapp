@@ -1,5 +1,7 @@
 <template>
-  <div class="product-item-sm-container pointer">
+  <div
+    @click='handleItemClick()'
+    class="product-item-sm-container pointer">
     <!--:id='generatedImgId'-->
     <img :id='getImgId()'
       :src='getImageUrl()'
@@ -10,7 +12,7 @@
       :title='item["_source"]["t_description"]'
       class='text-truncate product-item-sm-label'>
       {{item["_source"]["t_description"]}}</div>
-      
+
     <div class="product-itme-sm-sublabel">
       ${{item["_source"]["hf_price_suggested"].toFixed(3)}}
     </div>
@@ -55,6 +57,7 @@ module.exports = {
     fakeUpdateModel: function() {
       this.fakeIndicator = parseInt(new Date().getTime()*Math.random(), 10);
     },
+
     /*
      *  create the image component id (not using computed value)
      */
@@ -64,14 +67,12 @@ module.exports = {
       }
       return this.imgId;
     },
-
     /*
      *  get the image
      */
     getImageUrl: function() {
       return '/image/items/'+this.item["_source"]["k_photo"];
     },
-
     /*
      *  [testing] update the image component's width:height to 4:3 ratio
      */
@@ -91,6 +92,11 @@ module.exports = {
       // return a dummy object...
       let _c=this.fakeIndicator;
       return { _c: false };
+    },
+
+    handleItemClick: function() {
+// TODO:
+      console.log('## fwd to product-item-details page '+this.item['_source']['t_description']);
     }
 
 

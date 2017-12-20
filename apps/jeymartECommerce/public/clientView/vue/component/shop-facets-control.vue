@@ -44,7 +44,31 @@ module.exports = {
     return new _model_shop_facets_control(this);
   },
   // mode: button (click and go), checkbox (multi-check and go)
-  props: [ 'label', 'mode', 'data' ],
+  props: [ 'label', 'mode', 'data', 'preSelected' ],
+  watch: {
+    preSelected: function(_newValue) {
+      if (_newValue) {
+        if ('button' == this.mode) {
+          this.chosenItemList=[_newValue];
+        } else if ('checkbox' == this.mode) {
+          // check if exists or not...
+          let _idx=0;
+          let _lstSize = this.chosenItemList.length;
+          let _found = false;
+
+          for (; _idx<_lstSize; _idx++) {
+            if (_newValue == this.chosenItemList[_idx]) {
+              _found=true;
+            }
+          }
+          if (!_found) {
+            this.chosenItemList.push(_newValue);
+          }
+        }
+      } // end -- if (_newValue is valid)
+    }
+    
+  },
   methods: {
     /*
      *  method to toggle the visiblility of the facets item list
@@ -119,7 +143,7 @@ module.exports = {
       } else if (this.label == 'ratings') {
         _eventObject['ratingList'] = this.chosenItemList;
       }
-      window.Vue.$emit('changeRouterView', _eventObject);
+      window.Vue.$emit('changeRouterViewToListing', _eventObject);
     }
 
   }

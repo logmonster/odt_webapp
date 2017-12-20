@@ -5,6 +5,11 @@
   padding-left: 2px;
   color: #888;
 }
+.product-t6-more {
+  font-size: 14px;
+  font-weight: 500;
+  padding-left: 2px;
+}
 
 .product-item-sm-container {
   border: 1px solid #ccc;

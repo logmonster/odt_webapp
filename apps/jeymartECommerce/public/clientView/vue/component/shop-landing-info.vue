@@ -1,11 +1,4 @@
 <template>
-  <!--div>
-    landing info page~~~~
-    TBD<p/>
-    <router-link to="listing">
-      fwd to "help.vue" again
-    </router-link>
-  </div-->
   <div>
     <div v-for="(_cat, _idx) in getLandingInfoDataByCategories()">
       <shop-product-display-top5 :catObject='_cat' ></shop-product-display-top5>

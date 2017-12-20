@@ -11,6 +11,7 @@
           <shop-facets-control
             mode='button'
             :data='getFacetsDataByType("_cats")'
+            :preSelected='preSelectedCategory'
             label='categories' ></shop-facets-control>
           <p/>
           <shop-facets-control
@@ -58,7 +59,9 @@ function _model_shop_landing(_instance) {
       'catList': [],
       'brandList': [],
       'ratingList': []
-    }
+    },
+
+    'preSelectedCategory': ''
   };
 }
 
@@ -92,7 +95,7 @@ module.exports = {
     /*  parent child events */
     /* -------------------- */
 
-    window.Vue.$on('changeRouterView', function(_eventObject) {
+    window.Vue.$on('changeRouterViewToListing', function(_eventObject) {
       /*
        *  "close" the carousel part (indirectly updating the css classes
        *  for the carousel component)
@@ -110,6 +113,12 @@ module.exports = {
         } else if (_eventObject['ratingList']) {
           _instance.chosenFacetsCriteria['ratingList']=_eventObject['ratingList'];
         }
+
+        // special handling for top6 page (indirectly update the category facets control)
+        if ('shop_product_top5' == _eventObject['from'] && _eventObject['catList']) {
+          _instance.preSelectedCategory = _eventObject['catList'][0];
+        }
+
         window.VueRouter.push({
           name: _eventObject['view'],
           params: {
