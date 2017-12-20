@@ -228,6 +228,65 @@ var MainRoutes = function(_client, _router, _eBuilder, _defaultQueriesMap, _esIn
     }); // end -- msearch
   };
 
+  /**
+   *  method to return the listing data based on the given params (e.g. category, brand)
+   */
+  let getListingDataByRouteParams = function(_req, _resp) {
+    let _eb = _eBuilder;
+    let _qSection = _esInterpretorUtil.extractJsonByQueryNameAndId(
+      'shopListingByParamsGet', 'getListingDataByRouteParams');
+    let _meta = _qSection['meta'];
+    let _critMap = {};
+
+    // build the criteria map (this query only needs a MUST, SHOULD)
+    _critMap['must']=[];
+    _critMap['should']=[];
+    /*
+    'categoryList': _eventObject['categoryList'],
+    'brandList': _eventObject['brandList'],
+'pagination': _eventObject['pagination'],
+    */
+    let _lst=_req.query['categoryList'];
+    if (_lst && _lst.length>0) {
+      _critMap=_buildQueryCriteria(_critMap, _lst, 'MatchQuery', 'k_category');
+    }
+    _lst=_req.query['brandList'];
+    if (_lst && _lst.length>0) {
+      _critMap=_buildQueryCriteria(_critMap, _lst, 'MatchQuery', 's_brand_name');
+    }
+    _critMap['pagination']=_req.query['pagination'];
+
+    _queryObj = _esInterpretorUtil.buildQueryByType(
+      _qSection, _critMap);
+
+    let _body=[];
+    _body.push(_meta);
+    _body.push(_queryObj.toJSON());
+
+    _client.msearch({
+      body: _body
+    }).then(function(_data) {
+      _resp.send(_data);
+    }, function(_err) {
+      _resp.send(_err);
+    }); // end -- msearch
+  };
+
+  let _buildQueryCriteria = function(
+    _critMap, _lst, _queryMethod, _field) {
+
+    if (_lst.length==1) {
+      // only 1, MUST
+      _critMap['must'].push({ 'query': _queryMethod, "field": _field, "value": _lst[0] });
+    } else if (_lst.length>0) {
+      // more than 1, SHOULD
+      _lst.forEach(function(_crit, _idx_1) {
+        _critMap['should'].push({ 'query': _queryMethod, "field": _field, "value": _lst[_idx_1] });
+      });
+    }
+    return _critMap;
+  };
+
   return {
     // setup routes related to Jeymart eCommerce app
     setup: () => {
@@ -259,6 +318,12 @@ var MainRoutes = function(_client, _router, _eBuilder, _defaultQueriesMap, _esIn
         get(function(_req, _resp) {
           // do a msearch on ...
           getTop5CategoryTop6HitsForLandingInfo(_req, _resp);
+        }
+      );
+      _router.route('/api/shopListingByParamsGet').
+        get(function(_req, _resp) {
+          // do a msearch on ...
+          getListingDataByRouteParams(_req, _resp);
         }
       );
 

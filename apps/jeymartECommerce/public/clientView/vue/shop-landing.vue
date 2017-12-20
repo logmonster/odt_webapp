@@ -19,11 +19,12 @@
             :data='getFacetsDataByType("_brands")'
             label='brands' ></shop-facets-control>
           <p/>
-          <shop-facets-control
+
+          <!-- due to the data structure, i_ratings is not suitable for facets filtering -->
+          <!--shop-facets-control
             mode='button'
             :data='getFacetsDataByType("_ratings")'
-            label='ratings' ></shop-facets-control>
-
+            label='ratings' ></shop-facets-control -->
 
         </div>
         <div class='col-sm-12 col-md-9'>

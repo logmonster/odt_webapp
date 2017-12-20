@@ -158,7 +158,11 @@
             },
             { "agg": "TopHitsAggregation",
               "param": [ "_top6" ],
-              "size": 4
+              "size": 4,
+              "orders": [
+                { "field": "i_rating", "direction": "desc" },
+                { "field": "i_qty", "direction": "desc" }
+              ]
             }
           ]
         }
@@ -181,11 +185,47 @@
               },
               "_top5": {
                 "top_hits": {
-                  "size": 4
+                  "size": 4,
+                  "sort": [
+                    {
+                      "i_rating": "desc"
+                    },
+                    {
+                      "i_qty": "desc"
+                    }
+                  ]
                 }
               }
             }
           }
+        }
+      }
+    }
+  ],
+  "shopListingByParamsGet": [
+    {
+      "id": "getListingDataByRouteParams",
+      "meta": {
+        "index": "jeymart_item",
+        "type": "doc"
+      },
+      "steps": [
+        { "id": 1, "query": "bool" }
+      ],
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match": {
+                "k_category": "fashion"
+              }
+            },
+            {
+              "match": {
+                "s_brand_name": "avery works"
+              }
+            }
+          ]
         }
       }
     }

@@ -147,6 +147,30 @@ module.exports={
       );
     });
 
+    /*
+     *  handle the request to fetch the listing data based on the router.params
+     */
+    window.Vue.$on('getListingDataByRouteParams', function(_eventObject) {
+      window.ajaxUtil.GET(
+        '/api/shopListingByParamsGet',
+        {
+          'categoryList': _eventObject['categoryList'],
+          'brandList': _eventObject['brandList'],
+          'ratingList': _eventObject['ratingList'],
+          'pagination': _eventObject['pagination'],
+        },
+        function(_data, _status, _jqXHR) {
+          if (_eventObject && _eventObject.callback) {
+            _eventObject.callback(_data);
+          }
+        },
+        function(_jqXHR, _status, _err) {
+          console.log('* something wrong happened ~ ');
+          console.log(_err);
+        }
+      );
+    });
+
   },
   methods: {
     /*

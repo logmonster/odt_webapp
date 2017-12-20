@@ -11154,13 +11154,6 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
 
 function _model_shop_landing_info(_inst) {
   return {
@@ -11241,13 +11234,101 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 //
 //
 //
+//
+//
+//
+//
 
+function _model_shop_landing_listing(_inst) {
+  return {
+    'instance': _inst,
+
+    'facets': {
+      'category': 'all',
+      'brand': 'all',
+      'rating': -1
+    },
+
+    'dataListing': [],
+
+    'pagination': {
+      'page': 0,
+      'pageSize': 10
+    }
+  };
+} // model
+
+module.exports={
+  name: 'shop_landing_listing',
+  data: function() {
+    return new _model_shop_landing_listing(this);
+  },
+  props: [],
+  watch: {
+    $route: function(_newValue) {
+      if (_newValue) {
+        if (_newValue.params.catList) {
+          this.facets['category']=_newValue.params.catList;
+        }
+        if (_newValue.params.brandList) {
+          this.facets['brand']=_newValue.params.brandList;
+        }
+        if (_newValue.params.ratingList) {
+          this.facets['rating']=_newValue.params.ratingList;
+        }
+        // ask for updated data (DAO)
+        this.getListingDataByRouteParams();
+      } // end -- if (_newValue is valid)
+    }
+  },
+  mounted: function() {
+    let _instance=this;
+    /*
+     *  1st time route params matching; subsequent changes on the $route object
+     *  is reflected by "watch" lifecycle hook
+     */
+    if (this.$route.params) {
+      let _r=this.$route.params;
+
+      if (_r.catList) {
+        this.facets['category']=_r.catList;
+      }
+      if (_r.brandList) {
+        this.facets['brand']=_r.brandList;
+      }
+      if (_r.ratingList) {
+        this.facets['rating']=_r.ratingList;
+      }
+      // ask for updated data (DAO)
+      this.getListingDataByRouteParams();
+    } // end -- if ($route.params valid)
+
+  },
+  methods: {
+
+    getListingDataByRouteParams: function() {
+      window.Vue.$emit('getListingDataByRouteParams', {
+        'categoryList': this.facets.category,
+        'brandList': this.facets.brand,
+        'ratingList': this.facets.rating,
+        
+        'pagination': this.pagination,
+        'callback': this.setListingData
+      });
+    },
+    setListingData: function(_data) {
+      this.dataListing = _data;
+      console.log(_data);
+    }
+
+  }
+};
 
 })()
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_vm._v("\n  hi there\n  "+_vm._s(_vm.$route.params.catList)),_c('br'),_vm._v("\n  "+_vm._s(_vm.$route.params.brandList)),_c('br'),_vm._v("\n  "+_vm._s(_vm.$route.params.ratingList)),_c('br'),_vm._v("\n  # hi there $\n")])}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_vm._v("\n  hi there\n  "),_vm._v("\n  "+_vm._s(_vm.facets['category'])),_c('br'),_vm._v("\n  "+_vm._s(_vm.facets['brand'])),_c('br'),_vm._v("\n  "+_vm._s(_vm.facets['rating'])),_c('br'),_vm._v("\n\n  # hi there $\n")])}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -11972,6 +12053,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 //
 //
 //
+//
 
 function _model_shop_landing(_instance) {
   return {
@@ -12050,7 +12132,7 @@ module.exports = {
           _instance.chosenFacetsCriteria['ratingList']=_eventObject['ratingList'];
         }
 
-        // special handling for top6 page
+        // special handling for top6 page (indirectly update the category facets control)
         if ('shop_product_top5' == _eventObject['from'] && _eventObject['catList']) {
           _instance.preSelectedCategory = _eventObject['catList'][0];
         }
@@ -12139,7 +12221,7 @@ module.exports = {
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('shop-carousel',{class:_vm.getCarouselCss(),attrs:{"images":_vm.carouselImages}}),_vm._v(" "),_c('div',{staticClass:"container-fluid landing-main-container"},[_c('div',{staticClass:"row"},[_c('div',{staticClass:"col-sm-12 col-md-3"},[_c('shop-facets-control',{attrs:{"mode":"button","data":_vm.getFacetsDataByType("_cats"),"preSelected":_vm.preSelectedCategory,"label":"categories"}}),_vm._v(" "),_c('p'),_vm._v(" "),_c('shop-facets-control',{attrs:{"mode":"button","data":_vm.getFacetsDataByType("_brands"),"label":"brands"}}),_vm._v(" "),_c('p'),_vm._v(" "),_c('shop-facets-control',{attrs:{"mode":"button","data":_vm.getFacetsDataByType("_ratings"),"label":"ratings"}})],1),_vm._v(" "),_c('div',{staticClass:"col-sm-12 col-md-9"},[_c('router-view')],1)])])],1)}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('shop-carousel',{class:_vm.getCarouselCss(),attrs:{"images":_vm.carouselImages}}),_vm._v(" "),_c('div',{staticClass:"container-fluid landing-main-container"},[_c('div',{staticClass:"row"},[_c('div',{staticClass:"col-sm-12 col-md-3"},[_c('shop-facets-control',{attrs:{"mode":"button","data":_vm.getFacetsDataByType("_cats"),"preSelected":_vm.preSelectedCategory,"label":"categories"}}),_vm._v(" "),_c('p'),_vm._v(" "),_c('shop-facets-control',{attrs:{"mode":"button","data":_vm.getFacetsDataByType("_brands"),"label":"brands"}}),_vm._v(" "),_c('p')],1),_vm._v(" "),_c('div',{staticClass:"col-sm-12 col-md-9"},[_c('router-view')],1)])])],1)}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -12290,6 +12372,30 @@ module.exports={
       window.ajaxUtil.GET(
         '/api/shopLandingInfoGet',
         null,
+        function(_data, _status, _jqXHR) {
+          if (_eventObject && _eventObject.callback) {
+            _eventObject.callback(_data);
+          }
+        },
+        function(_jqXHR, _status, _err) {
+          console.log('* something wrong happened ~ ');
+          console.log(_err);
+        }
+      );
+    });
+
+    /*
+     *  handle the request to fetch the listing data based on the router.params
+     */
+    window.Vue.$on('getListingDataByRouteParams', function(_eventObject) {
+      window.ajaxUtil.GET(
+        '/api/shopListingByParamsGet',
+        {
+          'categoryList': _eventObject['categoryList'],
+          'brandList': _eventObject['brandList'],
+          'ratingList': _eventObject['ratingList'],
+          'pagination': _eventObject['pagination'],
+        },
         function(_data, _status, _jqXHR) {
           if (_eventObject && _eventObject.callback) {
             _eventObject.callback(_data);
