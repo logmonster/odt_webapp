@@ -2857,7 +2857,7 @@ if (inBrowser && window.Vue) {
 module.exports = VueRouter;
 
 }).call(this,require('_process'))
-},{"_process":20}],3:[function(require,module,exports){
+},{"_process":21}],3:[function(require,module,exports){
 (function (process,global){
 /*!
  * Vue.js v2.5.9
@@ -10721,7 +10721,7 @@ Vue$3.nextTick(function () {
 module.exports = Vue$3;
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":20}],4:[function(require,module,exports){
+},{"_process":21}],4:[function(require,module,exports){
 
 var Vue = require('vue')
 var Shop = require('./vue/shop-main.vue')
@@ -10750,6 +10750,7 @@ window.Vue = new Vue();
 window.VueRouter = router;
 window.ajaxUtil = require('./vue/util/jQueryAjaxUtil.vue');
 window.throttleUtil = require('./vue/util/uiThrottleUtil.vue');
+window.windowEventUtil = require('./vue/util/windowEventUtil.vue');
 
 let app = new Vue({
   el: '#shop-app',
@@ -10759,7 +10760,7 @@ let app = new Vue({
   }
 });
 
-},{"./vue/component/shop-carousel.vue":5,"./vue/component/shop-facets-control.vue":6,"./vue/component/shop-header-navigator.vue":7,"./vue/component/shop-product-display-top5.vue":10,"./vue/component/shop-product-item-small.vue":11,"./vue/component/shop-searchbar.vue":12,"./vue/component/shop-spy-panel.vue":13,"./vue/router.vue":14,"./vue/shop-main.vue":17,"./vue/util/jQueryAjaxUtil.vue":18,"./vue/util/uiThrottleUtil.vue":19,"vue":3,"vue-router":2}],5:[function(require,module,exports){
+},{"./vue/component/shop-carousel.vue":5,"./vue/component/shop-facets-control.vue":6,"./vue/component/shop-header-navigator.vue":7,"./vue/component/shop-product-display-top5.vue":10,"./vue/component/shop-product-item-small.vue":11,"./vue/component/shop-searchbar.vue":12,"./vue/component/shop-spy-panel.vue":13,"./vue/router.vue":14,"./vue/shop-main.vue":17,"./vue/util/jQueryAjaxUtil.vue":18,"./vue/util/uiThrottleUtil.vue":19,"./vue/util/windowEventUtil.vue":20,"vue":3,"vue-router":2}],5:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -11247,6 +11248,8 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 //
 //
 //
+//
+//
 
 function _model_shop_product_top5(_inst) {
   return {
@@ -11284,7 +11287,7 @@ module.exports={
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('span',{staticClass:"product-t6-label"},[_vm._v(_vm._s(_vm.getCategoryName()))]),_vm._v(" \n  more "),_vm._v(" "),_c('div',{staticClass:"container-fluid"},[_c('div',{staticClass:"row"},_vm._l((_vm.getTop6Hits()),function(_hit,_idx){return _c('div',{staticClass:"col-sm-6 col-md-3",staticStyle:{"padding":"2px"}},[_c('shop-product-item-small',{attrs:{"item":_hit}})],1)}))])])}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('span',{staticClass:"product-t6-label"},[_vm._v(_vm._s(_vm.getCategoryName()))]),_vm._v(" \n  more "),_vm._v(" "),_c('div',{staticClass:"container-fluid"},[_c('div',{staticClass:"row"},_vm._l((_vm.getTop6Hits()),function(_hit,_idx){return _c('div',{staticClass:"col-sm-6 col-md-3",staticStyle:{"padding":"2px"}},[_c('shop-product-item-small',{staticStyle:{"margin-bottom":"8px"},attrs:{"item":_hit}})],1)}))])])}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -11313,11 +11316,16 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 //
 //
 //
+//
+//
+//
+//
 
 function _model_shop_product_item_sm(_inst) {
   return {
     'instance': _inst,
-    'imgId': ''
+    'imgId': '',
+    'fakeIndicator': 1
   };
 } // end -- model
 
@@ -11327,6 +11335,12 @@ module.exports = {
     return new _model_shop_product_item_sm(this);
   },
   props: [ 'item' ],
+  mounted: function() {
+    let _instance = this;
+
+    this.windowEventUtil = new window.windowEventUtil();
+    this.windowEventUtil.registerEvent('resize', 'shop_product_item_sm', this.fakeUpdateModel);
+  },
   /*computed: {
     *
      *  a generated id (sort of hash) for the image component
@@ -11336,6 +11350,14 @@ module.exports = {
     }*
   },*/
   methods: {
+    /*
+     *  a fake indicator to force vue to update the css methods;
+     *  the tip is that the model associated with this component must be
+     *  changed / updated, if not the css methods won't be re-triggered
+     */
+    fakeUpdateModel: function() {
+      this.fakeIndicator = parseInt(new Date().getTime()*Math.random(), 10);
+    },
     /*
      *  create the image component id (not using computed value)
      */
@@ -11370,10 +11392,10 @@ module.exports = {
         } // end -- if (_width is > 0)
       } // end -- if (jQuery object is valid)
       // return a dummy object...
-      return {};
+      let _c=this.fakeIndicator;
+      return { _c: false };
     }
 
-// TODO: try https://jsfiddle.net/hr77p7qb/3/ approach instead    
 
   }
 };
@@ -11382,7 +11404,7 @@ module.exports = {
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"product-item-sm-container"},[_c('img',{class:_vm.getImgCss(),staticStyle:{"width":"calc(100%)"},attrs:{"id":_vm.getImgId(),"src":_vm.getImageUrl()}}),_vm._v(" "),_c('div',{staticClass:"text-truncate"},[_vm._v("\n    "+_vm._s(_vm.item["_source"]["t_description"]))]),_vm._v(" "),_c('div',[_vm._v("\n    "+_vm._s(_vm.item["_source"]["hf_price_suggested"])+"\n  ")])])}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"product-item-sm-container pointer"},[_c('img',{class:_vm.getImgCss(),staticStyle:{"width":"calc(100%)"},attrs:{"id":_vm.getImgId(),"src":_vm.getImageUrl()}}),_vm._v(" "),_c('div',{staticClass:"text-truncate product-item-sm-label",attrs:{"title":_vm.item["_source"]["t_description"]}},[_vm._v("\n    "+_vm._s(_vm.item["_source"]["t_description"]))]),_vm._v(" "),_c('div',{staticClass:"product-itme-sm-sublabel"},[_vm._v("\n    $"+_vm._s(_vm.item["_source"]["hf_price_suggested"].toFixed(3))+"\n  ")])])}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -12444,6 +12466,99 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   }
 })()}
 },{"vue":3,"vue-hot-reload-api":1}],20:[function(require,module,exports){
+;(function(){
+
+/**
+ *  util to handle windows related event; such as "resize"
+ *
+ *  ref: https://jsfiddle.net/hr77p7qb/3/
+ */
+let WindowEventUtil = function() {
+  // core data structure for storing the "event-key" and its assoicated eventHandler(s)
+  let _eventMap = {};
+  // map of registered event for this util instance
+  let _registeredEvent = {};
+
+  /*
+   *  helper method to register callback based on componentName
+   */
+  let _registerCallbackByComponentName = function(
+    _eventType, _componentName, _callback) {
+
+    if (!_eventMap.hasOwnProperty(_eventType)) {
+      _eventMap[_eventType] = {};
+    }
+    let _eventMembers = _eventMap[_eventType];
+    // need to do anything to the to-be-disposed _callback???
+    _eventMembers[_componentName] = _callback;
+  };
+
+  /*
+   *  resize event Hook method
+   */
+  let _resizeEventHook = function() {
+    let _eventMembers = _eventMap['resize'];
+
+    if (_eventMembers) {
+      let _keys=Object.keys(_eventMembers);
+
+      for (let _idx=0; _idx<_keys.length; _idx++) {
+        let _cb = _eventMembers[_keys[_idx]];
+        if (_cb) {
+          _cb();
+        }
+      } // end -- for (keys loop)
+    }
+  };
+
+
+  /*
+   *  return the minimal features to the caller
+   */
+  return {
+    /*
+     *  register an event based on type and componentName;
+     *  invoke the callback when the event is
+     *  triggered
+     */
+    registerEvent: function(_eventType, _componentName, _callback) {
+      if (_eventType) {
+        if ('resize' == _eventType && _componentName && _callback) {
+          // resize event
+          // unregistered previous _callback if any (based on componentName)
+          _registerCallbackByComponentName(
+            _eventType, _componentName, _callback);
+
+          if (!_registeredEvent.hasOwnProperty(_eventType)) {
+            _registeredEvent[_eventType]=true;
+            window.addEventListener(_eventType, _resizeEventHook);
+          }
+        }
+      } // end -- if (_eventType is valid)
+    }
+
+  };
+};
+
+/*
+ *  new an instance of "WindowEventUtil" instead of treating it as a "singleton"
+ */
+module.exports=WindowEventUtil;
+
+})()
+if (module.exports.__esModule) module.exports = module.exports.default
+var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
+if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-8ef992f0", __vue__options__)
+  } else {
+    hotAPI.reload("data-v-8ef992f0", __vue__options__)
+  }
+})()}
+},{"vue":3,"vue-hot-reload-api":1}],21:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 

@@ -8,7 +8,9 @@
           style='padding: 2px;'
           v-for="(_hit, _idx) in getTop6Hits()" >
           <!--{{_hit['_source']['t_description']}}-->
-          <shop-product-item-small :item="_hit"  ></shop-product-item-small>
+          <shop-product-item-small
+            style="margin-bottom: 8px;"
+            :item="_hit"  ></shop-product-item-small>
 
         </div>
       </div>

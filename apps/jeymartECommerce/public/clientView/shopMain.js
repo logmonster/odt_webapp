@@ -26,6 +26,7 @@ window.Vue = new Vue();
 window.VueRouter = router;
 window.ajaxUtil = require('./vue/util/jQueryAjaxUtil.vue');
 window.throttleUtil = require('./vue/util/uiThrottleUtil.vue');
+window.windowEventUtil = require('./vue/util/windowEventUtil.vue');
 
 let app = new Vue({
   el: '#shop-app',

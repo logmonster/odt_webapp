@@ -1,13 +1,28 @@
 
 .product-t6-label {
   font-size: 18px;
-  font-weight: 400;
-  color: #aaa;
+  font-weight: 600;
+  padding-left: 2px;
+  color: #888;
 }
 
 .product-item-sm-container {
-  border: 1px solid black;
+  border: 1px solid #ccc;
   border-radius: 3px 3px 3px 3px;
 
   width: calc(100%);
+}
+
+.product-item-sm-label {
+  padding-top: 2px;
+  padding-left: 2px; padding-bottom: 2px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.product-itme-sm-sublabel {
+  padding-left: 2px; padding-bottom: 2px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #bbb;
 }

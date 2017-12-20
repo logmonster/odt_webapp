@@ -1,14 +1,18 @@
 <template>
-  <div class="product-item-sm-container">
+  <div class="product-item-sm-container pointer">
     <!--:id='generatedImgId'-->
     <img :id='getImgId()'
       :src='getImageUrl()'
       :class='getImgCss()'
       style="width: calc(100%);"  >
-    <div class='text-truncate'>
+
+    <div
+      :title='item["_source"]["t_description"]'
+      class='text-truncate product-item-sm-label'>
       {{item["_source"]["t_description"]}}</div>
-    <div>
-      {{item["_source"]["hf_price_suggested"]}}
+      
+    <div class="product-itme-sm-sublabel">
+      ${{item["_source"]["hf_price_suggested"].toFixed(3)}}
     </div>
   </div>
 </template>
@@ -17,7 +21,8 @@
 function _model_shop_product_item_sm(_inst) {
   return {
     'instance': _inst,
-    'imgId': ''
+    'imgId': '',
+    'fakeIndicator': 1
   };
 } // end -- model
 
@@ -27,6 +32,12 @@ module.exports = {
     return new _model_shop_product_item_sm(this);
   },
   props: [ 'item' ],
+  mounted: function() {
+    let _instance = this;
+
+    this.windowEventUtil = new window.windowEventUtil();
+    this.windowEventUtil.registerEvent('resize', 'shop_product_item_sm', this.fakeUpdateModel);
+  },
   /*computed: {
     *
      *  a generated id (sort of hash) for the image component
@@ -36,6 +47,14 @@ module.exports = {
     }*
   },*/
   methods: {
+    /*
+     *  a fake indicator to force vue to update the css methods;
+     *  the tip is that the model associated with this component must be
+     *  changed / updated, if not the css methods won't be re-triggered
+     */
+    fakeUpdateModel: function() {
+      this.fakeIndicator = parseInt(new Date().getTime()*Math.random(), 10);
+    },
     /*
      *  create the image component id (not using computed value)
      */
@@ -70,10 +89,10 @@ module.exports = {
         } // end -- if (_width is > 0)
       } // end -- if (jQuery object is valid)
       // return a dummy object...
-      return {};
+      let _c=this.fakeIndicator;
+      return { _c: false };
     }
 
-// TODO: try https://jsfiddle.net/hr77p7qb/3/ approach instead    
 
   }
 };
