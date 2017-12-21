@@ -104,6 +104,9 @@ module.exports={
         if (_newValue.params.ratingList) {
           this.facets['rating']=_newValue.params.ratingList;
         }
+        if (_newValue.params.pagination) {
+          this.pagination=_newValue.params.pagination;
+        }
         // ask for updated data (DAO)
         this.getListingDataByRouteParams();
       } // end -- if (_newValue is valid)
@@ -126,6 +129,9 @@ module.exports={
       }
       if (_r.ratingList) {
         this.facets['rating']=_r.ratingList;
+      }
+      if (_r.pagination) {
+        this.pagination=_r.pagination;
       }
       // ask for updated data (DAO)
       this.getListingDataByRouteParams();
@@ -234,11 +240,12 @@ module.exports={
       }
     },
     emitLandingListingPageChangeEvent: function() {
-      window.Vue.$emit('listingPageChange', {
+      window.Vue.$emit('getListingDataByRouteParams', {
+        'categoryList': this.facets['category'],
+        'brandList': this.facets['brand'],
+        'ratingList': this.facets['rating'],
         'pagination': this.pagination,
-        'category': this.facets['category'],
-        'brand': this.facets['brand'],
-        'rating': this.facets['rating']
+        'callback': this.setListingData
       });
     }
 

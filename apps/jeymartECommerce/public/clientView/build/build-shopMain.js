@@ -10958,7 +10958,7 @@ module.exports = {
         }
       } // end -- if (_newValue is valid)
     }
-    
+
   },
   methods: {
     /*
@@ -11034,6 +11034,11 @@ module.exports = {
       } else if (this.label == 'ratings') {
         _eventObject['ratingList'] = this.chosenItemList;
       }
+      // reset pagination
+      _eventObject['pagination']={
+        'page': 0,
+        'pageSize': 16
+      };
       window.Vue.$emit('changeRouterViewToListing', _eventObject);
     }
 
@@ -11330,6 +11335,9 @@ module.exports={
         if (_newValue.params.ratingList) {
           this.facets['rating']=_newValue.params.ratingList;
         }
+        if (_newValue.params.pagination) {
+          this.pagination=_newValue.params.pagination;
+        }
         // ask for updated data (DAO)
         this.getListingDataByRouteParams();
       } // end -- if (_newValue is valid)
@@ -11352,6 +11360,9 @@ module.exports={
       }
       if (_r.ratingList) {
         this.facets['rating']=_r.ratingList;
+      }
+      if (_r.pagination) {
+        this.pagination=_r.pagination;
       }
       // ask for updated data (DAO)
       this.getListingDataByRouteParams();
@@ -11460,11 +11471,12 @@ module.exports={
       }
     },
     emitLandingListingPageChangeEvent: function() {
-      window.Vue.$emit('listingPageChange', {
+      window.Vue.$emit('getListingDataByRouteParams', {
+        'categoryList': this.facets['category'],
+        'brandList': this.facets['brand'],
+        'ratingList': this.facets['rating'],
         'pagination': this.pagination,
-        'category': this.facets['category'],
-        'brand': this.facets['brand'],
-        'rating': this.facets['rating']
+        'callback': this.setListingData
       });
     }
 
@@ -12290,6 +12302,7 @@ module.exports = {
             catList: _instance.chosenFacetsCriteria['catList'],
             brandList: _instance.chosenFacetsCriteria['brandList'],
             ratingList: _instance.chosenFacetsCriteria['ratingList'],
+            pagination: _eventObject['pagination']
           }
         });
       } // end -- if (chosenFacetsCriteria and _eventObject are valid)

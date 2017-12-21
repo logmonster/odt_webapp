@@ -67,7 +67,7 @@ module.exports = {
         }
       } // end -- if (_newValue is valid)
     }
-    
+
   },
   methods: {
     /*
@@ -143,6 +143,11 @@ module.exports = {
       } else if (this.label == 'ratings') {
         _eventObject['ratingList'] = this.chosenItemList;
       }
+      // reset pagination
+      _eventObject['pagination']={
+        'page': 0,
+        'pageSize': 16
+      };
       window.Vue.$emit('changeRouterViewToListing', _eventObject);
     }
 

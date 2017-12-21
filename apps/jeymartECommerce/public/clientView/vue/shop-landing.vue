@@ -127,6 +127,7 @@ module.exports = {
             catList: _instance.chosenFacetsCriteria['catList'],
             brandList: _instance.chosenFacetsCriteria['brandList'],
             ratingList: _instance.chosenFacetsCriteria['ratingList'],
+            pagination: _eventObject['pagination']
           }
         });
       } // end -- if (chosenFacetsCriteria and _eventObject are valid)
