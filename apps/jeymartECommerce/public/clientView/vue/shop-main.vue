@@ -171,6 +171,14 @@ module.exports={
       );
     });
 
+    /**
+     *  handle the request to change page of the listing-view
+     */
+    window.Vue.$on('listingPageChange', function(_eventObject) {
+console.log('inside listingPageChange(main)');
+console.log(_eventObject);
+    });
+
   },
   methods: {
     /*

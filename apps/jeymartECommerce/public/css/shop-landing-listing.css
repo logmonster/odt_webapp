@@ -1,0 +1,21 @@
+
+.shop-listing-header-container {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+.shop-listing-header-label {
+  font-weight: 400;
+  font-size: 16px;
+  color: #666;
+}
+.shop-listing-pagination-container {
+  margin-left: 100px;
+  margin-right: 100px;
+}
+.shop-listing-header-count {
+  color: #03a9f4 !important;
+}
+.shop-listing-header-count-label {
+  font-weight: 400;
+  color: #666;
+}

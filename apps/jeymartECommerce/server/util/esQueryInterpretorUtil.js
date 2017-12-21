@@ -190,9 +190,11 @@ let Util = function(_defaultQueriesMap, _eb) {
         _q.filter(_filterLst);
       }
       // handle _pagination
-console.log(_pagination['page']+','+_pagination['pageSize']);
-// TODO: handle _pagination
-
+      let _size = parseInt(_pagination['pageSize'], 10);
+      let _from = parseInt(_pagination['page'], 10)*_size;
+      _queryObj.from(_from);
+      _queryObj.size(_size);
+      // set back the query object to the RequestBodySearch object
       _queryObj.query(_q);
     }
 

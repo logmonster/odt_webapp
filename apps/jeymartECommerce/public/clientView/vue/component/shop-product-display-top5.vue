@@ -3,8 +3,7 @@
     <span class="product-t6-label">{{getCategoryName()}}</span>&nbsp;
     <a href='javascript:void(0);' @click='handleMoreClick()'>
       <span class='product-t6-more'>
-        more... <!-- similar to the linking of the shop-facets-control.vue -->
-      </span>
+        more...</span>
     </a>
 
     <div class='container-fluid'>

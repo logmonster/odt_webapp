@@ -237,29 +237,30 @@ var MainRoutes = function(_client, _router, _eBuilder, _defaultQueriesMap, _esIn
       'shopListingByParamsGet', 'getListingDataByRouteParams');
     let _meta = _qSection['meta'];
     let _critMap = {};
+    let _body=[];
 
     // build the criteria map (this query only needs a MUST, SHOULD)
     _critMap['must']=[];
     _critMap['should']=[];
-    /*
-    'categoryList': _eventObject['categoryList'],
-    'brandList': _eventObject['brandList'],
-'pagination': _eventObject['pagination'],
-    */
+
+    // category
     let _lst=_req.query['categoryList'];
     if (_lst && _lst.length>0) {
-      _critMap=_buildQueryCriteria(_critMap, _lst, 'MatchQuery', 'k_category');
+      _critMap=_buildListingDataByRouteParamsCriteria(
+        _critMap, _lst, 'MatchQuery', 'k_category');
     }
+    // brand
     _lst=_req.query['brandList'];
     if (_lst && _lst.length>0) {
-      _critMap=_buildQueryCriteria(_critMap, _lst, 'MatchQuery', 's_brand_name');
+      _critMap=_buildListingDataByRouteParamsCriteria(
+        _critMap, _lst, 'MatchQuery', 's_brand_name');
     }
+    // pagination
     _critMap['pagination']=_req.query['pagination'];
 
-    _queryObj = _esInterpretorUtil.buildQueryByType(
-      _qSection, _critMap);
+    _queryObj = _esInterpretorUtil.buildQueryByType(_qSection, _critMap);
 
-    let _body=[];
+    // build the meta and query for msearch
     _body.push(_meta);
     _body.push(_queryObj.toJSON());
 
@@ -272,7 +273,10 @@ var MainRoutes = function(_client, _router, _eBuilder, _defaultQueriesMap, _esIn
     }); // end -- msearch
   };
 
-  let _buildQueryCriteria = function(
+  /**
+   *  handy method to build a criteria object for "query" operations
+   */
+  let _buildListingDataByRouteParamsCriteria = function(
     _critMap, _lst, _queryMethod, _field) {
 
     if (_lst.length==1) {
@@ -287,6 +291,9 @@ var MainRoutes = function(_client, _router, _eBuilder, _defaultQueriesMap, _esIn
     return _critMap;
   };
 
+  /**
+   *  return the minimal methods and attributes to the caller
+   */
   return {
     // setup routes related to Jeymart eCommerce app
     setup: () => {
