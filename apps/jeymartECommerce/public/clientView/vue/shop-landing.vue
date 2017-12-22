@@ -116,8 +116,22 @@ module.exports = {
         }
 
         // special handling for top6 page (indirectly update the category facets control)
-        if ('shop_product_top5' == _eventObject['from'] && _eventObject['catList']) {
-          _instance.preSelectedCategory = _eventObject['catList'][0];
+        if (('shop_product_top5' == _eventObject['from'] ||
+              'shop_searchbar' == _eventObject['from'] ||
+              'shop_landing_listing' == _eventObject['from']) &&
+          _eventObject['catList']) {
+
+          if (_eventObject['catList'].length>0) {
+            _instance.preSelectedCategory = _eventObject['catList'][0];
+          } else {
+            // 'all' means no preSelected category filter
+            _instance.preSelectedCategory = 'all';
+          }
+        }
+        // special handling for empty searchbarText (set to __empty__)
+        let _searchbarText = _eventObject['searchbarText'];
+        if (!_searchbarText || _searchbarText.trim().length==0) {
+          _searchbarText="__empty__";
         }
 
         window.VueRouter.push({
@@ -127,6 +141,7 @@ module.exports = {
             catList: _instance.chosenFacetsCriteria['catList'],
             brandList: _instance.chosenFacetsCriteria['brandList'],
             ratingList: _instance.chosenFacetsCriteria['ratingList'],
+            searchbarText: _searchbarText,
             pagination: _eventObject['pagination']
           }
         });

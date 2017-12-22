@@ -45,6 +45,16 @@ module.exports = {
   },
   // mode: button (click and go), checkbox (multi-check and go)
   props: [ 'label', 'mode', 'data', 'preSelected' ],
+  mounted: function() {
+    let _instance=this;
+
+    window.Vue.$on('getListingDataByRouteParams', function(_eventObject) {
+      if (_eventObject && 'shop_landing_listing'==_eventObject['from']) {
+        // remove the given category
+        _instance.chosenItemList=[];
+      }
+    });
+  },
   watch: {
     preSelected: function(_newValue) {
       if (_newValue) {

@@ -1,13 +1,5 @@
 <template>
   <div>
-    <!--hi there
-    {{$route.params.catList}}<br/>
-    {{$route.params.brandList}}<br/>
-    {{$route.params.ratingList}}<br/>
-    {{facets['category']}}<br/>
-    {{facets['brand']}}<br/>
-    {{facets['rating']}}<br/>
-    # hi there $ -->
     <!-- header -->
     <div class="shop-listing-header-container">
       <span class="shop-listing-header-label">Filters:&nbsp;&nbsp;</span>
@@ -27,6 +19,10 @@
         <span class='shop-listing-header-count'>Hits: </span>
         <span class='shop-listing-header-count-label'>
           {{getHitsCount()}}
+        </span>
+        &nbsp;
+        <span class='shop-listing-header-count-label'>
+          (page {{pagination.page+1}})
         </span>
       </div>
     </div>
@@ -82,7 +78,9 @@ function _model_shop_landing_listing(_inst) {
     'pagination': {
       'page': 0,
       'pageSize': 16
-    }
+    },
+
+    'searchbarText': ''
   };
 } // model
 
@@ -106,6 +104,9 @@ module.exports={
         }
         if (_newValue.params.pagination) {
           this.pagination=_newValue.params.pagination;
+        }
+        if (_newValue.params.searchbarText) {
+          this.searchbarText=_newValue.params.searchbarText;
         }
         // ask for updated data (DAO)
         this.getListingDataByRouteParams();
@@ -133,6 +134,9 @@ module.exports={
       if (_r.pagination) {
         this.pagination=_r.pagination;
       }
+      if (_r.searchbarText) {
+        this.searchbarText=_r.searchbarText;
+      }
       // ask for updated data (DAO)
       this.getListingDataByRouteParams();
     } // end -- if ($route.params valid)
@@ -145,6 +149,7 @@ module.exports={
         'categoryList': this.facets.category,
         'brandList': this.facets.brand,
         'ratingList': this.facets.rating,
+        'searchbarText': this.searchbarText,
 
         'pagination': this.pagination,
         'callback': this.setListingData
@@ -223,8 +228,16 @@ module.exports={
     },
 
     handlePillClick: function(_pillValue, _facetType) {
-      console.log(_pillValue+', '+_facetType);
-// TODO: update the filter and get refreshed data for listing
+      // update the filter and get refreshed data for listing
+      if ('category'==_facetType) {
+        window.collectionUtil.removeElementFromArray(
+          _pillValue, this.facets['category']);
+
+      } else if ('brand'==_facetType) {
+        window.collectionUtil.removeElementFromArray(
+          _pillValue, this.facets['brand']);
+      } // end -- if (_facetType)
+      this.emitLandingListingPageChangeEvent();
     },
 
     handlePrevClick: function() {
@@ -241,9 +254,11 @@ module.exports={
     },
     emitLandingListingPageChangeEvent: function() {
       window.Vue.$emit('getListingDataByRouteParams', {
+        'from': 'shop_landing_listing',
         'categoryList': this.facets['category'],
         'brandList': this.facets['brand'],
         'ratingList': this.facets['rating'],
+        'searchbarText': this.searchbarText,
         'pagination': this.pagination,
         'callback': this.setListingData
       });

@@ -2857,7 +2857,7 @@ if (inBrowser && window.Vue) {
 module.exports = VueRouter;
 
 }).call(this,require('_process'))
-},{"_process":21}],3:[function(require,module,exports){
+},{"_process":22}],3:[function(require,module,exports){
 (function (process,global){
 /*!
  * Vue.js v2.5.9
@@ -10721,7 +10721,7 @@ Vue$3.nextTick(function () {
 module.exports = Vue$3;
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":21}],4:[function(require,module,exports){
+},{"_process":22}],4:[function(require,module,exports){
 
 var Vue = require('vue')
 var Shop = require('./vue/shop-main.vue')
@@ -10751,6 +10751,7 @@ window.VueRouter = router;
 window.ajaxUtil = require('./vue/util/jQueryAjaxUtil.vue');
 window.throttleUtil = require('./vue/util/uiThrottleUtil.vue');
 window.windowEventUtil = require('./vue/util/windowEventUtil.vue');
+window.collectionUtil = require('./vue/util/collectionUtil.vue');
 
 let app = new Vue({
   el: '#shop-app',
@@ -10760,7 +10761,7 @@ let app = new Vue({
   }
 });
 
-},{"./vue/component/shop-carousel.vue":5,"./vue/component/shop-facets-control.vue":6,"./vue/component/shop-header-navigator.vue":7,"./vue/component/shop-product-display-top5.vue":10,"./vue/component/shop-product-item-small.vue":11,"./vue/component/shop-searchbar.vue":12,"./vue/component/shop-spy-panel.vue":13,"./vue/router.vue":14,"./vue/shop-main.vue":17,"./vue/util/jQueryAjaxUtil.vue":18,"./vue/util/uiThrottleUtil.vue":19,"./vue/util/windowEventUtil.vue":20,"vue":3,"vue-router":2}],5:[function(require,module,exports){
+},{"./vue/component/shop-carousel.vue":5,"./vue/component/shop-facets-control.vue":6,"./vue/component/shop-header-navigator.vue":7,"./vue/component/shop-product-display-top5.vue":10,"./vue/component/shop-product-item-small.vue":11,"./vue/component/shop-searchbar.vue":12,"./vue/component/shop-spy-panel.vue":13,"./vue/router.vue":14,"./vue/shop-main.vue":17,"./vue/util/collectionUtil.vue":18,"./vue/util/jQueryAjaxUtil.vue":19,"./vue/util/uiThrottleUtil.vue":20,"./vue/util/windowEventUtil.vue":21,"vue":3,"vue-router":2}],5:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -10936,6 +10937,16 @@ module.exports = {
   },
   // mode: button (click and go), checkbox (multi-check and go)
   props: [ 'label', 'mode', 'data', 'preSelected' ],
+  mounted: function() {
+    let _instance=this;
+
+    window.Vue.$on('getListingDataByRouteParams', function(_eventObject) {
+      if (_eventObject && 'shop_landing_listing'==_eventObject['from']) {
+        // remove the given category
+        _instance.chosenItemList=[];
+      }
+    });
+  },
   watch: {
     preSelected: function(_newValue) {
       if (_newValue) {
@@ -11293,10 +11304,6 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 //
 //
 //
-//
-//
-//
-//
 
 function _model_shop_landing_listing(_inst) {
   return {
@@ -11313,7 +11320,9 @@ function _model_shop_landing_listing(_inst) {
     'pagination': {
       'page': 0,
       'pageSize': 16
-    }
+    },
+
+    'searchbarText': ''
   };
 } // model
 
@@ -11337,6 +11346,9 @@ module.exports={
         }
         if (_newValue.params.pagination) {
           this.pagination=_newValue.params.pagination;
+        }
+        if (_newValue.params.searchbarText) {
+          this.searchbarText=_newValue.params.searchbarText;
         }
         // ask for updated data (DAO)
         this.getListingDataByRouteParams();
@@ -11364,6 +11376,9 @@ module.exports={
       if (_r.pagination) {
         this.pagination=_r.pagination;
       }
+      if (_r.searchbarText) {
+        this.searchbarText=_r.searchbarText;
+      }
       // ask for updated data (DAO)
       this.getListingDataByRouteParams();
     } // end -- if ($route.params valid)
@@ -11376,6 +11391,7 @@ module.exports={
         'categoryList': this.facets.category,
         'brandList': this.facets.brand,
         'ratingList': this.facets.rating,
+        'searchbarText': this.searchbarText,
 
         'pagination': this.pagination,
         'callback': this.setListingData
@@ -11454,8 +11470,16 @@ module.exports={
     },
 
     handlePillClick: function(_pillValue, _facetType) {
-      console.log(_pillValue+', '+_facetType);
-// TODO: update the filter and get refreshed data for listing
+      // update the filter and get refreshed data for listing
+      if ('category'==_facetType) {
+        window.collectionUtil.removeElementFromArray(
+          _pillValue, this.facets['category']);
+
+      } else if ('brand'==_facetType) {
+        window.collectionUtil.removeElementFromArray(
+          _pillValue, this.facets['brand']);
+      } // end -- if (_facetType)
+      this.emitLandingListingPageChangeEvent();
     },
 
     handlePrevClick: function() {
@@ -11472,9 +11496,11 @@ module.exports={
     },
     emitLandingListingPageChangeEvent: function() {
       window.Vue.$emit('getListingDataByRouteParams', {
+        'from': 'shop_landing_listing',
         'categoryList': this.facets['category'],
         'brandList': this.facets['brand'],
         'ratingList': this.facets['rating'],
+        'searchbarText': this.searchbarText,
         'pagination': this.pagination,
         'callback': this.setListingData
       });
@@ -11487,7 +11513,7 @@ module.exports={
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('div',{staticClass:"shop-listing-header-container"},[_c('span',{staticClass:"shop-listing-header-label"},[_vm._v("Filters:  ")]),_vm._v(" "),_vm._l((_vm.facets.category),function(_item,_idx){return _c('span',{staticClass:"pointer badge badge-pill light-blue shop-listing-header-pill",style:(_vm.getCssStyleForPills()),on:{"click":function($event){_vm.handlePillClick(_item, "category")}}},[_vm._v("\n      "+_vm._s(_item)+" "),_c('i',{staticClass:"fa fa-close",attrs:{"aria-hidden":"true"}})])}),_vm._v(" "),_vm._l((_vm.facets.brand),function(_item,_idx){return _c('span',{staticClass:"pointer badge badge-pill green shop-listing-header-pill",style:(_vm.getCssStyleForPills()),on:{"click":function($event){_vm.handlePillClick(_item, "brand")}}},[_vm._v("\n      "+_vm._s(_item)+" "),_c('i',{staticClass:"fa fa-close",attrs:{"aria-hidden":"true"}})])}),_vm._v(" "),_c('div',{staticClass:"pull-right"},[_c('span',{staticClass:"shop-listing-header-count"},[_vm._v("Hits: ")]),_vm._v(" "),_c('span',{staticClass:"shop-listing-header-count-label"},[_vm._v("\n        "+_vm._s(_vm.getHitsCount())+"\n      ")])])],2),_vm._v(" "),_c('div',{staticClass:"container-fluid"},[_c('div',{staticClass:"row"},_vm._l((_vm.getHitsList()),function(_hit,_idx){return _c('div',{staticClass:"col-sm-6 col-md-3",staticStyle:{"padding":"2px"}},[_c('shop-product-item-small',{staticStyle:{"margin-bottom":"8px"},attrs:{"item":_hit}})],1)}))]),_vm._v(" "),_c('div',{staticClass:"shop-listing-pagination-container text-center",class:_vm.getCssForPagination()},[_c('button',{staticClass:"btn btn-outline-info waves-effect",style:(_vm.getCssStyleForPills()),attrs:{"type":"button","disabled":_vm.isPreviousButtonDisabled()},on:{"click":function($event){_vm.handlePrevClick()}}},[_vm._v("\n      previous")]),_vm._v(" "),_c('button',{staticClass:"btn btn-outline-success waves-effect",style:(_vm.getCssStyleForPills()),attrs:{"type":"button","disabled":_vm.isNextButtonDisabled()},on:{"click":function($event){_vm.handleNextClick()}}},[_vm._v("\n      next page")])])])}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('div',{staticClass:"shop-listing-header-container"},[_c('span',{staticClass:"shop-listing-header-label"},[_vm._v("Filters:  ")]),_vm._v(" "),_vm._l((_vm.facets.category),function(_item,_idx){return _c('span',{staticClass:"pointer badge badge-pill light-blue shop-listing-header-pill",style:(_vm.getCssStyleForPills()),on:{"click":function($event){_vm.handlePillClick(_item, "category")}}},[_vm._v("\n      "+_vm._s(_item)+" "),_c('i',{staticClass:"fa fa-close",attrs:{"aria-hidden":"true"}})])}),_vm._v(" "),_vm._l((_vm.facets.brand),function(_item,_idx){return _c('span',{staticClass:"pointer badge badge-pill green shop-listing-header-pill",style:(_vm.getCssStyleForPills()),on:{"click":function($event){_vm.handlePillClick(_item, "brand")}}},[_vm._v("\n      "+_vm._s(_item)+" "),_c('i',{staticClass:"fa fa-close",attrs:{"aria-hidden":"true"}})])}),_vm._v(" "),_c('div',{staticClass:"pull-right"},[_c('span',{staticClass:"shop-listing-header-count"},[_vm._v("Hits: ")]),_vm._v(" "),_c('span',{staticClass:"shop-listing-header-count-label"},[_vm._v("\n        "+_vm._s(_vm.getHitsCount())+"\n      ")]),_vm._v("\n       \n      "),_c('span',{staticClass:"shop-listing-header-count-label"},[_vm._v("\n        (page "+_vm._s(_vm.pagination.page+1)+")\n      ")])])],2),_vm._v(" "),_c('div',{staticClass:"container-fluid"},[_c('div',{staticClass:"row"},_vm._l((_vm.getHitsList()),function(_hit,_idx){return _c('div',{staticClass:"col-sm-6 col-md-3",staticStyle:{"padding":"2px"}},[_c('shop-product-item-small',{staticStyle:{"margin-bottom":"8px"},attrs:{"item":_hit}})],1)}))]),_vm._v(" "),_c('div',{staticClass:"shop-listing-pagination-container text-center",class:_vm.getCssForPagination()},[_c('button',{staticClass:"btn btn-outline-info waves-effect",style:(_vm.getCssStyleForPills()),attrs:{"type":"button","disabled":_vm.isPreviousButtonDisabled()},on:{"click":function($event){_vm.handlePrevClick()}}},[_vm._v("\n      previous")]),_vm._v(" "),_c('button',{staticClass:"btn btn-outline-success waves-effect",style:(_vm.getCssStyleForPills()),attrs:{"type":"button","disabled":_vm.isNextButtonDisabled()},on:{"click":function($event){_vm.handleNextClick()}}},[_vm._v("\n      next page")])])])}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -11655,6 +11681,18 @@ module.exports = {
       this.fakeIndicator = parseInt(new Date().getTime()*Math.random(), 10);
     },
 
+    getSuggestedPrice: function(_item) {
+      let _price=0.000;
+
+      if (_item && _item['_source'] && _item['_source']['hf_price_suggested']) {
+        let _val=_item["_source"]["hf_price_suggested"];
+        if (_val) {
+          _price=_val.toFixed(3)
+        }
+      }
+      return _price;
+    },
+
     /*
      *  create the image component id (not using computed value)
      */
@@ -11704,7 +11742,7 @@ module.exports = {
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"product-item-sm-container pointer",on:{"click":function($event){_vm.handleItemClick()}}},[_c('img',{class:_vm.getImgCss(),staticStyle:{"width":"calc(100%)"},attrs:{"id":_vm.getImgId(),"src":_vm.getImageUrl()}}),_vm._v(" "),_c('div',{staticClass:"text-truncate product-item-sm-label",attrs:{"title":_vm.item["_source"]["t_description"]}},[_vm._v("\n    "+_vm._s(_vm.item["_source"]["t_description"]))]),_vm._v(" "),_c('div',{staticClass:"product-itme-sm-sublabel"},[_vm._v("\n    $"+_vm._s(_vm.item["_source"]["hf_price_suggested"].toFixed(3))+"\n  ")])])}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"product-item-sm-container pointer",on:{"click":function($event){_vm.handleItemClick()}}},[_c('img',{class:_vm.getImgCss(),staticStyle:{"width":"calc(100%)"},attrs:{"id":_vm.getImgId(),"src":_vm.getImageUrl()}}),_vm._v(" "),_c('div',{staticClass:"text-truncate product-item-sm-label",attrs:{"title":_vm.item["_source"]["t_description"]}},[_vm._v("\n    "+_vm._s(_vm.item["_source"]["t_description"]))]),_vm._v(" "),_c('div',{staticClass:"product-itme-sm-sublabel"},[_vm._v("\n    $"+_vm._s(_vm.getSuggestedPrice(_vm.item))+"\n  ")])])}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -11936,12 +11974,19 @@ module.exports = {
      *  emit a "search icon" clicked event to the parent
      */
     handleSearchIconClick: function() {
-      window.Vue.$emit(
-        'searchbarIconClick', {
-          'text': this.searchbarText,
-          'category': this.category
-        }
-      );
+      let _instance = this;
+      // due to some latency in setting the model value back
+      setTimeout(function() {
+        window.Vue.$emit('searchbarIconClick',
+          {
+            'searchbar': {
+              'from': 'shop_searchbar',
+              'text': _instance.searchbarText,
+              'category': _instance.category
+            }
+          }
+        );
+      }, 100);
     }
 
   }
@@ -12291,8 +12336,22 @@ module.exports = {
         }
 
         // special handling for top6 page (indirectly update the category facets control)
-        if ('shop_product_top5' == _eventObject['from'] && _eventObject['catList']) {
-          _instance.preSelectedCategory = _eventObject['catList'][0];
+        if (('shop_product_top5' == _eventObject['from'] ||
+              'shop_searchbar' == _eventObject['from'] ||
+              'shop_landing_listing' == _eventObject['from']) &&
+          _eventObject['catList']) {
+
+          if (_eventObject['catList'].length>0) {
+            _instance.preSelectedCategory = _eventObject['catList'][0];
+          } else {
+            // 'all' means no preSelected category filter
+            _instance.preSelectedCategory = 'all';
+          }
+        }
+        // special handling for empty searchbarText (set to __empty__)
+        let _searchbarText = _eventObject['searchbarText'];
+        if (!_searchbarText || _searchbarText.trim().length==0) {
+          _searchbarText="__empty__";
         }
 
         window.VueRouter.push({
@@ -12302,6 +12361,7 @@ module.exports = {
             catList: _instance.chosenFacetsCriteria['catList'],
             brandList: _instance.chosenFacetsCriteria['brandList'],
             ratingList: _instance.chosenFacetsCriteria['ratingList'],
+            searchbarText: _searchbarText,
             pagination: _eventObject['pagination']
           }
         });
@@ -12497,11 +12557,6 @@ module.exports={
       _instance.throttleUtil.isTimeout();
     });
 
-// TODO: to be coded
-    window.Vue.$on('searchbarIconClick', function(_eventObject) {
-      console.log(_eventObject);
-    });
-
     /*
      *  handle the request for facets-data (aggs); usually it is the
      *  LHS panel
@@ -12554,6 +12609,7 @@ module.exports={
           'brandList': _eventObject['brandList'],
           'ratingList': _eventObject['ratingList'],
           'pagination': _eventObject['pagination'],
+          'searchbarText': _eventObject['searchbarText']
         },
         function(_data, _status, _jqXHR) {
           if (_eventObject && _eventObject.callback) {
@@ -12567,12 +12623,35 @@ module.exports={
       );
     });
 
-    /**
-     *  handle the request to change page of the listing-view
-     */
-    window.Vue.$on('listingPageChange', function(_eventObject) {
-console.log('inside listingPageChange(main)');
-console.log(_eventObject);
+    // TODO: to be coded
+    window.Vue.$on('searchbarIconClick', function(_eventObject) {
+      // handle the category
+      let _category=[];
+      if (_eventObject['searchbar']['category']!='all') {
+        _category.push(_eventObject['searchbar']['category']);
+      }
+      let _searchbarText=_eventObject['searchbar']['text'];
+      if (_searchbarText.trim().length==0) {
+        _searchbarText="__empty__";
+      }
+      // update the data entries in the model
+      _instance.searchbarText=_searchbarText;
+      _instance.searchbarCategory=_category;
+
+      let _eventObject2 = {
+        'view': 'listing/:hash',
+        'hash': parseInt(new Date().getTime()*Math.random(), 10)
+      };
+      // force the facets contrl to refresh on the chosen category
+      _eventObject2['from']='shop_searchbar';
+      _eventObject2['searchbarText']=_searchbarText;
+      _eventObject2['catList'] = _category;
+      // reset pagination
+      _eventObject2['pagination']={
+        'page': 0,
+        'pageSize': 16
+      };
+      window.Vue.$emit('changeRouterViewToListing', _eventObject2);
     });
 
   },
@@ -12642,6 +12721,56 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 })()}
 },{"vue":3,"vue-hot-reload-api":1}],18:[function(require,module,exports){
 ;(function(){
+
+
+/**
+ *  util to handle array, map related utility methods
+ */
+module.exports={
+  /**
+   *  helper method to remove the given _e within the given _arr
+   *  (only remove the first occurence of the element though)
+   */
+  removeElementFromArray: function(_e, _arr) {
+    let _idx=-1;
+    let _found=false;
+    // check if found or not, and splice when necessary
+    if (_e && _arr) {
+      let _size = _arr.length;
+
+      for (_idx=0; _idx<_size; _idx++) {
+        let _current=_arr[_idx];
+
+        if (_e == _current) {
+          _found=true;
+          break;
+        }
+      } // end -- for(_arr)
+
+      if (_found) {
+        _arr.splice(_idx, 1);
+      }
+    }
+    return _idx;
+  }
+
+};
+
+})()
+if (module.exports.__esModule) module.exports = module.exports.default
+var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
+if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-6c27ff94", __vue__options__)
+  } else {
+    hotAPI.reload("data-v-6c27ff94", __vue__options__)
+  }
+})()}
+},{"vue":3,"vue-hot-reload-api":1}],19:[function(require,module,exports){
+;(function(){
 //
 
 module.exports = {
@@ -12691,7 +12820,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-440cc2b4", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],19:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],20:[function(require,module,exports){
 ;(function(){
 
 /*
@@ -12803,7 +12932,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-73698a58", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],20:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],21:[function(require,module,exports){
 ;(function(){
 
 /**
@@ -12896,7 +13025,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-8ef992f0", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],21:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],22:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 

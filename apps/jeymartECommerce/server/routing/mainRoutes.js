@@ -255,6 +255,21 @@ var MainRoutes = function(_client, _router, _eBuilder, _defaultQueriesMap, _esIn
       _critMap=_buildListingDataByRouteParamsCriteria(
         _critMap, _lst, 'MatchQuery', 's_brand_name');
     }
+    // t_description
+    let _productDesc=[];
+    let _pDesc=_req.query['searchbarText'];
+    /*
+     *  since Vue.js would ignore empty string values '' or "";
+     *  therefore a delimiter such as "__empty__" or "all" is used
+     */
+    if ('__empty__'!=_pDesc) {
+      _productDesc.push(_pDesc);
+    }
+    if (_productDesc && _productDesc.length>0) {
+      _critMap=_buildListingDataByRouteParamsCriteria(
+        _critMap, _productDesc, 'MatchQuery', 't_description');
+    }
+console.log(_critMap);    
     // pagination
     _critMap['pagination']=_req.query['pagination'];
 

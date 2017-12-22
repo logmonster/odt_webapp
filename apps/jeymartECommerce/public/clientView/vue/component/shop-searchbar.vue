@@ -216,12 +216,19 @@ module.exports = {
      *  emit a "search icon" clicked event to the parent
      */
     handleSearchIconClick: function() {
-      window.Vue.$emit(
-        'searchbarIconClick', {
-          'text': this.searchbarText,
-          'category': this.category
-        }
-      );
+      let _instance = this;
+      // due to some latency in setting the model value back
+      setTimeout(function() {
+        window.Vue.$emit('searchbarIconClick',
+          {
+            'searchbar': {
+              'from': 'shop_searchbar',
+              'text': _instance.searchbarText,
+              'category': _instance.category
+            }
+          }
+        );
+      }, 100);
     }
 
   }

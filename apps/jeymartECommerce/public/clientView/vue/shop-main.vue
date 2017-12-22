@@ -101,11 +101,6 @@ module.exports={
       _instance.throttleUtil.isTimeout();
     });
 
-// TODO: to be coded
-    window.Vue.$on('searchbarIconClick', function(_eventObject) {
-      console.log(_eventObject);
-    });
-
     /*
      *  handle the request for facets-data (aggs); usually it is the
      *  LHS panel
@@ -158,6 +153,7 @@ module.exports={
           'brandList': _eventObject['brandList'],
           'ratingList': _eventObject['ratingList'],
           'pagination': _eventObject['pagination'],
+          'searchbarText': _eventObject['searchbarText']
         },
         function(_data, _status, _jqXHR) {
           if (_eventObject && _eventObject.callback) {
@@ -171,12 +167,35 @@ module.exports={
       );
     });
 
-    /**
-     *  handle the request to change page of the listing-view
-     */
-    window.Vue.$on('listingPageChange', function(_eventObject) {
-console.log('inside listingPageChange(main)');
-console.log(_eventObject);
+    // TODO: to be coded
+    window.Vue.$on('searchbarIconClick', function(_eventObject) {
+      // handle the category
+      let _category=[];
+      if (_eventObject['searchbar']['category']!='all') {
+        _category.push(_eventObject['searchbar']['category']);
+      }
+      let _searchbarText=_eventObject['searchbar']['text'];
+      if (_searchbarText.trim().length==0) {
+        _searchbarText="__empty__";
+      }
+      // update the data entries in the model
+      _instance.searchbarText=_searchbarText;
+      _instance.searchbarCategory=_category;
+
+      let _eventObject2 = {
+        'view': 'listing/:hash',
+        'hash': parseInt(new Date().getTime()*Math.random(), 10)
+      };
+      // force the facets contrl to refresh on the chosen category
+      _eventObject2['from']='shop_searchbar';
+      _eventObject2['searchbarText']=_searchbarText;
+      _eventObject2['catList'] = _category;
+      // reset pagination
+      _eventObject2['pagination']={
+        'page': 0,
+        'pageSize': 16
+      };
+      window.Vue.$emit('changeRouterViewToListing', _eventObject2);
     });
 
   },

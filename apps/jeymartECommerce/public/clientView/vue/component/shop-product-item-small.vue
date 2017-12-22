@@ -14,7 +14,7 @@
       {{item["_source"]["t_description"]}}</div>
 
     <div class="product-itme-sm-sublabel">
-      ${{item["_source"]["hf_price_suggested"].toFixed(3)}}
+      ${{ getSuggestedPrice(item) }}
     </div>
   </div>
 </template>
@@ -56,6 +56,18 @@ module.exports = {
      */
     fakeUpdateModel: function() {
       this.fakeIndicator = parseInt(new Date().getTime()*Math.random(), 10);
+    },
+
+    getSuggestedPrice: function(_item) {
+      let _price=0.000;
+
+      if (_item && _item['_source'] && _item['_source']['hf_price_suggested']) {
+        let _val=_item["_source"]["hf_price_suggested"];
+        if (_val) {
+          _price=_val.toFixed(3)
+        }
+      }
+      return _price;
     },
 
     /*
