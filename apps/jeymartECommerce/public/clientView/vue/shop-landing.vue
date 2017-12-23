@@ -62,7 +62,16 @@ function _model_shop_landing(_instance) {
       'ratingList': []
     },
 
-    'preSelectedCategory': ''
+    'preSelectedCategory': 'all',
+// TODO: move all searchbarText search icon click events to here
+/*
+ *  facets control can emit event to here and shop-main (dao)
+ *  so both parent could handle certain features (here for data level update),
+ *  shop-main for dao update
+ *
+ *  so now here has all data for the further UI and dao updates
+ */
+    'searchbarText': '__empty__'
   };
 }
 
@@ -97,55 +106,57 @@ module.exports = {
     /* -------------------- */
 
     window.Vue.$on('changeRouterViewToListing', function(_eventObject) {
-      /*
-       *  "close" the carousel part (indirectly updating the css classes
-       *  for the carousel component)
-       */
-      _instance.css.shouldCarouselHide = true;
-      /*
-       *  prepare the correct facets criteria object
-       *  (preserve the other facets options)
-       */
-      if (_instance.chosenFacetsCriteria && _eventObject) {
-        if (_eventObject['catList']) {
-          _instance.chosenFacetsCriteria['catList']=_eventObject['catList'];
-        } else if (_eventObject['brandList']) {
-          _instance.chosenFacetsCriteria['brandList']=_eventObject['brandList'];
-        } else if (_eventObject['ratingList']) {
-          _instance.chosenFacetsCriteria['ratingList']=_eventObject['ratingList'];
-        }
+      _instance.changeRouterViewToListing(_eventObject);
+    });
 
-        // special handling for top6 page (indirectly update the category facets control)
-        if (('shop_product_top5' == _eventObject['from'] ||
-              'shop_searchbar' == _eventObject['from'] ||
-              'shop_landing_listing' == _eventObject['from']) &&
-          _eventObject['catList']) {
+    /*
+     *  (data / model update)
+     *  handle the searchbarText category change;
+     *  add the searchbarText and chosenFacetsCriteria['catList']
+     */
+    window.Vue.$on('searchbarcategorychanged', function(_eventObject) {
+      // check the "text"; if empty => __empty__
+      if (_eventObject.text && _eventObject.text.trim().length>0) {
+        _instance.searchbarText = _eventObject.text;
+      } else {
+        _instance.searchbarText = '__empty__';
+      }
+      // append the category if it doesn't exists
+      let _idx = window.collectionUtil.isElementExistsInArray(
+        _eventObject.category, _instance.chosenFacetsCriteria['catList']);
+      if (_idx==-1) {
+        _instance.chosenFacetsCriteria['catList']=[_eventObject.category];
+      }
+    });
 
-          if (_eventObject['catList'].length>0) {
-            _instance.preSelectedCategory = _eventObject['catList'][0];
-          } else {
-            // 'all' means no preSelected category filter
-            _instance.preSelectedCategory = 'all';
-          }
-        }
-        // special handling for empty searchbarText (set to __empty__)
-        let _searchbarText = _eventObject['searchbarText'];
-        if (!_searchbarText || _searchbarText.trim().length==0) {
-          _searchbarText="__empty__";
-        }
+    window.Vue.$on('searchbarIconClick', function(_eventObject) {
+      // handle the category
+      let _category=[];
+      if (_eventObject['searchbar']['category']!='all') {
+        _category.push(_eventObject['searchbar']['category']);
+      }
+      let _searchbarText=_eventObject['searchbar']['text'];
+      if (_searchbarText.trim().length==0) {
+        _searchbarText="__empty__";
+      }
+      // update the data entries in the model
+      _instance.searchbarText=_searchbarText;
+      _instance.chosenFacetsCriteria['catList']=_category;
 
-        window.VueRouter.push({
-          name: _eventObject['view'],
-          params: {
-            hash: _eventObject['hash'],
-            catList: _instance.chosenFacetsCriteria['catList'],
-            brandList: _instance.chosenFacetsCriteria['brandList'],
-            ratingList: _instance.chosenFacetsCriteria['ratingList'],
-            searchbarText: _searchbarText,
-            pagination: _eventObject['pagination']
-          }
-        });
-      } // end -- if (chosenFacetsCriteria and _eventObject are valid)
+      let _eventObject2 = {
+        'view': 'listing/:hash',
+        'hash': parseInt(new Date().getTime()*Math.random(), 10)
+      };
+      // force the facets contrl to refresh on the chosen category
+      _eventObject2['from']='shop_landing';
+      _eventObject2['searchbarText']=_searchbarText;
+      _eventObject2['catList'] = _category;
+      // reset pagination
+      _eventObject2['pagination']={
+        'page': 0,
+        'pageSize': 16
+      };
+      window.Vue.$emit('changeRouterViewToListing', _eventObject2);
     });
 
   },
@@ -210,6 +221,61 @@ module.exports = {
       }
 
       return _css;
+    },
+
+    changeRouterViewToListing: function(_eventObject) {
+      let _instance=this;
+      /*
+       *  "close" the carousel part (indirectly updating the css classes
+       *  for the carousel component)
+       */
+      _instance.css.shouldCarouselHide = true;
+      /*
+       *  prepare the correct facets criteria object
+       *  (preserve the other facets options)
+       */
+      if (_instance.chosenFacetsCriteria && _eventObject) {
+        if (_eventObject['catList']) {
+          _instance.chosenFacetsCriteria['catList']=_eventObject['catList'];
+        } else if (_eventObject['brandList']) {
+          _instance.chosenFacetsCriteria['brandList']=_eventObject['brandList'];
+        } else if (_eventObject['ratingList']) {
+          _instance.chosenFacetsCriteria['ratingList']=_eventObject['ratingList'];
+        }
+
+        // special handling for top6 page (indirectly update the category facets control)
+        if (('shop_product_top5' == _eventObject['from'] ||
+              'shop_landing' == _eventObject['from'] ||
+              'shop_landing_listing' == _eventObject['from']) &&
+          _eventObject['catList']) {
+
+          if (_eventObject['catList'].length>0) {
+            _instance.preSelectedCategory = _eventObject['catList'][0];
+          } else {
+            // 'all' means no preSelected category filter
+            _instance.preSelectedCategory = 'all';
+          }
+        }
+        // special handling for empty searchbarText (set to __empty__)
+        /*let _searchbarText = _eventObject['searchbarText'];
+        if (!_searchbarText || _searchbarText.trim().length==0) {
+          _searchbarText="__empty__";
+        }*/
+        let _searchbarText=_instance.searchbarText;
+        // TODO: need to prepare the default pagination??
+
+        window.VueRouter.push({
+          name: _eventObject['view'],
+          params: {
+            hash: _eventObject['hash'],
+            catList: _instance.chosenFacetsCriteria['catList'],
+            brandList: _instance.chosenFacetsCriteria['brandList'],
+            ratingList: _instance.chosenFacetsCriteria['ratingList'],
+            searchbarText: _searchbarText,
+            pagination: _eventObject['pagination']
+          }
+        });
+      } // end -- if (chosenFacetsCriteria and _eventObject are valid)
     }
 
 

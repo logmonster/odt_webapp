@@ -167,7 +167,7 @@ module.exports={
       );
     });
 
-    // TODO: to be coded
+    // TODO: moved to shop-landing.vue
     window.Vue.$on('searchbarIconClick', function(_eventObject) {
       // handle the category
       let _category=[];
@@ -181,7 +181,7 @@ module.exports={
       // update the data entries in the model
       _instance.searchbarText=_searchbarText;
       _instance.searchbarCategory=_category;
-
+      /*
       let _eventObject2 = {
         'view': 'listing/:hash',
         'hash': parseInt(new Date().getTime()*Math.random(), 10)
@@ -196,7 +196,9 @@ module.exports={
         'pageSize': 16
       };
       window.Vue.$emit('changeRouterViewToListing', _eventObject2);
+      */
     });
+
 
   },
   methods: {

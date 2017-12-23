@@ -115,12 +115,19 @@ module.exports = {
       let _exists = false;
 
       // check if _key is within the chosenItemList
-      for (; _idx_1<this.chosenItemList.length; _idx_1++) {
+      /*for (; _idx_1<this.chosenItemList.length; _idx_1++) {
         if (_key == this.chosenItemList[_idx_1]) {
           _exists = true;
           break;
         }
+      }*/
+      _idx_1 = window.collectionUtil.isElementExistsInArray(
+        _key, this.chosenItemList);
+        
+      if (_idx_1!=-1) {
+        _exists=true;
       }
+
       // update the chosenItemList
       // * button mode => only "1" item could be chosen
       if ('button' == this.mode) {
