@@ -269,7 +269,7 @@ var MainRoutes = function(_client, _router, _eBuilder, _defaultQueriesMap, _esIn
       _critMap=_buildListingDataByRouteParamsCriteria(
         _critMap, _productDesc, 'MatchQuery', 't_description');
     }
-console.log(_critMap);    
+//console.log(_critMap);
     // pagination
     _critMap['pagination']=_req.query['pagination'];
 
@@ -305,6 +305,45 @@ console.log(_critMap);
     }
     return _critMap;
   };
+
+  /**
+   *  return the suggestions by MoreLikeThisQuery and SignificantTermsAggregation
+   *  for the shop item details page
+   */
+  let getShopItemDetailsSuggestions = function(_req, _resp) {
+    let _eb = _eBuilder;
+    let _qSection_mlt = _esInterpretorUtil.extractJsonByQueryNameAndId(
+      'shopItemDetailsSuggestionsGet', 'getShopItemDetailsSuggestionsByMoreLikeThisQuery');
+    let _qSection_st = _esInterpretorUtil.extractJsonByQueryNameAndId(
+      'shopItemDetailsSuggestionsGet', 'getShopItemDetailsSuggestionsBySignificantTerms');
+    //let _meta = _qSection['meta'];
+    //let _critMap = {};
+    let _body=[];
+
+    let _qObj=_createQueryForShopItemDetailsSuggestionsMLT(_qSection_mlt, _req.query['mltPayload']);
+    _body.push(_qObj['meta']);
+    _body.push(_qObj['query'].toJSON());
+
+    _qObj=_createQueryForShopItemDetailsSuggestionsST(_qSection_st, _req.query['stPayload']);
+    _body.push(_qObj['meta']);
+    _body.push(_qObj['query'].toJSON());
+
+    _client.msearch({
+      body: _body
+    }).then(function(_data) {
+      _resp.send(_data);
+    }, function(_err) {
+      _resp.send(_err);
+    }); // end -- msearch
+  };
+
+  let _createQueryForShopItemDetailsSuggestionsMLT = function(_qSection, _payLoad) {
+    // return object => meta = meta data; query => Query
+  };
+  let _createQueryForShopItemDetailsSuggestionsST = function(_qSection, _payLoad) {
+    // return object => meta = meta data; query => Query
+  };
+
 
   /**
    *  return the minimal methods and attributes to the caller
@@ -348,6 +387,13 @@ console.log(_critMap);
           getListingDataByRouteParams(_req, _resp);
         }
       );
+      _router.route('/api/shopItemDetailsSuggestionsGet').
+        get(function(_req, _resp) {
+          // do a msearch on ...
+          getShopItemDetailsSuggestions(_req, _resp);
+        }
+      );
+
 
       return _router;
     }

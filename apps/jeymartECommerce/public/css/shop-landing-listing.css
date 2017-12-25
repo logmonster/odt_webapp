@@ -1,4 +1,8 @@
 
+/* --------------------- */
+/*  shop listing related */
+/* --------------------- */
+
 .shop-listing-header-container {
   margin-top: 8px;
   margin-bottom: 8px;
@@ -18,4 +22,78 @@
 .shop-listing-header-count-label {
   font-weight: 400;
   color: #666;
+}
+
+/* -------------------------- */
+/*  shop item details related */
+/* -------------------------- */
+
+.shop-item-details-container {
+  padding-left: 8px;
+  padding-right: 8px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.shop-item-details-img-container {
+  padding: 2px;
+}
+.shop-item-details-img {
+  width: calc(100%);
+}
+.shop-item-details-specification-container {
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+.shop-item-details-specification-label {
+  padding-top: 4px;
+  font-weight: 300;
+  color: #666;
+}
+.shop-item-details-spec-item-label {
+  font-weight: bold;
+  color: #888;
+}
+.shop-item-details-spec-item-value {
+  font-weight: 300;
+  color: #888;
+}
+
+.shop-item-details-comments-main-container {
+  padding-top: 4px;
+}
+.shop-item-details-comments-tab {
+  position: relative;
+  z-index: 9;
+  background: white;
+  padding-left: 6px; padding-right: 6px;
+  padding-top: 2px; padding-bottom: 2px;
+  border: 1px solid #ccc;
+  border-bottom: 1px solid #fff;
+  border-radius: 3px 3px 0 0;
+  display: inline-block;
+}
+.shop-item-details-comments-container {
+  position: relative;
+  z-index: 8;
+  top: -1px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 0 0 3px 3px;
+}
+
+.shop-item-details-comment-card {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  margin-left: 4px; margin-right: 4px;
+  padding: 8px;
+  border-bottom: 1px solid #aaa;
+}
+.shop-item-details-comment-card:last-of-type {
+  border-bottom: 0px;
+}
+.shop-item-details-comment-card-text {
+  padding-top: 2px;
 }

@@ -159,6 +159,24 @@ module.exports = {
       window.Vue.$emit('changeRouterViewToListing', _eventObject2);
     });
 
+    window.Vue.$on('forwardToItemDetailsPage', function(_eventObject) {
+      let _item=_eventObject['item'];
+      let _hash=parseInt(new Date().getTime()*Math.random(), 10);
+
+      window.VueRouter.push({
+        name: '/itemDetails/:hash',
+        params: {
+          hash: _hash,
+          item: _item,
+          itemId: _item['_id'],
+          catList: _instance.chosenFacetsCriteria['catList'],
+          brandList: _instance.chosenFacetsCriteria['brandList'],
+          ratingList: _instance.chosenFacetsCriteria['ratingList'],
+          searchbarText: _instance._searchbarText
+        }
+      });
+    });
+
   },
   methods: {
     /*

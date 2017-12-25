@@ -199,6 +199,9 @@ module.exports={
       */
     });
 
+    window.Vue.$on('getShopItemDetailsSuggestions', function(_eventObject) {
+      
+    });
 
   },
   methods: {

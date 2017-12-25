@@ -107,8 +107,9 @@ module.exports = {
     },
 
     handleItemClick: function() {
-// TODO:
-      console.log('## fwd to product-item-details page '+this.item['_source']['t_description']);
+      window.Vue.$emit('forwardToItemDetailsPage', {
+        'item': this.item
+      });
     }
 
 

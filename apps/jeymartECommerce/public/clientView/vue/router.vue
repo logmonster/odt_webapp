@@ -25,6 +25,10 @@ module.exports = {
         rvSpyPanel: require('./shop-help.vue')
       }*/
     },
+    { path: '/itemDetails/:hash',
+      name: '/itemDetails/:hash',
+      component: require('./component/shop-item-details.vue')
+    },
     { path: '/help',
       name: '/help',
       component: require('./shop-help.vue')

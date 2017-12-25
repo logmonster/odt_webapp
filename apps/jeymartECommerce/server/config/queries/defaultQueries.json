@@ -229,6 +229,87 @@
         }
       }
     }
+  ],
+  "shopItemDetailsSuggestionsGet": [
+    {
+      "id": "getShopItemDetailsSuggestionsByMoreLikeThisQuery",
+      "meta": {
+        "index": "jeymart_item",
+        "type": "doc"
+      },
+      "steps": [
+        { "id": 1, "method": "size", "param": 10 },
+        { "id": 2, "query": "MoreLikeThisQuery",
+          "minTermFreq": 1
+        }
+      ],
+      "query": {
+        "more_like_this": {
+          "fields": [
+            "t_description"
+          ],
+          "like": {
+            "_index": "odt_jeymart_items",
+            "_type": "doc",
+            "_id": "AVylX6bzdr2sb8BuSRoG"
+          },
+          "min_term_freq": 1
+        }
+      }
+    },
+    {
+      "id": "getShopItemDetailsSuggestionsBySignificantTerms",
+      "meta": {
+        "index": "jeymart_item",
+        "type": "doc"
+      },
+      "steps": [
+        { "id": 1, "method": "size", "param": 0 },
+        { "id": 2, "agg": "SignificantTermsAggregation",
+          "param": [ "_st", "s_brand_name.keyword" ],
+          "size": 5,
+          "subAggs": [
+            { "agg": "TopHitsAggregation",
+              "param": [ "_st2" ],
+              "size": 2
+            }
+          ]
+        }
+      ],
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match": {
+                "t_description": "folkart heart napkin rings"
+              }
+            },
+            {
+              "match": {
+                "k_category": "fashion"
+              }
+            }
+          ]
+        }
+      },
+      "aggs": {
+        "_st": {
+          "significant_terms": {
+            "field": "s_brand_name.keyword",
+            "size": 5
+          },
+          "aggs": {
+            "_st2": {
+              "top_hits": {
+                "_source": [
+                  "t_description"
+                ],
+                "size": 2
+              }
+            }
+          }
+        }
+      }
+    }
   ]
-
 }

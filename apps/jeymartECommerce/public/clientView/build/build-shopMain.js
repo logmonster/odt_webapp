@@ -2857,7 +2857,7 @@ if (inBrowser && window.Vue) {
 module.exports = VueRouter;
 
 }).call(this,require('_process'))
-},{"_process":22}],3:[function(require,module,exports){
+},{"_process":23}],3:[function(require,module,exports){
 (function (process,global){
 /*!
  * Vue.js v2.5.9
@@ -10721,7 +10721,7 @@ Vue$3.nextTick(function () {
 module.exports = Vue$3;
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":22}],4:[function(require,module,exports){
+},{"_process":23}],4:[function(require,module,exports){
 
 var Vue = require('vue')
 var Shop = require('./vue/shop-main.vue')
@@ -10761,7 +10761,7 @@ let app = new Vue({
   }
 });
 
-},{"./vue/component/shop-carousel.vue":5,"./vue/component/shop-facets-control.vue":6,"./vue/component/shop-header-navigator.vue":7,"./vue/component/shop-product-display-top5.vue":10,"./vue/component/shop-product-item-small.vue":11,"./vue/component/shop-searchbar.vue":12,"./vue/component/shop-spy-panel.vue":13,"./vue/router.vue":14,"./vue/shop-main.vue":17,"./vue/util/collectionUtil.vue":18,"./vue/util/jQueryAjaxUtil.vue":19,"./vue/util/uiThrottleUtil.vue":20,"./vue/util/windowEventUtil.vue":21,"vue":3,"vue-router":2}],5:[function(require,module,exports){
+},{"./vue/component/shop-carousel.vue":5,"./vue/component/shop-facets-control.vue":6,"./vue/component/shop-header-navigator.vue":7,"./vue/component/shop-product-display-top5.vue":11,"./vue/component/shop-product-item-small.vue":12,"./vue/component/shop-searchbar.vue":13,"./vue/component/shop-spy-panel.vue":14,"./vue/router.vue":15,"./vue/shop-main.vue":18,"./vue/util/collectionUtil.vue":19,"./vue/util/jQueryAjaxUtil.vue":20,"./vue/util/uiThrottleUtil.vue":21,"./vue/util/windowEventUtil.vue":22,"vue":3,"vue-router":2}],5:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -11177,6 +11177,291 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+function _model_shop_item_details(_inst) {
+  return {
+    'instance': _inst,
+    /* data facets from the listing page */
+    'dataFacets': {
+      'category':[],
+      'brand':[],
+      'rating':[],
+      'searchbarText': '__empty__'
+    },
+    'item': {}
+  };
+} // end model
+
+module.exports={
+  name: 'shop_item_details',
+  data: function() {
+    return new _model_shop_item_details(this);
+  },
+  props: [],
+  mounted: function() {
+    let _instance=this;
+
+    _instance.populateDataFacets(this.$route.params, _instance);
+  },
+  watch: {
+    $route: function(_newValue) {
+      console.log('## new data');
+      console.log(_newValue);
+      console.log(_newValue['params']['item']);
+      console.log(_newValue['params']['itemId']);
+      populateDataFacets(_newValue.params, null);
+    }
+  },
+  methods: {
+    /**
+     *  populate the dataFacets based on the given _object
+     */
+    populateDataFacets: function(_object, _instance) {
+/*
+hash: _hash,
+item: _item,
+itemId: _item['_id'],
+catList: _instance.chosenFacetsCriteria['catList'],
+brandList: _instance.chosenFacetsCriteria['brandList'],
+ratingList: _instance.chosenFacetsCriteria['ratingList'],
+searchbarText: _instance._searchbarText
+*/
+      if (!_instance) {
+        _instance=this;
+      }
+      let _lst=_object['catList'];
+      _instance.dataFacets['category']=(_lst)?_lst:[];
+      _lst=_object['brandList'];
+      _instance.dataFacets['brand']=(_lst)?_lst:[];
+      _lst=_object['ratingList'];
+      _instance.dataFacets['rating']=(_lst)?_lst:[];
+
+      let _searchbarText=_object['searchbarText'];
+      _instance.dataFacets['searchbarText']=(_searchbarText && _searchbarText.trim().length>0)?_searchbarText:"__empty__";
+
+      _instance.item=_object['item'];
+    },
+
+    /*
+     *  for some css (from mdbootstrap); you need to override
+     *  the "style" directly instead of using a css class
+     */
+    getCssStyleForPills: function() {
+      return {
+        'border-radius': '8rem',
+        'font-size': '14px',
+        'font-weight': 300,
+        'padding-left': '12px',
+        'padding-right': '12px',
+        'padding-top': '6px',
+        'padding-bottom': '6px',
+        'margin-bottom': '2px;'
+      };
+    },
+
+    handlePillClick: function(_item, _facetType) {
+      // TODO: handle the swap of page
+      console.log('** item (type) => '+_item+' ('+_facetType+')');
+    },
+
+    getImageUrl: function() {
+      if (this.item && this.item['_source']) {
+        return '/image/items/'+this.item['_source']['k_photo']
+      }
+      return '';
+    },
+
+    getDetailsByKey: function(_key) {
+      let _v='';
+      if (this.item && this.item['_source']) {
+        _v=this.item['_source'][_key];
+      }
+      return _v;
+    },
+    getGroupedDetailsByKey: function(_key) {
+      let _v=this.getDetailsByKey(_key);
+      if (_v && _v!='') {
+        if (_v.length) {
+          let _arr=_v;
+
+          _v='';
+          for (let _idx=0; _idx<_arr.length; _idx++) {
+            if (_idx>0) {
+              _v+=', ';
+            }
+            _v+=_arr[_idx];
+          } // end -- for ()
+        }
+      }
+      return _v;
+    },
+    getFloatDetailsByKey: function(_key) {
+      let _v=this.getDetailsByKey(_key);
+
+      if (_v && _v!='') {
+        _v=parseFloat(_v, 0.0).toFixed(2);
+      }
+      return _v;
+    }
+
+  }
+};
+
+})()
+if (module.exports.__esModule) module.exports = module.exports.default
+var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
+if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('div',{staticClass:"shop-item-details-container"},[_c('span',{staticClass:"shop-listing-header-label"},[_vm._v("Filters:  ")]),_vm._v(" "),_vm._l((_vm.dataFacets.category),function(_item,_idx){return _c('span',{staticClass:"pointer badge badge-pill light-blue shop-listing-header-pill",style:(_vm.getCssStyleForPills()),on:{"click":function($event){_vm.handlePillClick(_item, "category")}}},[_vm._v("\n      "+_vm._s(_item)+" "),_c('i',{staticClass:"fa fa-close",attrs:{"aria-hidden":"true"}})])}),_vm._v(" "),_vm._l((_vm.dataFacets.brand),function(_item,_idx){return _c('span',{staticClass:"pointer badge badge-pill green shop-listing-header-pill",style:(_vm.getCssStyleForPills()),on:{"click":function($event){_vm.handlePillClick(_item, "brand")}}},[_vm._v("\n      "+_vm._s(_item)+" "),_c('i',{staticClass:"fa fa-close",attrs:{"aria-hidden":"true"}})])})],2),_vm._v(" "),_c('div',{staticClass:"container-fluid"},[_c('div',{staticClass:"row"},[_c('div',{staticClass:"col-sm-6 col-md-6"},[_c('div',{staticClass:"card"},[_c('div',{staticClass:"view overlay hm-white-light shop-item-details-img-container"},[_c('img',{staticClass:"shop-item-details-img img-fluid",attrs:{"src":_vm.getImageUrl()}}),_vm._v(" "),_vm._m(0,false,false)]),_vm._v(" "),_c('div',{staticClass:"card-body shop-item-details-specification-container"},[_c('h4',{staticClass:"card-title shop-item-details-specification-label"},[_vm._v("specifications:")]),_vm._v(" "),_c('p',{staticClass:"card-text"}),_c('div',[_vm._m(1,false,false),_vm._v("\n                 \n                "),_c('span',{staticClass:"shop-item-details-spec-item-value text-truncate"},[_vm._v(_vm._s(_vm.getDetailsByKey('s_brand_name')))])]),_vm._v(" "),_c('div',[_vm._m(2,false,false),_vm._v("\n                 \n                "),_c('span',{staticClass:"shop-item-details-spec-item-value text-truncate"},[_vm._v(_vm._s(_vm.getDetailsByKey('t_description')))])]),_vm._v(" "),_c('div',[_vm._m(3,false,false),_vm._v("\n                 \n                "),_c('span',{staticClass:"shop-item-details-spec-item-value"},[_vm._v("$ "+_vm._s(_vm.getFloatDetailsByKey('hf_price_suggested')))])]),_vm._v(" "),_c('div',[_vm._m(4,false,false),_vm._v("\n                 \n                "),_c('span',{staticClass:"shop-item-details-spec-item-value"},[_vm._v(_vm._s(_vm.getGroupedDetailsByKey('k_category')))])]),_vm._v(" "),_c('p')])])]),_vm._v(" "),_vm._m(5,false,false)])])])}
+__vue__options__.staticRenderFns = [function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('a',{attrs:{"href":"#"}},[_c('div',{staticClass:"mask"})])},function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{staticClass:"shop-item-details-spec-item-label"},[_c('i',{staticClass:"fa fa-tags",attrs:{"aria-hidden":"true"}})])},function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{staticClass:"shop-item-details-spec-item-label"},[_c('i',{staticClass:"fa fa-list-alt",attrs:{"aria-hidden":"true"}})])},function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{staticClass:"shop-item-details-spec-item-label"},[_c('i',{staticClass:"fa fa-money",attrs:{"aria-hidden":"true"}})])},function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{staticClass:"shop-item-details-spec-item-label"},[_c('i',{staticClass:"fa fa-list-ul",attrs:{"aria-hidden":"true"}})])},function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"col-sm-6 col-md-6"},[_c('div',{staticClass:"shop-item-details-comments-main-container"},[_c('div',{staticClass:"shop-item-details-comments-tab"},[_vm._v("comment")]),_vm._v(" "),_c('div',{staticClass:"shop-item-details-comments-container"},[_c('div',{staticClass:"shop-item-details-comment-card"},[_c('div',[_c('i',{staticClass:"fa fa-id-card-o",attrs:{"aria-hidden":"true"}}),_vm._v("\n                anonymous\n                "),_c('i',{staticClass:"fa fa-thumbs-o-up",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('div',[_c('i',{staticClass:"fa fa-map-marker",attrs:{"aria-hidden":"true"}}),_vm._v("\n                London, United Kingdom\n              ")]),_vm._v(" "),_c('div',{staticClass:"shop-item-details-comment-card-text"},[_vm._v("\n                great product at a reasonable price.\n              ")])]),_vm._v(" "),_c('div',{staticClass:"shop-item-details-comment-card"},[_c('div',[_c('i',{staticClass:"fa fa-id-card-o",attrs:{"aria-hidden":"true"}}),_vm._v("\n                Marinos Quina\n                "),_c('i',{staticClass:"fa fa-thumbs-o-up",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('div',[_c('i',{staticClass:"fa fa-map-marker",attrs:{"aria-hidden":"true"}}),_vm._v("\n                Madrid, Spain\n              ")]),_vm._v(" "),_c('div',{staticClass:"shop-item-details-comment-card-text"},[_vm._v("\n                gran producto a un precio razonable.\n              ")])]),_vm._v(" "),_c('div',{staticClass:"shop-item-details-comment-card"},[_c('div',[_c('i',{staticClass:"fa fa-id-card-o",attrs:{"aria-hidden":"true"}}),_vm._v("\n                高橋たろ\n                "),_c('i',{staticClass:"fa fa-thumbs-o-down",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('div',[_c('i',{staticClass:"fa fa-map-marker",attrs:{"aria-hidden":"true"}}),_vm._v("\n                Tokyo, Japan\n              ")]),_vm._v(" "),_c('div',{staticClass:"shop-item-details-comment-card-text"},[_vm._v("\n                海外配送のために少し高価\n              ")])])])]),_vm._v("\n\n\n        some other suggestions: (significant terms etc)\n      ")])}]
+if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-15173194", __vue__options__)
+  } else {
+    hotAPI.reload("data-v-15173194", __vue__options__)
+  }
+})()}
+},{"vue":3,"vue-hot-reload-api":1}],9:[function(require,module,exports){
+;(function(){
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 function _model_shop_landing_info(_inst) {
   return {
@@ -11245,7 +11530,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-41f1b8b0", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],9:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],10:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -11532,7 +11817,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-a9e3db1c", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],10:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],11:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -11626,7 +11911,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-4e5a9755", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],11:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],12:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -11737,8 +12022,9 @@ module.exports = {
     },
 
     handleItemClick: function() {
-// TODO:
-      console.log('## fwd to product-item-details page '+this.item['_source']['t_description']);
+      window.Vue.$emit('forwardToItemDetailsPage', {
+        'item': this.item
+      });
     }
 
 
@@ -11761,7 +12047,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-e3d43e12", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],12:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],13:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -12015,7 +12301,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-d20f0ce2", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],13:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],14:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -12114,7 +12400,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-3adaded7", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],14:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],15:[function(require,module,exports){
 ;(function(){
 
 /* ------------------------------------------------------------------------
@@ -12143,6 +12429,10 @@ module.exports = {
         rvSpyPanel: require('./shop-help.vue')
       }*/
     },
+    { path: '/itemDetails/:hash',
+      name: '/itemDetails/:hash',
+      component: require('./component/shop-item-details.vue')
+    },
     { path: '/help',
       name: '/help',
       component: require('./shop-help.vue')
@@ -12163,7 +12453,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-4c0c66f2", __vue__options__)
   }
 })()}
-},{"./component/shop-landing-info.vue":8,"./component/shop-landing-listing.vue":9,"./shop-help.vue":15,"./shop-landing.vue":16,"vue":3,"vue-hot-reload-api":1,"vue-router":2}],15:[function(require,module,exports){
+},{"./component/shop-item-details.vue":8,"./component/shop-landing-info.vue":9,"./component/shop-landing-listing.vue":10,"./shop-help.vue":16,"./shop-landing.vue":17,"vue":3,"vue-hot-reload-api":1,"vue-router":2}],16:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -12223,7 +12513,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-0fa9f71f", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],16:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],17:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -12386,6 +12676,24 @@ module.exports = {
       window.Vue.$emit('changeRouterViewToListing', _eventObject2);
     });
 
+    window.Vue.$on('forwardToItemDetailsPage', function(_eventObject) {
+      let _item=_eventObject['item'];
+      let _hash=parseInt(new Date().getTime()*Math.random(), 10);
+
+      window.VueRouter.push({
+        name: '/itemDetails/:hash',
+        params: {
+          hash: _hash,
+          item: _item,
+          itemId: _item['_id'],
+          catList: _instance.chosenFacetsCriteria['catList'],
+          brandList: _instance.chosenFacetsCriteria['brandList'],
+          ratingList: _instance.chosenFacetsCriteria['ratingList'],
+          searchbarText: _instance._searchbarText
+        }
+      });
+    });
+
   },
   methods: {
     /*
@@ -12525,7 +12833,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-79fe24ae", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],17:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],18:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -12728,7 +13036,6 @@ module.exports={
       */
     });
 
-
   },
   methods: {
     /*
@@ -12794,7 +13101,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-3e3c3197", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],18:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],19:[function(require,module,exports){
 ;(function(){
 
 
@@ -12875,7 +13182,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-6c27ff94", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],19:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],20:[function(require,module,exports){
 ;(function(){
 //
 
@@ -12926,7 +13233,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-440cc2b4", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],20:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],21:[function(require,module,exports){
 ;(function(){
 
 /*
@@ -13038,7 +13345,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-73698a58", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],21:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],22:[function(require,module,exports){
 ;(function(){
 
 /**
@@ -13131,7 +13438,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-8ef992f0", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],22:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],23:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
