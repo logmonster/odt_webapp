@@ -51,15 +51,32 @@ module.exports = {
     window.Vue.$on('getListingDataByRouteParams', function(_eventObject) {
       if (_eventObject && 'shop_landing_listing'==_eventObject['from']) {
         // remove the given category
-        _instance.chosenItemList=[];
+        //_instance.chosenItemList=[];
+        /*
+        let _l;
+        if (_instance.label=='categories') {
+
+          _l=_eventObject['categoryList'];
+          if (_l && _l.length>0) {
+            _instance.preSelected=_l[0];
+          }
+        }
+        if (_instance.label=='brands') {
+          //_instance.chosenItemList=[];
+          _l=_eventObject['brandList'];
+          if (_l && _l.length>0) {
+            _instance.preSelected=_l[0];
+          }
+        }
+console.log(_instance.preSelected);
+        */
       }
     });
-
-    console.log('** '+this.preSelected);
-
+    //console.log('** '+this.mode+','+this.preSelected);
   },
   watch: {
     preSelected: function(_newValue) {
+      //console.log('** watch '+this.mode+','+this.preSelected);
       if (_newValue) {
         if ('button' == this.mode) {
           this.chosenItemList=[_newValue];

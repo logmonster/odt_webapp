@@ -84,6 +84,25 @@ module.exports = {
   props: [  ],
   mounted: function() {
     let _instance = this;
+
+    // if "back" from shop-item-details page... then would have a $route object
+    if (this.$route && this.$route.params){
+      let _r = this.$route.params;
+
+      let _l = _r['catList'];
+      if (_l && _l.length>0) {
+        this.chosenFacetsCriteria.catList=_l;
+        this.preSelectedCategory = _l[0];
+      }
+
+      _l = _r['brandList'];
+      if (_l && _l.length>0) {
+        this.chosenFacetsCriteria.brandList=_l;
+        this.preSelectedBrand = _l[0];
+      }
+      // ignore ratingList (since no usage for now)
+    }
+
     /*
      *  issue an event to the parent (since the left hand side panel results
      *  occur more than once, the related logic should not be bounded by a
@@ -178,6 +197,24 @@ module.exports = {
       });
     });
 
+    window.Vue.$on('getListingDataByRouteParams', function(_eventObject) {
+      if (_eventObject && 'shop_landing_listing'==_eventObject['from']) {
+        let _l=_eventObject['categoryList'];
+        if (_l && _l.length>0) {
+          _instance.preSelectedCategory=_l[0];
+        } else {
+          _instance.preSelectedCategory='all';
+        }
+        _l=_eventObject['brandList'];
+        if (_l && _l.length>0) {
+          _instance.preSelectedBrand=_l[0];
+        } else {
+          _instance.preSelectedBrand='all';
+        }
+      } // end -- if (shop_landing_listing from)
+      //console.log('** '+_instance.preSelectedCategory+' v '+_instance.preSelectedBrand);
+    });
+
   },
   methods: {
     /*
@@ -269,16 +306,20 @@ module.exports = {
               'shop_landing_listing' == _eventObject['from']) &&
           _eventObject['catList']) {
 
-          if (_eventObject['catList'].length>0) {
-            _instance.preSelectedCategory = _eventObject['catList'][0];
+          let _cLst=_eventObject['catList'];
+
+          if (_cLst.length>0) {
+            _instance.preSelectedCategory = _cLst[0];
           } else {
             // 'all' means no preSelected category filter
             _instance.preSelectedCategory = 'all';
           }
 
-          if (_eventObject['brandList'].length>0) {
-            _instance.preSelectedBrand = _eventObject['brandList'][0];
+          let _bLst=_eventObject['brandList'];
+          if (_bLst && _bLst.length>0) {
+            _instance.preSelectedBrand = _bLst[0];
           }
+//console.log('** '+_instance.preSelectedCategory +' v '+_instance.preSelectedBrand);
         }
         // special handling for empty searchbarText (set to __empty__)
         /*let _searchbarText = _eventObject['searchbarText'];
