@@ -1,0 +1,39 @@
+
+.shop-ids-container {
+  padding-top: 24px;
+  padding-bottom: 4px;
+}
+
+.shop-ids-title {
+  font-weight: bold;
+  color: #aaa;
+  padding-left: 6px; padding-right: 6px;
+}
+.shop-ids-text {
+  font-weight: 400;
+  color: #666;
+  padding-left: 6px; padding-right: 6px;
+}
+.shop-ids-text:last-child {
+  padding-bottom: 8px;
+}
+
+.shop-ids-image {
+  padding: 2px;
+}
+
+.shop-ids-suggestion-type-label {
+  font-weight: 300;
+  font-size: 16px;
+  color: #666;
+}
+.shop-ids-suggestion-type-label-caption {
+  font-weight: 500;
+  color: #888;
+}
+
+.shop-ids-suggestion-row-container {
+  border: 1px solid #ccc;
+  border-radius: 4px 4px 4px 4px;
+  padding-bottom: 8px;
+}

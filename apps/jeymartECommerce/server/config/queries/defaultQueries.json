@@ -239,7 +239,7 @@
       },
       "steps": [
         { "id": 1, "method": "size", "param": 10 },
-        { "id": 2, "query": "MoreLikeThisQuery",
+        { "id": 2, "query": "morelikethis",
           "minTermFreq": 1
         }
       ],
@@ -271,7 +271,7 @@
           "subAggs": [
             { "agg": "TopHitsAggregation",
               "param": [ "_st2" ],
-              "size": 2
+              "size": 1
             }
           ]
         }

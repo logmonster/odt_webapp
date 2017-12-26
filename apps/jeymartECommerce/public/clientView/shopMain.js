@@ -11,6 +11,7 @@ Vue.component('shop-spy-panel', require('./vue/component/shop-spy-panel.vue'));
 Vue.component('shop-facets-control', require('./vue/component/shop-facets-control.vue'));
 Vue.component('shop-product-display-top5', require('./vue/component/shop-product-display-top5.vue'));
 Vue.component('shop-product-item-small', require('./vue/component/shop-product-item-small.vue'));
+Vue.component('shop-item-details-suggestion', require('./vue/component/shop-item-details-suggestion.vue'));
 
 // setup Router
 var Router = require('vue-router');

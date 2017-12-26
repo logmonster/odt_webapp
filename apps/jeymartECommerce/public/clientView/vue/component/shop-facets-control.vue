@@ -54,6 +54,9 @@ module.exports = {
         _instance.chosenItemList=[];
       }
     });
+
+    console.log('** '+this.preSelected);
+
   },
   watch: {
     preSelected: function(_newValue) {
@@ -123,7 +126,7 @@ module.exports = {
       }*/
       _idx_1 = window.collectionUtil.isElementExistsInArray(
         _key, this.chosenItemList);
-        
+
       if (_idx_1!=-1) {
         _exists=true;
       }

@@ -102,6 +102,24 @@ let Util = function(_defaultQueriesMap, _eb) {
         });
         _agg.sorts(_sorts);
       }
+    } else if (_aggType=='SignificantTermsAggregation') {
+      let _param=_step['param'];
+      let _size=parseInt(_step['size'], 10);
+      let _subAgg = (_step['subAggs']!=null)?_step['subAggs']:null;
+
+      _agg = new _eb.SignificantTermsAggregation(_param[0], _param[1]);
+      if (_size>=0) {
+        _agg.size(_size);
+      }
+      // handling of subAgg(s) if any
+      if (_subAgg!=null) {
+        let _subAggArray=[];
+        _subAgg.forEach(function(_subA, _idx_1) {
+          _subAggArray.push(_handleAggPerStep(_subA['agg'], _subA, _queryObj));
+        });
+        // add back to _agg...
+        _agg.aggs(_subAggArray);
+      }
     }
     return _agg;
   };
@@ -190,11 +208,31 @@ let Util = function(_defaultQueriesMap, _eb) {
         _q.filter(_filterLst);
       }
       // handle _pagination
-      let _size = parseInt(_pagination['pageSize'], 10);
-      let _from = parseInt(_pagination['page'], 10)*_size;
-      _queryObj.from(_from);
-      _queryObj.size(_size);
+      if (_pagination) {
+        let _size = parseInt(_pagination['pageSize'], 10);
+        let _from = parseInt(_pagination['page'], 10)*_size;
+        _queryObj.from(_from);
+        _queryObj.size(_size);
+      }
       // set back the query object to the RequestBodySearch object
+      _queryObj.query(_q);
+
+    } else if ('morelikethis' == _type) {
+      // MoreLikeThisQuery
+      let _q = new _eb.MoreLikeThisQuery();
+      let _like = _criteria['like'];
+      let _fields = _criteria['fields'];
+      let _minTermFreq = parseInt(_criteria['minTermFreq'], 10);
+
+      if (_like) {
+        _q.like(_like);
+      }
+      if (_fields) {
+        _q.fields(_fields);
+      }
+      if (_minTermFreq>=0) {
+        _q.minTermFreq(_minTermFreq);
+      }
       _queryObj.query(_q);
     }
 
@@ -258,6 +296,10 @@ let Util = function(_defaultQueriesMap, _eb) {
      */
     buildQueryByType: function(_payloads, _criteria) {
       return _buildQueryByType(_payloads, _criteria);
+    },
+
+    buildAggByType: function(_aggType, _step, _queryObj) {
+      return _handleAgg(_aggType, _step, _queryObj);
     }
 
 

@@ -17,6 +17,7 @@
           <shop-facets-control
             mode='button'
             :data='getFacetsDataByType("_brands")'
+            :preSelected='preSelectedBrand'
             label='brands' ></shop-facets-control>
           <p/>
 
@@ -63,14 +64,14 @@ function _model_shop_landing(_instance) {
     },
 
     'preSelectedCategory': 'all',
-// TODO: move all searchbarText search icon click events to here
-/*
- *  facets control can emit event to here and shop-main (dao)
- *  so both parent could handle certain features (here for data level update),
- *  shop-main for dao update
- *
- *  so now here has all data for the further UI and dao updates
- */
+    'preSelectedBrand': '',
+    /*
+     *  facets control can emit event to here and shop-main (dao)
+     *  so both parent could handle certain features (here for data level update),
+     *  shop-main for dao update
+     *
+     *  so now here has all data for the further UI and dao updates
+     */
     'searchbarText': '__empty__'
   };
 }
@@ -264,6 +265,7 @@ module.exports = {
         // special handling for top6 page (indirectly update the category facets control)
         if (('shop_product_top5' == _eventObject['from'] ||
               'shop_landing' == _eventObject['from'] ||
+              'shop_item_details_suggestion' == _eventObject['from'] ||
               'shop_landing_listing' == _eventObject['from']) &&
           _eventObject['catList']) {
 
@@ -272,6 +274,10 @@ module.exports = {
           } else {
             // 'all' means no preSelected category filter
             _instance.preSelectedCategory = 'all';
+          }
+
+          if (_eventObject['brandList'].length>0) {
+            _instance.preSelectedBrand = _eventObject['brandList'][0];
           }
         }
         // special handling for empty searchbarText (set to __empty__)

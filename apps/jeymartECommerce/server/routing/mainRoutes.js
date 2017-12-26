@@ -320,11 +320,11 @@ var MainRoutes = function(_client, _router, _eBuilder, _defaultQueriesMap, _esIn
     //let _critMap = {};
     let _body=[];
 
-    let _qObj=_createQueryForShopItemDetailsSuggestionsMLT(_qSection_mlt, _req.query['mltPayload']);
+    let _qObj=_createQueryForShopItemDetailsSuggestionsMLT(_qSection_mlt, _req.query['item']);
     _body.push(_qObj['meta']);
     _body.push(_qObj['query'].toJSON());
 
-    _qObj=_createQueryForShopItemDetailsSuggestionsST(_qSection_st, _req.query['stPayload']);
+    _qObj=_createQueryForShopItemDetailsSuggestionsST(_qSection_st, _req.query['item']);
     _body.push(_qObj['meta']);
     _body.push(_qObj['query'].toJSON());
 
@@ -338,10 +338,50 @@ var MainRoutes = function(_client, _router, _eBuilder, _defaultQueriesMap, _esIn
   };
 
   let _createQueryForShopItemDetailsSuggestionsMLT = function(_qSection, _payLoad) {
-    // return object => meta = meta data; query => Query
+    let _obj={};
+    let _critMap={};
+
+    // build the criteria map
+    _critMap['like']={
+      '_index': _payLoad['_index'],
+      '_type': _payLoad['_type'],
+      '_id': _payLoad['_id']
+    };
+    _critMap['fields']=[ 't_description' ];
+    _critMap['minTermFreq']=1;
+
+    _obj['meta']=_qSection['meta'];
+    _obj['query']=_esInterpretorUtil.buildQueryByType(_qSection, _critMap);
+    _obj['query'].size(10);
+
+    return _obj;
   };
   let _createQueryForShopItemDetailsSuggestionsST = function(_qSection, _payLoad) {
-    // return object => meta = meta data; query => Query
+    let _eb = _eBuilder;
+    let _obj={};
+    let _critMap={};
+    let _queryObj=new _eb.requestBodySearch();
+    // TODO: not to be hard-coded (but for now, it is easier to handle this way)
+    let _stepAggs=_qSection['steps'][1];
+
+    // handle aggs
+    _queryObj=_esInterpretorUtil.buildAggByType(_stepAggs['agg'], _stepAggs, _queryObj);
+
+    // handle query
+    _critMap['must']=[];
+    _critMap['must'].push({ 'query': 'MatchQuery', "field": 't_description', "value": _payLoad['_source']['t_description'] });
+    _critMap['must'].push({ 'query': 'MatchQuery', "field": 'k_category', "value": _payLoad['_source']['k_category'][0] });
+
+    // add this step so that a bool query would be created
+    _qSection['steps'].push({ "id": 3, "query": "bool" });
+    let _queryObj2 = _esInterpretorUtil.buildQueryByType(_qSection, _critMap);
+    _queryObj2.aggs(_queryObj['_aggs']);
+    _queryObj2.size(0);
+
+    _obj['meta']=_qSection['meta'];
+    _obj['query']=_queryObj2;
+
+    return _obj;
   };
 
 

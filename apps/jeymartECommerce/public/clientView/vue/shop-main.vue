@@ -167,7 +167,7 @@ module.exports={
       );
     });
 
-    // TODO: moved to shop-landing.vue
+    // (partial) moved to shop-landing.vue
     window.Vue.$on('searchbarIconClick', function(_eventObject) {
       // handle the category
       let _category=[];
@@ -181,26 +181,27 @@ module.exports={
       // update the data entries in the model
       _instance.searchbarText=_searchbarText;
       _instance.searchbarCategory=_category;
-      /*
-      let _eventObject2 = {
-        'view': 'listing/:hash',
-        'hash': parseInt(new Date().getTime()*Math.random(), 10)
-      };
-      // force the facets contrl to refresh on the chosen category
-      _eventObject2['from']='shop_searchbar';
-      _eventObject2['searchbarText']=_searchbarText;
-      _eventObject2['catList'] = _category;
-      // reset pagination
-      _eventObject2['pagination']={
-        'page': 0,
-        'pageSize': 16
-      };
-      window.Vue.$emit('changeRouterViewToListing', _eventObject2);
-      */
     });
 
+    /**
+     *  handling on request for suggestions for the item details suggestion(s)
+     */
     window.Vue.$on('getShopItemDetailsSuggestions', function(_eventObject) {
-      
+      window.ajaxUtil.GET(
+        '/api/shopItemDetailsSuggestionsGet',
+        {
+          'item': _eventObject['item']
+        },
+        function(_data, _status, _jqXHR) {
+          if (_eventObject && _eventObject.callback) {
+            _eventObject.callback(_data);
+          }
+        },
+        function(_jqXHR, _status, _err) {
+          console.log('* something wrong happened ~ ');
+          console.log(_err);
+        }
+      );
     });
 
   },

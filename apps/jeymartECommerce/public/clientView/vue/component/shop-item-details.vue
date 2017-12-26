@@ -5,13 +5,19 @@
       <span v-for='(_item, _idx) in dataFacets.category'
         :style='getCssStyleForPills()'
         @click='handlePillClick(_item, "category")'
-        class="pointer badge badge-pill light-blue shop-listing-header-pill">
-        {{_item}} <i class="fa fa-close" aria-hidden="true"></i></span>
+        class=" badge badge-pill light-blue shop-listing-header-pill">
+        {{_item}}</span>
       <span v-for='(_item, _idx) in dataFacets.brand'
         :style='getCssStyleForPills()'
         @click='handlePillClick(_item, "brand")'
-        class="pointer badge badge-pill green shop-listing-header-pill">
-        {{_item}} <i class="fa fa-close" aria-hidden="true"></i></span>
+        class=" badge badge-pill green shop-listing-header-pill">
+        {{_item}}</span>
+
+      <span
+        :style='getCssStyleForPills()'
+        @click='handleBackClick()'
+        class="pull-right pointer badge badge-pill teal shop-listing-header-pill">
+        back <i class="fa fa-caret-left" aria-hidden="true"></i></span>
     </div>
 
     <!-- details -->
@@ -24,7 +30,7 @@
             <!--Card image-->
             <div class="view overlay hm-white-light shop-item-details-img-container">
               <img :src='getImageUrl()' class='shop-item-details-img img-fluid'>
-              <a href="#">
+              <a href="javascript:void(0);">
                 <!--  pattern-4 (make it blurrer) -->
                 <div class="mask"></div>
               </a>
@@ -80,12 +86,12 @@
               <!-- comment 1 (hard coded though) -->
               <div class='shop-item-details-comment-card'>
                 <div>
-                  <i class="fa fa-id-card-o" aria-hidden="true"></i>
+                  <i class="fa fa-id-card-o shop-item-details-comment-card-icon" aria-hidden="true"></i>
                   anonymous
-                  <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+                  <i class="fa fa-thumbs-o-up shop-item-details-comment-card-icon" aria-hidden="true"></i>
                 </div>
                 <div>
-                  <i class="fa fa-map-marker" aria-hidden="true"></i>
+                  <i class="fa fa-map-marker shop-item-details-comment-card-icon" aria-hidden="true" style="padding-left: 4px; padding-right: 4px;"></i>
                   London, United Kingdom
                 </div>
                 <div class="shop-item-details-comment-card-text">
@@ -95,12 +101,12 @@
 
               <div class='shop-item-details-comment-card'>
                 <div>
-                  <i class="fa fa-id-card-o" aria-hidden="true"></i>
+                  <i class="fa fa-id-card-o shop-item-details-comment-card-icon" aria-hidden="true"></i>
                   Marinos Quina
-                  <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+                  <i class="fa fa-thumbs-o-up shop-item-details-comment-card-icon" aria-hidden="true"></i>
                 </div>
                 <div>
-                  <i class="fa fa-map-marker" aria-hidden="true"></i>
+                  <i class="fa fa-map-marker shop-item-details-comment-card-icon" aria-hidden="true" style="padding-left: 4px; padding-right: 4px;"></i>
                   Madrid, Spain
                 </div>
                 <div class="shop-item-details-comment-card-text">
@@ -110,12 +116,12 @@
 
               <div class='shop-item-details-comment-card'>
                 <div>
-                  <i class="fa fa-id-card-o" aria-hidden="true"></i>
+                  <i class="fa fa-id-card-o shop-item-details-comment-card-icon" aria-hidden="true"></i>
                   高橋たろ
-                  <i class="fa fa-thumbs-o-down" aria-hidden="true"></i>
+                  <i class="fa fa-thumbs-o-down shop-item-details-comment-card-icon" aria-hidden="true"></i>
                 </div>
                 <div>
-                  <i class="fa fa-map-marker" aria-hidden="true"></i>
+                  <i class="fa fa-map-marker shop-item-details-comment-card-icon" aria-hidden="true" style="padding-left: 4px; padding-right: 4px;"></i>
                   Tokyo, Japan
                 </div>
                 <div class="shop-item-details-comment-card-text">
@@ -129,6 +135,17 @@
 
           some other suggestions: (significant terms etc)
         </div>
+      </div>
+      <!-- suggestions -->
+      <div>
+        <shop-item-details-suggestion
+          sType='morelikethis'
+          :dataList='dataSuggestions["morelikethis"]'></shop-item-details-suggestion>
+      </div>
+      <div>
+        <shop-item-details-suggestion
+          sType='st'
+          :dataList='dataSuggestions["st"]'></shop-item-details-suggestion>
       </div>
     </div>
 
@@ -146,7 +163,12 @@ function _model_shop_item_details(_inst) {
       'rating':[],
       'searchbarText': '__empty__'
     },
-    'item': {}
+    'item': {},
+
+    'dataSuggestions': {
+      'morelikethis': [],
+      'st': []
+    }
   };
 } // end model
 
@@ -166,7 +188,7 @@ module.exports={
       'callback': this.setDataSuggestions,
       'item': this.item
     });
-    
+
   },
   watch: {
     $route: function(_newValue) {
@@ -179,8 +201,24 @@ module.exports={
   },
   methods: {
 
+    handleBackClick: function() {
+      window.Vue.$emit('changeRouterViewToListing', {
+        'catList': this.dataFacets['category'],
+        'brandList': this.dataFacets['brand'],
+        'ratingList': this.dataFacets['rating'],
+        'searchbarText': this.dataFacets['searchbarText'],
+
+        'view': 'listing/:hash',
+        'hash': parseInt((new Date().getTime()*Math.random()), 10),
+        'from': 'shop_item_details_suggestion'
+      });
+    },
+
     setDataSuggestions: function(_data) {
-      console.log(_data);
+      if (_data && _data['responses']) {
+        this.dataSuggestions['morelikethis']=_data['responses'][0];
+        this.dataSuggestions['st']=_data['responses'][1];
+      }
     },
 
     /**
