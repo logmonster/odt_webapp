@@ -47,12 +47,11 @@ module.exports = {
   props: [ 'label', 'mode', 'data', 'preSelected' ],
   mounted: function() {
     let _instance=this;
-
+    /*
     window.Vue.$on('getListingDataByRouteParams', function(_eventObject) {
       if (_eventObject && 'shop_landing_listing'==_eventObject['from']) {
         // remove the given category
         //_instance.chosenItemList=[];
-        /*
         let _l;
         if (_instance.label=='categories') {
 
@@ -68,11 +67,11 @@ module.exports = {
             _instance.preSelected=_l[0];
           }
         }
-console.log(_instance.preSelected);
-        */
+        console.log(_instance.preSelected);
       }
     });
     //console.log('** '+this.mode+','+this.preSelected);
+    */
   },
   watch: {
     preSelected: function(_newValue) {

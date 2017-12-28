@@ -12,6 +12,7 @@ Vue.component('shop-facets-control', require('./vue/component/shop-facets-contro
 Vue.component('shop-product-display-top5', require('./vue/component/shop-product-display-top5.vue'));
 Vue.component('shop-product-item-small', require('./vue/component/shop-product-item-small.vue'));
 Vue.component('shop-item-details-suggestion', require('./vue/component/shop-item-details-suggestion.vue'));
+Vue.component('shop-adv-search-panel', require('./vue/component/shop-adv-search-panel.vue'));
 
 // setup Router
 var Router = require('vue-router');
@@ -29,6 +30,7 @@ window.ajaxUtil = require('./vue/util/jQueryAjaxUtil.vue');
 window.throttleUtil = require('./vue/util/uiThrottleUtil.vue');
 window.windowEventUtil = require('./vue/util/windowEventUtil.vue');
 window.collectionUtil = require('./vue/util/collectionUtil.vue');
+window.lectureUtil = require('./vue/util/LectureUtil.vue');
 
 let app = new Vue({
   el: '#shop-app',

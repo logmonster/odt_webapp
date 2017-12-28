@@ -41,3 +41,22 @@
   display: inline-block;
   border: 1px solid #f00;
 }
+
+/* color schemes for jsCodeBeautifier */
+
+.js_code_keyword {
+  color: #9933CC;
+}
+
+.js_code_method {
+  color: #4285F4;
+}
+
+.js_code_html {
+  color: #b71c1c;
+}
+
+
+.result-color {
+  color: #007E33;
+}

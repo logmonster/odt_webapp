@@ -384,6 +384,164 @@ var MainRoutes = function(_client, _router, _eBuilder, _defaultQueriesMap, _esIn
     return _obj;
   };
 
+  // ------------------------------------ //
+  // start of query(s) for advance search //
+  // ------------------------------------ //
+
+  let getAdvSearchMatchQueryResults = function(_req, _resp) {
+    let _eb = _eBuilder;
+    let _rQ = _req.query;
+    let _body=[];
+    let _dsl='';
+    let _queryObj=new _eb.RequestBodySearch();
+
+    // create the dsl by the request objects' params
+    _queryObj.size(parseInt(_rQ['size'] ,10));
+    if (_rQ['highlight']=='yes') {
+      _queryObj.highlight(new _eb.Highlight([
+        "t_description", "s_brand_name", "k_category" ]));
+    }
+    // create the MatchQuery object and set the attributes
+    let _matchQ=new _eb.MatchQuery(_rQ['field'], _rQ['text']);
+    _matchQ.operator(_rQ['operator']);
+    _matchQ.minimumShouldMatch(parseInt(_rQ['minShouldMatch'], 10));
+
+    // update the dsl member and attach the matchQuery object to the requestBodySearch object
+    _queryObj.query(_matchQ);
+    _dsl = _queryObj.toJSON();
+
+    _body.push({
+      "index": "jeymart_item",
+      "type": "doc"
+    });
+    _body.push(_dsl);
+
+    _client.msearch({
+      body: _body
+    }).then(function(_data) {
+      _resp.send({
+        'data': _data,
+        'dsl': _dsl
+      });
+    }, function(_err) {
+      _resp.send(_err);
+    }); // end -- msearch
+  };
+
+  let getAdvSearchMatchPhraseQueryResults=function(_req, _resp) {
+    let _eb = _eBuilder;
+    let _rQ = _req.query;
+    let _body=[];
+    let _dsl='';
+    let _queryObj=new _eb.RequestBodySearch();
+
+    // create the dsl by the request objects' params
+    _queryObj.size(parseInt(_rQ['size'] ,10));
+    if (_rQ['highlight']=='yes') {
+      _queryObj.highlight(new _eb.Highlight([
+        "t_description", "s_brand_name", "k_category" ]));
+    }
+    // create the MatchQuery object and set the attributes
+    let _matchQ=new _eb.MatchPhraseQuery(_rQ['field'], _rQ['text']);
+    _matchQ.slop(parseInt(_rQ['slop'], 0));
+
+    // update the dsl member and attach the matchQuery object to the requestBodySearch object
+    _queryObj.query(_matchQ);
+    _dsl = _queryObj.toJSON();
+
+    _body.push({
+      "index": "jeymart_item",
+      "type": "doc"
+    });
+    _body.push(_dsl);
+
+    _client.msearch({
+      body: _body
+    }).then(function(_data) {
+      _resp.send({
+        'data': _data,
+        'dsl': _dsl
+      });
+    }, function(_err) {
+      _resp.send(_err);
+    }); // end -- msearch
+  };
+
+  let getAdvSearchMultiMatchQueryResults=function(_req, _resp) {
+    let _eb = _eBuilder;
+    let _rQ = _req.query;
+    let _body=[];
+    let _dsl='';
+    let _queryObj=new _eb.RequestBodySearch();
+
+    // create the dsl by the request objects' params
+    _queryObj.size(parseInt(_rQ['size'] ,10));
+    if (_rQ['highlight']=='yes') {
+      _queryObj.highlight(new _eb.Highlight([
+        "t_description", "s_brand_name", "k_category" ]));
+    }
+    // create the MatchQuery object and set the attributes
+    let _matchQ=new _eb.MultiMatchQuery(_rQ['fields'], _rQ['text']);
+
+    // update the dsl member and attach the matchQuery object to the requestBodySearch object
+    _queryObj.query(_matchQ);
+    _dsl = _queryObj.toJSON();
+
+    _body.push({
+      "index": "jeymart_item",
+      "type": "doc"
+    });
+    _body.push(_dsl);
+
+    _client.msearch({
+      body: _body
+    }).then(function(_data) {
+      _resp.send({
+        'data': _data,
+        'dsl': _dsl
+      });
+    }, function(_err) {
+      _resp.send(_err);
+    }); // end -- msearch
+  };
+
+  let getAdvSearchMultiTermsQueryResults = function(_req, _resp) {
+    let _eb = _eBuilder;
+    let _rQ = _req.query;
+    let _body=[];
+    let _dsl='';
+    let _queryObj=new _eb.RequestBodySearch();
+
+    // create the dsl by the request objects' params
+    _queryObj.size(parseInt(_rQ['size'] ,10));
+    if (_rQ['highlight']=='yes') {
+      _queryObj.highlight(new _eb.Highlight([
+        "t_description", "s_brand_name", "k_category" ]));
+    }
+    // create the MatchQuery object and set the attributes
+    let _matchQ=new _eb.TermsQuery(_rQ['field'], _rQ['termsArray']);
+
+    // update the dsl member and attach the matchQuery object to the requestBodySearch object
+    _queryObj.query(_matchQ);
+    _dsl = _queryObj.toJSON();
+
+    _body.push({
+      "index": "jeymart_item",
+      "type": "doc"
+    });
+    _body.push(_dsl);
+
+    _client.msearch({
+      body: _body
+    }).then(function(_data) {
+      _resp.send({
+        'data': _data,
+        'dsl': _dsl
+      });
+    }, function(_err) {
+      _resp.send(_err);
+    }); // end -- msearch
+  };
 
   /**
    *  return the minimal methods and attributes to the caller
@@ -433,6 +591,35 @@ var MainRoutes = function(_client, _router, _eBuilder, _defaultQueriesMap, _esIn
           getShopItemDetailsSuggestions(_req, _resp);
         }
       );
+      // advance search app / page
+      _router.route('/api/shopAdvSearchMatchQueryGet').
+        get(function(_req, _resp) {
+          // do a msearch on ...
+          getAdvSearchMatchQueryResults(_req, _resp);
+        }
+      );
+      _router.route('/api/shopAdvSearchMatchPhraseQueryGet').
+        get(function(_req, _resp) {
+          // do a msearch on ...
+          getAdvSearchMatchPhraseQueryResults(_req, _resp);
+        }
+      );
+      _router.route('/api/shopAdvSearchMultiMatchQueryGet').
+        get(function(_req, _resp) {
+          // do a msearch on ...
+          getAdvSearchMultiMatchQueryResults(_req, _resp);
+        }
+      );
+      _router.route('/api/shopAdvSearchMultiTermsQueryGet').
+        get(function(_req, _resp) {
+          // do a msearch on ...
+          getAdvSearchMultiTermsQueryResults(_req, _resp);
+        }
+      );
+
+
+
+
 
 
       return _router;

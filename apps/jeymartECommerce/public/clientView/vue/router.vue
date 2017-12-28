@@ -29,6 +29,10 @@ module.exports = {
       name: '/itemDetails/:hash',
       component: require('./component/shop-item-details.vue')
     },
+    { path: '/advanceSearch',
+      name: '/advanceSearch',
+      component: require('./component/shop-advance-search.vue')
+    },
     { path: '/help',
       name: '/help',
       component: require('./shop-help.vue')

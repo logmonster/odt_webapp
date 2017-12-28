@@ -22,7 +22,8 @@
         </span>
         &nbsp;
         <span class='shop-listing-header-count-label'>
-          (page {{pagination.page+1}})
+          {{getPageNumForDisplay()}}
+          <!--(page {{pagination.page+1}})-->
         </span>
       </div>
     </div>
@@ -210,11 +211,19 @@ module.exports={
     },
 
     getHitsCount: function() {
-      let _cnt=-1;
+      let _cnt=0;
       if (this.dataListing && this.dataListing['hits'] && this.dataListing['hits']['total']) {
         _cnt=parseInt(this.dataListing['hits']['total'], 10);
       }
       return _cnt;
+    },
+
+    getPageNumForDisplay: function() {
+      if (this.getHitsCount()>0) {
+        return "(page "+(this.pagination.page+1)+")";
+      } else {
+        return "";
+      }
     },
 
     getHitsList: function() {
