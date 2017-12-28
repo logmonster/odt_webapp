@@ -53,7 +53,7 @@
       </div>
     </div>
     <!-- spy panel for sample code display -->
-    <shop-spy-panel :viewFile='spyPanelViewFile' ></shop-spy-panel>
+    <!--shop-spy-panel :viewFile='spyPanelViewFile' ></shop-spy-panel-->
   </div>
 </template>
 
@@ -61,6 +61,7 @@
 function _model_shop_adv_search(_inst) {
   return {
     'instance': _inst,
+
     'query': {
       'dsl': '',
       'dslBeautified': '',
@@ -77,6 +78,11 @@ module.exports={
   },
   mounted: function() {
     let _instance=this;
+
+    // update the spyPanel help file
+    window.Vue.$emit('updateSpyPanelFile', {
+      'file': '/clientView/code/advanceSearchSpy.html'
+    });
 
     window.Vue.$on('runMatchQuery', function(_eventObject) {
       _instance.validateNSetDefaultValuesForFields(_eventObject);

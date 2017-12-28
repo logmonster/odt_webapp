@@ -11259,6 +11259,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 function _model_shop_adv_search(_inst) {
   return {
     'instance': _inst,
+
     'query': {
       'dsl': '',
       'dslBeautified': '',
@@ -11275,6 +11276,11 @@ module.exports={
   },
   mounted: function() {
     let _instance=this;
+
+    // update the spyPanel help file
+    window.Vue.$emit('updateSpyPanelFile', {
+      'file': '/clientView/code/advanceSearchSpy.html'
+    });
 
     window.Vue.$on('runMatchQuery', function(_eventObject) {
       _instance.validateNSetDefaultValuesForFields(_eventObject);
@@ -11513,7 +11519,7 @@ module.exports={
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('div',{staticClass:"shop-adv-main-container"},[_c('shop-adv-search-panel')],1),_vm._v(" "),_c('div',{staticClass:"container-fluid"},[_c('div',{staticClass:"row"},[_c('div',{staticClass:"col-sm-6 col-md-6"},[_c('div',{staticClass:"shop-adv-s-main-label",staticStyle:{"padding-top":"18px"}},[_vm._v("\n          Query DSL:")]),_vm._v(" "),_c('div',{staticClass:"shop-adv-s-result-dsl",class:_vm.getQueryDSLVisibilityCss(),staticStyle:{"overflow":"auto"}},[_c('div',{domProps:{"innerHTML":_vm._s(_vm.query.dslBeautified)}})])]),_vm._v(" "),_c('div',{staticClass:"col-sm-6 col-md-6"},[_c('div',{staticClass:"shop-adv-s-main-label",staticStyle:{"padding-top":"18px"}},[_vm._v("\n          Result(s):\n          "),_c('span',{staticClass:"pull-right"},[_vm._v(_vm._s(_vm.getHitsCount()))])]),_vm._v(" "),_vm._l((_vm.getHitsArray()),function(hit,idx){return _c('div',{staticClass:"shop-adv-s-result-listing-container",staticStyle:{"overflow":"auto"}},[_c('img',{staticClass:"shop-adv-s-result-listing-img",attrs:{"src":_vm.getImageUrl(hit)}}),_vm._v(" "),_c('div',[_c('div',{staticClass:"em-marker"},[_c('i',{staticClass:"fa fa-tags",attrs:{"aria-hidden":"true"}}),_vm._v(" "),_c('span',{domProps:{"innerHTML":_vm._s(_vm.getHitBrand(hit))}})]),_vm._v(" "),_c('div',{staticClass:"text-truncate em-marker",attrs:{"title":hit['_source']['t_description']}},[_c('i',{staticClass:"fa fa-list-alt",attrs:{"aria-hidden":"true"}}),_vm._v(" "),_c('span',{domProps:{"innerHTML":_vm._s(_vm.getHitDescription(hit))}})]),_vm._v(" "),_c('div',[_c('i',{staticClass:"fa fa-money",attrs:{"aria-hidden":"true"}}),_vm._v("\n              "+_vm._s(_vm.getHitPrice(hit))+"\n            ")]),_vm._v(" "),_c('div',{staticClass:"em-marker"},[_c('i',{staticClass:"fa fa-list-ul",attrs:{"aria-hidden":"true"}}),_vm._v(" "),_c('span',{domProps:{"innerHTML":_vm._s(_vm.getHitCategory(hit))}})])])])})],2)])]),_vm._v(" "),_c('shop-spy-panel',{attrs:{"viewFile":_vm.spyPanelViewFile}})],1)}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('div',{staticClass:"shop-adv-main-container"},[_c('shop-adv-search-panel')],1),_vm._v(" "),_c('div',{staticClass:"container-fluid"},[_c('div',{staticClass:"row"},[_c('div',{staticClass:"col-sm-6 col-md-6"},[_c('div',{staticClass:"shop-adv-s-main-label",staticStyle:{"padding-top":"18px"}},[_vm._v("\n          Query DSL:")]),_vm._v(" "),_c('div',{staticClass:"shop-adv-s-result-dsl",class:_vm.getQueryDSLVisibilityCss(),staticStyle:{"overflow":"auto"}},[_c('div',{domProps:{"innerHTML":_vm._s(_vm.query.dslBeautified)}})])]),_vm._v(" "),_c('div',{staticClass:"col-sm-6 col-md-6"},[_c('div',{staticClass:"shop-adv-s-main-label",staticStyle:{"padding-top":"18px"}},[_vm._v("\n          Result(s):\n          "),_c('span',{staticClass:"pull-right"},[_vm._v(_vm._s(_vm.getHitsCount()))])]),_vm._v(" "),_vm._l((_vm.getHitsArray()),function(hit,idx){return _c('div',{staticClass:"shop-adv-s-result-listing-container",staticStyle:{"overflow":"auto"}},[_c('img',{staticClass:"shop-adv-s-result-listing-img",attrs:{"src":_vm.getImageUrl(hit)}}),_vm._v(" "),_c('div',[_c('div',{staticClass:"em-marker"},[_c('i',{staticClass:"fa fa-tags",attrs:{"aria-hidden":"true"}}),_vm._v(" "),_c('span',{domProps:{"innerHTML":_vm._s(_vm.getHitBrand(hit))}})]),_vm._v(" "),_c('div',{staticClass:"text-truncate em-marker",attrs:{"title":hit['_source']['t_description']}},[_c('i',{staticClass:"fa fa-list-alt",attrs:{"aria-hidden":"true"}}),_vm._v(" "),_c('span',{domProps:{"innerHTML":_vm._s(_vm.getHitDescription(hit))}})]),_vm._v(" "),_c('div',[_c('i',{staticClass:"fa fa-money",attrs:{"aria-hidden":"true"}}),_vm._v("\n              "+_vm._s(_vm.getHitPrice(hit))+"\n            ")]),_vm._v(" "),_c('div',{staticClass:"em-marker"},[_c('i',{staticClass:"fa fa-list-ul",attrs:{"aria-hidden":"true"}}),_vm._v(" "),_c('span',{domProps:{"innerHTML":_vm._s(_vm.getHitCategory(hit))}})])])])})],2)])])])}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -13408,6 +13414,21 @@ module.exports = {
   data: function() {
     return new _model_shop_spy_panel(this);
   },
+  watch: {
+    viewFile: function(_newValue) {
+      let _instance=this;
+      window.ajaxUtil.GET(
+        _newValue,
+        {},
+        function(_data, _status, _jqXHR) {
+          _instance.viewFileContent=_data;
+        },
+        function(_jqXHR, _status, _err) {
+          _instance.viewFileContent=_err;
+        }
+      );
+    }
+  },
   mounted: function() {
     let _instance = this;
     // endable tooltip (need to uncomment the shop.html entry for popper.js)
@@ -14016,9 +14037,15 @@ module.exports={
       }
     );
 
+
+
     /* ---------------------------------------------------------------- */
     /*  define $on events (parent-child component communication model)  */
     /* ---------------------------------------------------------------- */
+
+    window.Vue.$on('updateSpyPanelFile', function(_eventObject) {
+      _instance.spyPanelViewFile=_eventObject['file'];
+    });
 
     // handle searchbarText keyup event
     window.Vue.$on('searchbartextkeyup', function(_keyObject) {

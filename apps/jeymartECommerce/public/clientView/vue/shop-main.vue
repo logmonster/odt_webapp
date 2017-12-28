@@ -75,9 +75,15 @@ module.exports={
       }
     );
 
+
+
     /* ---------------------------------------------------------------- */
     /*  define $on events (parent-child component communication model)  */
     /* ---------------------------------------------------------------- */
+
+    window.Vue.$on('updateSpyPanelFile', function(_eventObject) {
+      _instance.spyPanelViewFile=_eventObject['file'];
+    });
 
     // handle searchbarText keyup event
     window.Vue.$on('searchbartextkeyup', function(_keyObject) {

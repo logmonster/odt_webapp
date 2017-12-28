@@ -1,0 +1,44 @@
+
+.sf-chapter-label {
+  font-size: 24px;
+  font-weight: bold;
+  color: #666;
+  padding-top: 8px;
+}
+.sf-chapter-sub-label {
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  padding-left: 4px; padding-right: 4px;
+  padding-top: 8px; padding-bottom: 8px;
+  background: #888;
+  margin-bottom: 8px;
+  margin-top: 20px;
+}
+
+.sf-parargraph {
+  padding-left: 32px;
+  padding-right: 32px;
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+.sf-paragraph-sub {
+  margin-top: 8px;
+}
+.sf-parargraph-final {
+  margin-bottom: 40px;
+}
+.sf-parargraph var {
+  color: #7b1fa2;
+  font-weight: bold;
+}
+
+
+.sf-list {
+  padding-left: 22px;
+}
+.sf-list li {
+  padding-left: 2px;
+  list-style: circle;
+  list-style-type: circle;
+}

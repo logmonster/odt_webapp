@@ -50,6 +50,21 @@ module.exports = {
   data: function() {
     return new _model_shop_spy_panel(this);
   },
+  watch: {
+    viewFile: function(_newValue) {
+      let _instance=this;
+      window.ajaxUtil.GET(
+        _newValue,
+        {},
+        function(_data, _status, _jqXHR) {
+          _instance.viewFileContent=_data;
+        },
+        function(_jqXHR, _status, _err) {
+          _instance.viewFileContent=_err;
+        }
+      );
+    }
+  },
   mounted: function() {
     let _instance = this;
     // endable tooltip (need to uncomment the shop.html entry for popper.js)

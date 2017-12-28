@@ -1,0 +1,85 @@
+
+<h1 class="sf-chapter-label">
+  Advance Search Panel
+</h1>
+
+<div class='sf-parargraph'>
+  In this section, we will cover the following search queries:
+  <ul class="sf-list">
+    <li><mark>Match Query</mark> and its variances - basic search based on term(s)</li>
+    <li><mark>Match Phrase Query</mark> and its variances - treat the terms as a phrase</li>
+    <li><mark>Multi Match Query</mark> - matching multiple fields for a term</li>
+    <li><mark>Terms Query</mark> - matching multiple terms in a field</li>
+  </ul>
+
+  <div class='sf-chapter-sub-label'>Match Query</div>
+  <div class='sf-paragraph-sub text-justify'>
+    The simplest and yet flexible query to perform basic searches. By default the
+    <var>"operator"</var> for a MatchQuery is <mark>"OR"</mark>; which means that any
+    document with the given field's value matches ANY of the terms would be a match.
+  </div>
+  <div class='sf-paragraph-sub text-justify' style="overflow: auto;">
+    <img src='/image/spy/advSpy00.png'
+      style='width: 400px; float: left; margin-right: 4px; border: 1px solid #ddd;' />
+    If you type <mark>"necklace green"</mark> in the search-term textbox and
+    set the size of the query batch to <mark>"20"</mark>; you would get back a list
+    of results related to either <mark>green</mark> OR <mark>necklace</mark>.
+    For the first few results in the list; they seem to be quite relevant (e.g.
+    DIAMANTE NECKLACE GREEN, GREEN MURANO TWIST NECKLACE), however if you keep on
+    scrolling down the list, you would find that the results are less and less
+    related to "necklace green" (e.g. GREEN SWEETHEART BRACELET, GREEN VINTAGE EARRINGS).
+    The reason is because the default <var>operator</var> for MatchQuery is <mark>OR</mark>.
+  </div>
+  <div class='sf-paragraph-sub text-justify'>
+    Now, let's modify the <var>operator</var> to <mark>"AND"</mark> instead. Run
+    the query again and now every result returned <mark>MUST</mark> have both "necklace"
+    and "green" available in the given field (in this case, "t_description"). This
+    is a simple technique to restrict the number of results returned and also at
+    the same time increase accuracy (return more relevant results).
+  </div>
+  <div class='sf-paragraph-sub text-justify'>
+    If you don't want to be so restrictive in retrieving the results, you can
+    keep using <var>operator</var> = <mark>OR</mark>, and configure the
+    <var>minimum should match</var> setting instead. Assume you typed in
+    <mark>"green earring necklace"</mark> and set the minimum should match
+    setting to <mark>2</mark>. Run the query and you should get back a list of
+    results having 2 or more of the terms matched in the designated field
+    (in this case "t_description"). For the first few results, you got back
+    "GREEN VINTAGE EARRINGS" (which matches 2 terms - green and earring),
+    "DIAMANTE NECKLACE GREEN" (which matches 2 terms - green and necklace).
+    By now, you have added flexibility in retreiving a match (using OR) and at
+    the same restricting the number of entries returned based on
+    accuracy / relevancy (minimum should match).
+  </div>
+  <div class='sf-paragraph-sub text-justify' style="overflow: auto;">
+    <img src='/image/spy/advSpy01.png'
+      style='width: 400px; float: left; margin-right: 4px; border: 1px solid #ddd;' />
+    The last option available in the panel area is "highlight"; this is a
+    handy option for helping you to spot out why a document is a match with the
+    given terms and settings (e.g. operator change). If we turn on "highlight";
+    the matched terms would be in <span style="color: #f00;">red</span> color.
+    Giving you a hint why and where this document is a match. Try to turn the
+    "highlight" off and run the query again. Now there would be no hint at all
+    for the results.
+  </div>
+  <div class='sf-paragraph-sub text-justify'>
+    The <mark>"Query DSL"</mark> panel shows you exactly how the query DSL is
+    created and to be run against your Elasticsearch instance. Try to change
+    the settings and run the query, you will notice the query inside the panel
+    would change accordingly.
+  </div>
+</div>
+
+<div class='sf-chapter-sub-label'>Match Phrase Query</div>
+<div class='sf-paragraph-sub text-justify'>
+  If you want a more restrictive way to retrieve documents
+  (not just all the terms are within that field of the document), such as the
+  position of terms <mark>MUST</mark> be in sequence too.
+  <mark>Match Phrase Query</mark> can help.
+</div>
+<div class='sf-paragraph-sub text-justify'>
+  
+</div>
+
+
+<div class="sf-parargraph-final">&nbsp;</div>
