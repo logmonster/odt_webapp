@@ -74,12 +74,95 @@
 <div class='sf-paragraph-sub text-justify'>
   If you want a more restrictive way to retrieve documents
   (not just all the terms are within that field of the document), such as the
-  position of terms <mark>MUST</mark> be in sequence too.
+  position of terms <mark>MUST</mark> be in sequence.
   <mark>Match Phrase Query</mark> can help.
 </div>
-<div class='sf-paragraph-sub text-justify'>
-  
+<div class='sf-paragraph-sub text-justify' style="overflow: auto;">
+  <img src='/image/spy/advSpy02.png'
+    style='width: 400px; float: left; margin-right: 4px; border: 1px solid #ddd;' />
+  Type in <mark>"vintage earring green"</mark> as the search text and run the
+  query. Now you would have ZERO results, why? The reason is a hit means the
+  document's t_description field needs to have <mark>vintage</mark>,
+  <mark>green</mark> and <mark>earring</mark> to be available
+  <span style="color: #f00;">PLUS</span> the ordering of the 3 terms must in
+  the given sequence as well. Hence no results returned. Modify the search text
+  into <mark>"green vintage earring"</mark> and run the query again. This time
+  you would get back 2 results, do focus on the <span style="color: #f00;">highlighted</span>
+  t_description field and you would find out that both results have the terms
+  in the exactly sequence we provided.
+  <p style="margin-top: 8px;"/>
+  Having such restrictive rules is good for certain use cases, however, wouldn't
+  it be even better if we could add certain flexibility? The <var>slop</var>
+  operator let's us add a configured number of arbitrary term(s) in between our
+  phrase. Type in <mark>"green earring"</mark> in the search text and run the query.
+  Zero results returned as there are no such document with t_description having
+  exactly "green earring" as the value. Now modify the <var>slop</var> operator,
+  set it to <mark>1</mark> and run the query again. Now you should get back 6
+  results and take a look at the <span style="color: #f00;">highlighted</span>
+  t_description, you can see that there is exactly "1" arbitrary term
+  between "green" and "earring". We successfully setup our restritive query
+  condition and adding a certain degree of flexibility.
 </div>
 
+
+<div class='sf-chapter-sub-label'>Multi Match Query</div>
+<div class='sf-paragraph-sub text-justify'>
+  There are times when you would want to search a given term(s) across multiple
+  fields. For example, our Jey-mart eCommerce store, the searchbar might actually
+  search the given search text across both "t_description" and "s_brand_name"
+  fields.
+</div>
+<div class='sf-paragraph-sub text-justify'>
+  Type in <mark>"design"</mark> as the search text and run the query. You should
+  get back a list of results. The 1st result shows that there is a match with
+  <mark>design</mark> at both <mark>t_description</mark> and <mark>s_brand_name</mark> field.
+  In real world use cases, you might want to search certain products name across
+  "user_comments" and "shopping_list" fields, so now you would be able to know
+  for a certain product, how many user comments on it
+  (also is the comment positive or negative) plus how well does it sell
+  (based on age group, gender etc);
+  more importantly, you could derive a set of metrics, visualizations and dashboards
+  based on these findings which might help you to predict a sales trend!
+</div>
+
+
+<div class='sf-chapter-sub-label'>Terms Query</div>
+<div class='sf-paragraph-sub text-justify' style="overflow: auto;">
+  <img src='/image/spy/advSpy03.png'
+    style='width: 400px; float: left; margin-right: 4px; border: 1px solid #ddd;' />
+  Slightly different from Multi-Search query, you might want to search a list of
+  terms on a single field. For example, you might want to retrieve documents
+  containing "sports shoes" and "sneakers" for the "product_description" field;
+  in such case, you know that sports-shoes are equivalent to sneakers in some sense,
+  hence searching both terms might benefit you most.
+  <p style="margin-top: 8px;"/>
+  Type in <mark>cake,design</mark> as the search text and run the query. Now you
+  should get back a list of results containing either <mark>"cake"</mark> or <mark>"design"</mark>
+  as a hit.
+</div>
+
+<div class='sf-chapter-sub-label'>Summary</div>
+<div class='sf-paragraph-sub text-justify'>
+  Cool! In this section, we have covered and run through
+  <mark><a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-query.html'
+    target="_blank">Match Query</a></mark>,
+  <mark><a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-query-phrase.html'
+    target="_blank">Match Phrase Query</a></mark>,
+  <mark><a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-multi-match-query.html'
+    target="_blank">Multi Match Query</a></mark> and
+  <mark><a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-terms-query.html'
+    target="_blank">Terms Query</a></mark>.
+  These are the basic and yet important queries in Elasticsearch,
+  use them wisely and you should have most of your everyday search use cases solved.
+  <p style="margin-top: 8px;"/>
+  For more advance queries, do take a look at the
+  <mark><a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-bool-query.html'
+    target="_blank">Boolean Query</a></mark> in which it provides you a way to combine
+  a set of retrieval criteria (each criteria might use one of the 4 queries mentioned in this section)
+</div>
+
+<div class='sf-paragraph-sub'>
+  Happy Searching <i class="fa fa-smile-o" aria-hidden="true"></i>
+</div>
 
 <div class="sf-parargraph-final">&nbsp;</div>
