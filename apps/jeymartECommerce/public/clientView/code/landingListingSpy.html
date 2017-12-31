@@ -85,26 +85,35 @@
 
   <div class='sf-chapter-sub-label'>pagination</div>
   <div class='sf-paragraph-sub text-justify' style="overflow: auto;">
-    
+    When you have a lot of results to display, it would be wise to provide
+    pagination capabilities instead of loading all results on 1 page at the
+    very beginning. In <mark>Elasticsearch</mark>, basic pagination is
+    easy to implement. Let's take a look at the code snippet below:
+    <p/>
+    <img src='/image/spy/landingListSpy02.png'
+      style='width: 400px; margin-right: 4px; border: 1px solid #ddd;' />
+    <img src='/image/spy/landingListSpy03.png'
+      style='width: 400px; margin-right: 4px; border: 1px solid #ddd;' />
+    <p style="margin-top: 8px;"/>
+    You can see that all we need to do is to add back the <var>from</var>
+    parameter and set it to the correct index, then we could <mark>"page"</mark> around
+    the results. Brilliant!
   </div>
+
 
   <div class='sf-chapter-sub-label'>Summary</div>
   <div class='sf-paragraph-sub text-justify'>
     Cool! In this section, we have covered and run through
-    <mark><a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket-terms-aggregation.html'
-      target="_blank">Terms Aggregation</a></mark>,
-    <mark><a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/search-suggesters-completion.html'
-      target="_blank">Auto-Completion Suggestion Query</a></mark>,
-    <mark><a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket-nested-aggregation.html'
-      target="_blank">Nested Aggregation concepts</a></mark> and
-    <mark><a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-metrics-top-hits-aggregation.html'
-      target="_blank">Top Hits Aggregation</a></mark>.
+    <mark><a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-bool-query.html'
+      target="_blank">Boolean Query</a></mark> and
+    <mark><a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-from-size.html'
+      target="_blank">Pagination concepts</a></mark>.
     <p style="margin-top: 8px;"/>
-    Interesting! In the RDBMS world, we perform all these things in "searches",
-    but when using <mark>Elasticsearch</mark> we actually used a lot of
-    aggregations too (even though aggregations and suggestions are also a
-    kind of query / search). In the next section, we are going to look into
-    the query(s) for Jey-mart eCommerce website.
+    By now, you have experienced how to write a complex query with multiple
+    matching criteria by using a <mark>Boolean Query</mark> and also how to
+    provide <mark>pagination</mark> capability to a large result set. For
+    the next section, we would look into other kinds of <mark>"suggestions"</mark>
+    based on the selected product item.
   </div>
 
   <div class='sf-paragraph-sub'>

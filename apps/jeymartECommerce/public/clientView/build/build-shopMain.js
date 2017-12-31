@@ -12359,6 +12359,11 @@ module.exports={
       'item': this.item
     });
 
+    // update the spyPanel help file
+    window.Vue.$emit('updateSpyPanelFile', {
+      'file': '/clientView/code/landingProdDetailsSpy.html'
+    });
+
   },
   watch: {
     $route: function(_newValue) {
