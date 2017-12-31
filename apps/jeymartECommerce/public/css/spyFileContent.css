@@ -42,3 +42,7 @@
   list-style: circle;
   list-style-type: circle;
 }
+
+space, sp {
+  padding-left: 12px;
+}

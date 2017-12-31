@@ -1,0 +1,116 @@
+<h1 class="sf-chapter-label">
+  Shop Listing Page
+</h1>
+
+<div class='sf-parargraph'>
+  In this section, we will cover the following topics:
+  <ul class="sf-list">
+    <li>the introduction of the areas / components of the shop listing page</li>
+    <li>the query result based on the searchbar's text and facets chosen values
+      (e.g. category name or brand name)</li>
+    <li>basic <mark>pagination</mark> approach</li>
+  </ul>
+
+  <div class='sf-chapter-sub-label'>the Shop Listing page</div>
+  <div class='sf-paragraph-sub text-justify' style="overflow: auto;">
+    <img src='/image/spy/landingListSpy01.png'
+      style='width: 400px; float: left; margin-right: 4px; border: 1px solid #ddd;' />
+    There isn't much new things on the listing page, we still have the good old
+    <mark>searchbar</mark> component, the <mark>facets</mark> on the left. The
+    new things are the listing page component in which we get back a list of
+    documents based on the value of the <mark>searchbar</mark> and the filters
+    chosen from the <mark>Facets</mark>. On the top of the listing component,
+    the chosen filters are listed; you can toggle the filter by pressing it.
+    The center part of the component are the documents considered to be a hit
+    based on our criteria, each document is shown in a preview mode, feel free
+    to press the image of the target product and you would be forwarded to the
+    product details page. Finally the lower part of the component are 2 buttons
+    for pagination purpose. (in real world, you might want to create pagination
+    controls just like any search engine does. As this course focuses on how to
+    integrate <mark>Elasticsearch</mark> with the view technology stack, all
+    the components involved are coded as simple as possible
+    <i class="fa fa-smile-o" aria-hidden="true"></i>)
+  <div>
+
+  <div class='sf-chapter-sub-label'>the Query and the Facets filters</div>
+  <div class='sf-paragraph-sub text-justify' style="overflow: auto;">
+    There are typically 2 ways to trigger a search for the listing. One of the ways
+    is to type in something in the <mark>searchbar</mark> component and press
+    the "search" (magnifying glass) button. The 2nd way is to chosen an option
+    on either <mark>Facets</mark> component (category or brand). Let's assume
+    we have the most complicated scenario; keyed in <var>"cake"</var> as the
+    <mark>searchbar</mark>'s text, picked <var>"food"</var> from the category
+    <mark>Facets</mark> and picked <var>"avery works"</var> from the brands
+    <mark>Facets</mark>. The query would be the following:
+  </div>
+
+  <div class='sf-paragraph-sub text-justify' >
+    <div>
+      <code>
+        GET odt_jeymart_items/_search <br/>
+        { <br/>
+          <sp/>"size": 16, <br/>
+          <sp/>"query": { <br/>
+            <sp/><sp/>"bool": { <br/>
+              <sp/><sp/><sp/>"must": [ <br/>
+                <sp/><sp/><sp/><sp/>{ <br/>
+                  <sp/><sp/><sp/><sp/><sp/>"match": { <br/>
+                    <sp/><sp/><sp/><sp/><sp/><sp/>"t_description": "cake" <br/>
+                  <sp/><sp/><sp/><sp/><sp/>} <br/>
+                <sp/><sp/><sp/><sp/>}, <br/>
+                <sp/><sp/><sp/><sp/>{ <br/>
+                  <sp/><sp/><sp/><sp/><sp/>"match": { <br/>
+                    <sp/><sp/><sp/><sp/><sp/><sp/>"k_category": "food" <br/>
+                  <sp/><sp/><sp/><sp/><sp/>} <br/>
+                <sp/><sp/><sp/><sp/>}, <br/>
+                <sp/><sp/><sp/><sp/>{ <br/>
+                  <sp/><sp/><sp/><sp/><sp/>"match": { <br/>
+                    <sp/><sp/><sp/><sp/><sp/><sp/>"s_brand_name": "avery works" <br/>
+                  <sp/><sp/><sp/><sp/><sp/>} <br/>
+                <sp/><sp/><sp/><sp/>} <br/>
+              <sp/><sp/><sp/>] <br/>
+            <sp/><sp/>} <br/>
+          <sp/>} <br/>
+        }
+      </code>
+    </div>
+    You can see that we no longer use a single and simple <mark>Match Query</mark>
+    to get all these 3 criteria satisfied. Instead, we use a new query named
+    <mark>Boolean Query</mark>; for our use case all we need is to use the <var>MUST</var>
+    clause to combine the 3 MANDATORY criteria
+    (i.e. searchbar text, category chosen and brand chosen). The other clauses
+    available are <var>MUST NOT</var>, <var>SHOULD</var> and <var>FILTER</var>.
+  </div>
+
+
+  <div class='sf-chapter-sub-label'>pagination</div>
+  <div class='sf-paragraph-sub text-justify' style="overflow: auto;">
+    
+  </div>
+
+  <div class='sf-chapter-sub-label'>Summary</div>
+  <div class='sf-paragraph-sub text-justify'>
+    Cool! In this section, we have covered and run through
+    <mark><a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket-terms-aggregation.html'
+      target="_blank">Terms Aggregation</a></mark>,
+    <mark><a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/search-suggesters-completion.html'
+      target="_blank">Auto-Completion Suggestion Query</a></mark>,
+    <mark><a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket-nested-aggregation.html'
+      target="_blank">Nested Aggregation concepts</a></mark> and
+    <mark><a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-metrics-top-hits-aggregation.html'
+      target="_blank">Top Hits Aggregation</a></mark>.
+    <p style="margin-top: 8px;"/>
+    Interesting! In the RDBMS world, we perform all these things in "searches",
+    but when using <mark>Elasticsearch</mark> we actually used a lot of
+    aggregations too (even though aggregations and suggestions are also a
+    kind of query / search). In the next section, we are going to look into
+    the query(s) for Jey-mart eCommerce website.
+  </div>
+
+  <div class='sf-paragraph-sub'>
+    Happy Searching <i class="fa fa-smile-o" aria-hidden="true"></i>
+  </div>
+
+  <div class="sf-parargraph-final">&nbsp;</div>
+
+</div>

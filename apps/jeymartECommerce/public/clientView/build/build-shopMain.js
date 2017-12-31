@@ -12529,6 +12529,11 @@ module.exports={
   mounted: function() {
     let _instance = this;
 
+    // update the spyPanel help file
+    window.Vue.$emit('updateSpyPanelFile', {
+      'file': '/clientView/code/landingInfoSpy.html'
+    });
+
     // setup the init call for landing-info data
     setTimeout(function() {
       window.Vue.$emit('getLandingInfoData', {
@@ -12725,6 +12730,11 @@ module.exports={
       // ask for updated data (DAO)
       this.getListingDataByRouteParams();
     } // end -- if ($route.params valid)
+
+    // update the spyPanel help file
+    window.Vue.$emit('updateSpyPanelFile', {
+      'file': '/clientView/code/landingListingSpy.html'
+    });
 
   },
   methods: {
@@ -14005,7 +14015,7 @@ function _model_shop_main(_instance) {
      *  update this property when the router-view changes
      *  so that the correct code sample is displayed!
      */
-    'spyPanelViewFile': '/clientView/code/landingPage.code'
+    'spyPanelViewFile': '/clientView/code/landingInfoSpy.html'
   };
 }
 

@@ -24,6 +24,11 @@ module.exports={
   mounted: function() {
     let _instance = this;
 
+    // update the spyPanel help file
+    window.Vue.$emit('updateSpyPanelFile', {
+      'file': '/clientView/code/landingInfoSpy.html'
+    });
+
     // setup the init call for landing-info data
     setTimeout(function() {
       window.Vue.$emit('getLandingInfoData', {

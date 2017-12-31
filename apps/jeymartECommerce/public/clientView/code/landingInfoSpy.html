@@ -1,0 +1,283 @@
+<h1 class="sf-chapter-label">
+  Shop Landing Page
+</h1>
+
+<div class='sf-parargraph'>
+  In this section, we will cover the following topics:
+  <ul class="sf-list">
+    <li><mark>Introduction</mark> of Jey-mart - a brief introduction on the
+      components of the eCommerce website</li>
+    <li><mark>Searchbar and its auto-completion</mark> - to get
+      auto-completion feature added for the searchbar component</li>
+    <li><mark>Facets</mark> - aggregations that provide valuable information
+      in decision making</li>
+    <li><mark>Top hits</mark> - returning the top n records from a bucket of data</li>
+  </ul>
+
+  <div class='sf-chapter-sub-label'>Introduction to Jey-mart</div>
+  <div class='sf-paragraph-sub text-justify' style="overflow: auto;">
+    <img src='/image/spy/landingInfoSpy01.png'
+      style='width: 400px; float: left; margin-right: 4px; border: 1px solid #ddd;' />
+    Jey-mart is an imaginary eCommerce store selling all sorts of products
+    ranging from clothings (fashion category) to biscuits (food category).
+    Basically there are 3 areas / components on the landing page namely:<p/>
+    <div>
+      <ul>
+        <li>1. searchbar</li>
+        <li>2. facets area</li>
+        <li>3. listing top 4 area</li>
+      </ul>
+    </div>
+    Each of the above areas / components' features and implementation would be
+    explained in their own sections.
+    <p style="margin-top: 8px;"/>
+    PS. The data involved for the app is completely created from scratch
+    (using simple random algorithms to generate the contents) and hence,
+    some data might look strange <i class="fa fa-smile-o" aria-hidden="true"></i>.
+    <p style="margin-top: 8px;"/>
+    PS. The view technology stack chosen for the app is
+    <mark><a href='https://vuejs.org/' target="_blank">Vue.js</a></mark>.
+    Vue is chosen by its simplicity and capabilities (would say Vue has the
+    merits of
+    <mark><a href='https://angular.io/' target="_blank">Ng4</a></mark> -
+    client side application architecture and
+    <mark><a href='https://reactjs.org/' target="_blank">react.js</a></mark> -
+    component awared development).
+    In this course, we would focus on how to integrate
+    <mark>Elasticsearch's</mark> queries and aggregations with the
+    view stack technology (could be any framework rather than Vue.js), hence
+    the techniques or approaches of the view side would be skipped. But do feel
+    free to look into the client side code on how the components are created
+    <i class="fa fa-smile-o" aria-hidden="true"></i>.
+  </div>
+
+  <div class='sf-chapter-sub-label'>Searchbar and auto-completion</div>
+  <div class='sf-paragraph-sub text-justify' style="overflow: auto;">
+    <img src='/image/spy/landingInfoSpy03.png'
+      style='width: 180px; float: left; margin-right: 4px; border: 1px solid #ddd;' />
+    <img src='/image/spy/landingInfoSpy02.png'
+      style='width: 200px; float: left; margin-right: 4px; border: 1px solid #ddd;' />
+    Searchbar component consists of 1 aggregation and 1 query. The "categories"
+    list is retreived through an <mark>aggregation</mark> (Terms aggregation),
+    whilst the auto-completion feature is provided by running a
+    <mark>suggestion query</mark> whenever the contents inside the
+    searchbar textbox has changed.
+    <p style="margin-top: 8px;"/>
+    Let's start with the "categories" aggregation. As explained in earlier
+    chapters of the course, aggregation returns statistical values from
+    buckets of data (default stats is <mark>"count"</mark> of documents).
+    Terms aggregation creates buckets based on the textual values of a
+    given field within an index; in this case we are going to use
+    <var>"k_category"</var> field from the <var>"odt_jeymart_items"</var>
+    index. The aggregation is as follows:
+  </div>
+
+  <div class='sf-paragraph-sub text-justify' >
+    <div>
+      <code>
+        GET jeymart_item/_search <br/>
+        { <br/>
+          <space />"size": 0, <br/>
+          <space />"aggs": { <br/>
+            <space /><space />"_cats": { <br/>
+              <space /><space /><space />"terms": { <br/>
+                <space /><space /><space /><space />"field": "k_category", <br/>
+                <space /><space /><space /><space />"size": 20, <br/>
+                <space /><space /><space /><space />"order": { <br/>
+                  <space /><space /><space /><space /><space />"_key": "asc" <br/>
+                <space /><space /><space /><space />} <br/>
+              <space /><space /><space />} <br/>
+            <space /><space />} <br/>
+          <space />} <br/>
+        }
+      </code>
+    </div>
+    Now we get back the list of categories for the searchbar component. Do note
+    that we have an "order" clause for sorting on the aggregation buckets;
+    in this case we simply sort by the textual values of the buckets instead of
+    by count - use <var>_key</var> to refer to the textual value.
+    <p style="margin-top: 8px;"/>
+    Next, we are going to take a look on how the "suggestion" query would
+    look like.
+  </div>
+
+  <div class='sf-paragraph-sub text-justify' >
+    <div>
+      <code>
+        GET odt_jeymart_items/_search<br/>
+        {<br/>
+          <space />"suggest": {<br/>
+            <space /><space />"_suggestions": {<br/>
+              <space /><space /><space />"prefix": "pea",<br/>
+              <space /><space /><space />"completion": {<br/>
+                <space /><space /><space /><space />"field": "t_description.suggest"<br/>
+              <space /><space /><space />}<br/>
+            <space /><space />}<br/>
+          <space />}<br/>
+        }
+      </code>
+    </div>
+    You can see a "suggestion" is a kind of query as well, the <var>prefix</var>
+    parameter is the text typed in by the user and we are using this text to
+    act as the "prefix" of our auto-completion suggestions. <var>completion.field</var>
+    tells Elasticsearch which field we are going to check for the suggestions.
+    For more information about the index level mappings for the completion field,
+    please read <mark>"chapter 4 - case study, eCommerce website"</mark>.
+  </div>
+
+
+  <div class='sf-chapter-sub-label'>Facets</div>
+  <div class='sf-paragraph-sub text-justify'>
+    What is "facets"? According to Wikipedia:
+    <blockquote class="blockquote text-left">
+      <p class="mb-0">
+        Faceted search, also called faceted navigation or faceted browsing,
+        is a technique for accessing information organized according to a
+        faceted classification system, allowing users to
+        <mark>explore a collection of information</mark> by applying
+        <mark>multiple filters</mark>. A faceted classification system
+        classifies each information element along multiple explicit dimensions,
+        called facets, enabling the classifications to be accessed
+        and ordered in multiple ways rather than in a single, pre-determined, taxonomic order.
+      </p>
+      <a href='https://en.wikipedia.org/wiki/Faceted_search' target="_blank">
+        https://en.wikipedia.org/wiki/Faceted_search
+      </a>
+    </blockquote>
+    So make it simple, facets provides us different ways to interprete the
+    data set we have. In Jey-mart, we provide 2 facets information namely
+    <mark>"categories"</mark> and <mark>"brands"</mark>. So why is facets
+    important to the eCommerce website? The 1st thing is you don't need to
+    search for anything beforehand and some basic statistical values are
+    already available for you (in our case, the <mark>"count"</mark> of
+    documents within the category or brand are always available). By then, if
+    you changed the searching criteria for the search, the corresponding facets
+    information (count in this case) should also be updated as well; this is
+    again very informational as you now know exactly how many products a certain
+    brand has a match with your search criteria (update on the fly).
+    <p style="margin-top: 8px;"/>
+    As you could guess, the facets are again <mark>aggregations</mark> and in this
+    case we are using the <mark>"count"</mark> metric. Example on the "brand"
+    facets as follows:
+  </div>
+
+  <div class='sf-paragraph-sub text-justify' >
+    <div>
+      <code>
+        GET odt_jeymart_items/_search <br/>
+        { <br/>
+          <space/>"size": 0, <br/>
+          <space/>"aggs": { <br/>
+            <space/><space/>"_cats": { <br/>
+              <space/><space/><space/>"terms": { <br/>
+                <space/><space/><space/><space/>"field": "s_brand_name.keyword", <br/>
+                <space/><space/><space/><space/>"size": 20, <br/>
+                <space/><space/><space/><space/>"order": { <br/>
+                  <space/><space/><space/><space/><space/>"_count": "desc" <br/>
+                <space/><space/><space/><space/>} <br/>
+              <space/><space/><space/>} <br/>
+            <space/><space/>} <br/>
+          <space/>} <br/>
+        }
+      </code>
+    </div>
+    1 important point to note about Terms aggregation is that only
+    <mark>"exact values"</mark> could be aggregated; that's why we are using
+    <var>"s_brand_name.keyword"</var> as the field. The reason is simple, if
+    we are using a <mark>text-analyzed</mark> field, which means all the contents within this
+    field has been lowercased or even stemmed, there is no way for us to
+    evaluate and compare if the values from document 1 and document 2 are
+    actually referring to the same values. Hence to make our life easier,
+    we can only use <mark>NON text-analyzed</mark> fields to do the aggregation.
+    <p style="margin-top: 8px;"/>
+    <span style="color: red;">MISSING THE PHOTOS ON CHANGE OF CRITERIA AND THE FACETS UPDATES</span>
+  </div>
+
+
+  <div class='sf-chapter-sub-label'>Top Hits aggregation</div>
+  <div class='sf-paragraph-sub text-justify'>
+    If you still remember for most aggregations, only a statistical value would
+    be returned per bucket. There are cases when we need to get back the actual
+    documents composited this bucket; with this intention, we need to know
+    the <mark>"top hits"</mark> aggregation.
+  </div>
+
+  <div class='sf-paragraph-sub text-justify' >
+    <div>
+      <code>
+GET odt_jeymart_user_trx/_search <br/>
+{ <br/>
+  <sp/>"size": 0, <br/>
+  <sp/>"aggs": { <br/>
+    <sp/><sp/>"_cats": { <br/>
+      <sp/><sp/><sp/>"terms": { <br/>
+        <sp/><sp/><sp/><sp/>"field": "k_category", <br/>
+        <sp/><sp/><sp/><sp/>"size": 5, <br/>
+        <sp/><sp/><sp/><sp/>"order": { <br/>
+          <sp/><sp/><sp/><sp/><sp/>"_qty": "desc" <br/>
+        <sp/><sp/><sp/><sp/>} <br/>
+      <sp/><sp/><sp/>}, <br/>
+      <sp/><sp/><sp/>"aggs": { <br/>
+        <sp/><sp/><sp/><sp/>"_qty": { <br/>
+          <sp/><sp/><sp/><sp/><sp/>"sum": { <br/>
+            <sp/><sp/><sp/><sp/><sp/><sp/>"field": "i_qty" <br/>
+          <sp/><sp/><sp/><sp/><sp/>} <br/>
+        <sp/><sp/><sp/><sp/>}, <br/>
+        <sp/><sp/><sp/><sp/>"_top5": { <br/>
+          <sp/><sp/><sp/><sp/><sp/>"top_hits": { <br/>
+            <sp/><sp/><sp/><sp/><sp/><sp/>"size": 4, <br/>
+            <sp/><sp/><sp/><sp/><sp/><sp/>"sort": [ <br/>
+              <sp/><sp/><sp/><sp/><sp/><sp/><sp/>{ <br/>
+                <sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>"i_rating": "desc" <br/>
+              <sp/><sp/><sp/><sp/><sp/><sp/><sp/>}, <br/>
+              <sp/><sp/><sp/><sp/><sp/><sp/><sp/>{ <br/>
+                <sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>"i_qty": "desc" <br/>
+              <sp/><sp/><sp/><sp/><sp/><sp/><sp/>} <br/>
+            <sp/><sp/><sp/><sp/><sp/><sp/>] <br/>
+          <sp/><sp/><sp/><sp/><sp/>} <br/>
+        <sp/><sp/><sp/><sp/>} <br/>
+      <sp/><sp/><sp/>} <br/>
+    <sp/><sp/>} <br/>
+  <sp/>} <br/>
+}
+      </code>
+    </div>
+    The aggregation this time is much more complex than we had seen before. We
+    have created 1 level of bucket and 2 metrics; we started by
+    creating the 1st level of bucket based on the categories (<var>k_category</var>)
+    and we are targeting 5 categories only. Then we create the 1st metric based
+    on the <mark>sum</mark> of the quantities (<var>i_qty</var>) sold, the
+    metric value is re-used as the sorting criteria for the <var>k_category</var>
+    buckets (remember we are targeting the top 5 categories based
+    on the value of each buckets' sum of quantities sold). Finally, we create
+    the <var>"top hits"</var> metrics so that we could get back the top 4 documents
+    compositing its corresponding bucket.
+  </div>
+
+
+  <div class='sf-chapter-sub-label'>Summary</div>
+  <div class='sf-paragraph-sub text-justify'>
+    Cool! In this section, we have covered and run through
+    <mark><a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket-terms-aggregation.html'
+      target="_blank">Terms Aggregation</a></mark>,
+    <mark><a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/search-suggesters-completion.html'
+      target="_blank">Auto-Completion Suggestion Query</a></mark>,
+    <mark><a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket-nested-aggregation.html'
+      target="_blank">Nested Aggregation concepts</a></mark> and
+    <mark><a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-metrics-top-hits-aggregation.html'
+      target="_blank">Top Hits Aggregation</a></mark>.
+    <p style="margin-top: 8px;"/>
+    Interesting! In the RDBMS world, we perform all these things in "searches",
+    but when using <mark>Elasticsearch</mark> we actually used a lot of
+    aggregations too (even though aggregations and suggestions are also a
+    kind of query / search). In the next section, we are going to look into
+    the query(s) for Jey-mart eCommerce website.
+  </div>
+
+  <div class='sf-paragraph-sub'>
+    Happy Searching <i class="fa fa-smile-o" aria-hidden="true"></i>
+  </div>
+
+  <div class="sf-parargraph-final">&nbsp;</div>
+
+</div>

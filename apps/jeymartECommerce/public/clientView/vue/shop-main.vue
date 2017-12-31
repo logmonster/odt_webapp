@@ -43,7 +43,7 @@ function _model_shop_main(_instance) {
      *  update this property when the router-view changes
      *  so that the correct code sample is displayed!
      */
-    'spyPanelViewFile': '/clientView/code/landingPage.code'
+    'spyPanelViewFile': '/clientView/code/landingInfoSpy.html'
   };
 }
 

@@ -142,6 +142,11 @@ module.exports={
       this.getListingDataByRouteParams();
     } // end -- if ($route.params valid)
 
+    // update the spyPanel help file
+    window.Vue.$emit('updateSpyPanelFile', {
+      'file': '/clientView/code/landingListingSpy.html'
+    });
+
   },
   methods: {
 
