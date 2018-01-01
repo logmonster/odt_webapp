@@ -12757,6 +12757,18 @@ module.exports={
     },
     setListingData: function(_data) {
       this.dataListing = _data['responses'][0];
+      /*
+       *  set also the facets... data
+       *  (emit event and let shop-landing.vue to catch and
+       *  update the facets dataList)
+      */
+      if (_data['responses'].length>=3) {
+        let _r=_data['responses'];
+        window.Vue.$emit('updateFacetsDataList', {
+          'category': _r[1],
+          'brand': _r[2]
+        });
+      }
     },
 
     /*
@@ -13823,6 +13835,13 @@ module.exports = {
         }
       } // end -- if (shop_landing_listing from)
       //console.log('** '+_instance.preSelectedCategory+' v '+_instance.preSelectedBrand);
+    });
+
+    /*
+     *  handle the updated facets data listing
+     */
+    window.Vue.$on('updateFacetsDataList', function(_eventObject) {
+      _instance.dataFacets=[_eventObject['category'], _eventObject['brand']];
     });
 
   },

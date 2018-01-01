@@ -5,7 +5,7 @@ var MainRoutes = function(_client, _router, _eBuilder, _defaultQueriesMap, _esIn
 
   /*
    *  method to demonstrate how the term and match query are built
-   */
+   *
   let buildQuery = function(_req, _resp) {
     let eb = _eBuilder;
     // term query
@@ -16,9 +16,9 @@ var MainRoutes = function(_client, _router, _eBuilder, _defaultQueriesMap, _esIn
     _runQuery([ _tq, _mq ], _req, _resp);
   };
 
-  /*
+   *
    *  actual method to return the response to the client (good for ajax calls)
-   */
+   *
   let _runQuery = function(_qList, _req, _resp) {
     let _lst=[];
 
@@ -39,6 +39,7 @@ var MainRoutes = function(_client, _router, _eBuilder, _defaultQueriesMap, _esIn
       _resp.send(_err);
     });
   };
+  */
 
   /*
    *  method to demonstrate how aggs work
@@ -279,6 +280,15 @@ var MainRoutes = function(_client, _router, _eBuilder, _defaultQueriesMap, _esIn
     _body.push(_meta);
     _body.push(_queryObj.toJSON());
 
+    // add also another msearch query based on the facets
+    // reuse the _queryObj above (create another one); then add back the "aggs" part
+    let _queryFacets=_buildFacetsAggrAsideListingDataByRouteParams(_qSection, _critMap);
+    _body.push(_meta);
+    _body.push(_queryFacets['category'].toJSON());
+
+    _body.push(_meta);
+    _body.push(_queryFacets['brand'].toJSON());
+
     _client.msearch({
       body: _body
     }).then(function(_data) {
@@ -286,6 +296,32 @@ var MainRoutes = function(_client, _router, _eBuilder, _defaultQueriesMap, _esIn
     }, function(_err) {
       _resp.send(_err);
     }); // end -- msearch
+  };
+
+  let _buildFacetsAggrAsideListingDataByRouteParams = function(_qSection, _critMap) {
+    let _eb = _eBuilder;
+    let _qFacetsCategory=_esInterpretorUtil.buildQueryByType(_qSection, _critMap);
+    let _qFacetsBrand=_esInterpretorUtil.buildQueryByType(_qSection, _critMap);
+
+    // category
+    let _catAggr = new _eb.TermsAggregation('_cats', 'k_category');
+    _catAggr.size(20);
+    _catAggr.order('_count', "desc");
+    // add to query object
+    _qFacetsCategory.agg(_catAggr);
+
+    // brand
+    let _brandAggr = new _eb.TermsAggregation('_brands', 's_brand_name.keyword');
+    _brandAggr.size(20);
+    _brandAggr.order('_count', "desc");
+
+    // add to query object
+    _qFacetsBrand.agg(_brandAggr);
+
+    return {
+      'category': _qFacetsCategory,
+      'brand': _qFacetsBrand
+    };
   };
 
   /**

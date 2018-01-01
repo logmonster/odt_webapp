@@ -215,6 +215,13 @@ module.exports = {
       //console.log('** '+_instance.preSelectedCategory+' v '+_instance.preSelectedBrand);
     });
 
+    /*
+     *  handle the updated facets data listing
+     */
+    window.Vue.$on('updateFacetsDataList', function(_eventObject) {
+      _instance.dataFacets=[_eventObject['category'], _eventObject['brand']];
+    });
+
   },
   methods: {
     /*
