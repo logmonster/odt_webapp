@@ -133,7 +133,7 @@
           </div>
 
 
-          some other suggestions: (significant terms etc)
+          
         </div>
       </div>
       <!-- suggestions -->

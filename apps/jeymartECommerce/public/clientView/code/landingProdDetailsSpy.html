@@ -12,26 +12,198 @@
 
   <div class='sf-chapter-sub-label'>the Shop Product Details page</div>
   <div class='sf-paragraph-sub text-justify' style="overflow: auto;">
-    <img src='/image/spy/landingListSpy01.png'
+    <img src='/image/spy/landingProdDetailsSpy00.png'
       style='width: 400px; float: left; margin-right: 4px; border: 1px solid #ddd;' />
 
+    The product details page consists of several areas / components of interest.
+    At the top, the <mark>searchbar</mark> component
+    (once hit the magnifying glass icon would forward back to the shop listing page),
+    the <mark>filters</mark> area showing what category or brand has been chosen,
+    the <mark>back button</mark> which forwards back to the shop listing page.
+    <p style="margin-top: 8px;"/>
+    Then the top part of the page consists of the product item details card component
+    as well as the <mark>comments</mark> component (the comments are hard-coded
+    at the moment, again the course focuses on how to integrate
+    <mark>Elasticsearch</mark> with the view technology stack, hence all the
+    components are coded as simple as possible. In real world situations, the
+    comments information should be stored in another index and ready to be
+    retrieved by a query). For the moment of time, the product item details card
+    component has no real functionality; in real world situations, clicking the
+    card could trigger an <mark>"add to cart"</mark> operation.
+    <i class="fa fa-smile-o" aria-hidden="true"></i>
+    <p style="margin-top: 8px;"/>
+    The lower part of the page consists of 2 <mark>suggestion areas</mark>; each area provides
+    a list of suggestions based on different approaches namely
+    <var>More Like This</var> and <var>Significant Terms</var> suggestions.
   </div>
 
+
+  <div class='sf-chapter-sub-label'>More Like This suggestion</div>
+  <div class='sf-paragraph-sub text-justify'>
+    Let's start with the <mark>More Like This</mark> suggestion. From
+    <mark>Elasticsearch</mark>'s documentation:
+    <blockquote class="blockquote text-left">
+      <p class="mb-0">
+        The <mark>More Like This Query</mark> finds documents that are
+        <var>"like"</var> a given set of documents. In order to do so,
+        MLT selects a set of <mark>representative terms</mark> of
+        these input documents, forms a query using these terms,
+        executes the query and returns the results.
+        The user controls the input documents, how the terms should be
+        selected and how the query is formed.
+      </p>
+      <a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-mlt-query.html'
+        target="_blank">
+        https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-mlt-query.html
+      </a>
+    </blockquote>
+    You can see that this approach is a <mark>Query</mark> and trying to match
+    documents that are "like" in some ways. In our use case, we would provide
+    a document's meta data to act as a cue for the <mark>More Like This Query</mark>
+    to execute against. The code snippet as follows:
+  </div>
+
+  <div class='sf-paragraph-sub text-justify' >
+    <div>
+      <code>
+GET odt_jeymart_items/_search <br />
+{ <br />
+  <sp/>"query": { <br />
+    <sp/><sp/>"more_like_this": { <br />
+      <sp/><sp/><sp/>"fields": [ <br />
+        <sp/><sp/><sp/><sp/>"t_description" <br />
+      <sp/><sp/><sp/>], <br />
+      <sp/><sp/><sp/>"like": { <br />
+        <sp/><sp/><sp/><sp/>"_index": "odt_jeymart_items", <br />
+        <sp/><sp/><sp/><sp/>"_type": "doc", <br />
+        <sp/><sp/><sp/><sp/>"_id": "AVylX6bzdr2sb8BuSRoG" <br />
+      <sp/><sp/><sp/>}, <br />
+      <sp/><sp/><sp/>"min_term_freq": 1 <br />
+    <sp/><sp/>} <br />
+  <sp/>} <br />
+}
+      </code>
+    </div>
+    As mentioned, we would provide a document's meta data; in this case, we
+    provide the <var>index</var>, <var>document_type</var> and <var>document_id</var>
+    information for the query to execute against. All these meta information
+    is available per document you retrieved earlier. (remember that <mark>Elasticsearch</mark>
+    always return you the meta data along with the <var>_source</var> data).
+    We also specify which field is to be referenced, in this case <mark>t_description</mark>.
+    <p style="margin-top: 8px;"/>
+    If everything's right, we would be able to get back a list of suggestions. Cool!
+  </div>
+
+
+  <div class='sf-chapter-sub-label'>Significant Terms suggestion</div>
+  <div class='sf-paragraph-sub text-justify'>
+    Next, we look into another way to provide suggestions. This time we are
+    going to use <mark>aggregations</mark> - <var>Significant Terms</var>. From
+    <mark>Elasticsearch</mark>'s documentation:
+    <blockquote class="blockquote text-left">
+      <p class="mb-0">
+        An aggregation that returns <var>interesting</var> or <var>unusual</var>
+        occurrences of terms in a set.
+        <br/>...<br/>
+        In all these cases the terms being selected are
+        <var>not simply the most popular terms</var> in a set.
+        They are the terms that have undergone a
+        <var>significant change in popularity</var> measured between a
+        <mark>foreground</mark> and <mark>background</mark> set.
+        If the term "H5N1" only exists in 5 documents in a 10 million
+        document index and yet is found in 4 of the 100 documents that make up
+        a user’s search results that is significant and probably very relevant
+        to their search. 5/10,000,000 vs 4/100 is a big swing in frequency.
+      </p>
+      <a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket-significantterms-aggregation.html'
+        target="_blank">
+        https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket-significantterms-aggregation.html
+      </a>
+    </blockquote>
+    Make it simple, <mark>significant terms</mark> aggregation helps to find
+    out unusual terms within a document set / context. We are not just
+    focusing on the popularity but instead of the unusual terms that are
+    interested for that document set / context. The following is the code
+    snippet:
+  </div>
+
+  <div class='sf-paragraph-sub text-justify' >
+    <div>
+      <code>
+GET odt_jeymart_items/_search <br/>
+{ <br/>
+  <sp/>"size": 0,  <br/>
+  <sp/>"query": { <br/>
+    <sp/><sp/>"bool": { <br/>
+      <sp/><sp/><sp/>"must": [ <br/>
+        <sp/><sp/><sp/><sp/>{ <br/>
+          <sp/><sp/><sp/><sp/><sp/>"match": { <br/>
+            <sp/><sp/><sp/><sp/><sp/><sp/>"t_description": "folkart heart napkin rings" <br/>
+          <sp/><sp/><sp/><sp/><sp/>} <br/>
+        <sp/><sp/><sp/><sp/>}, <br/>
+        <sp/><sp/><sp/><sp/>{ <br/>
+          <sp/><sp/><sp/><sp/><sp/>"match": { <br/>
+            <sp/><sp/><sp/><sp/><sp/><sp/>"k_category": "fashion" <br/>
+          <sp/><sp/><sp/><sp/><sp/>} <br/>
+        <sp/><sp/><sp/><sp/>} <br/>
+      <sp/><sp/><sp/>] <br/>
+    <sp/><sp/>} <br/>
+  <sp/>}, <br/>
+  <sp/>"aggs": { <br/>
+    <sp/><sp/>"_st": { <br/>
+      <sp/><sp/><sp/>"significant_terms": { <br/>
+        <sp/><sp/><sp/><sp/>"field": "s_brand_name.keyword", <br/>
+        <sp/><sp/><sp/><sp/>"size": 5 <br/>
+      <sp/><sp/><sp/>}, <br/>
+      <sp/><sp/><sp/>"aggs": { <br/>
+        <sp/><sp/><sp/><sp/>"_st2": { <br/>
+          <sp/><sp/><sp/><sp/><sp/>"top_hits": { <br/>
+            <sp/><sp/><sp/><sp/><sp/><sp/>"_source": [ <br/>
+              <sp/><sp/><sp/><sp/><sp/><sp/><sp/>"t_description" <br/>
+            <sp/><sp/><sp/><sp/><sp/><sp/>], <br/>
+            <sp/><sp/><sp/><sp/><sp/><sp/>"size": 2 <br/>
+          <sp/><sp/><sp/><sp/><sp/>} <br/>
+        <sp/><sp/><sp/><sp/>} <br/>
+      <sp/><sp/><sp/>} <br/>
+    <sp/><sp/>} <br/>
+  <sp/>} <br/>
+}
+      </code>
+    </div>
+    Let's dissect the complex query part by part. The 1st part of the query is a
+    <mark>Boolean Query</mark> combining the criteria for document retrieval (
+    searchbar text, facets of category and / or brand chosen); the 2nd part is
+    the aggregation.
+    <p style="margin-top: 8px;"/>
+    We start to create a bucket aggregation based on <mark>Significant Terms</mark>,
+    the field for bucketing is <mark>s_brand_name.keyword</mark> this gives
+    <mark>Elasticsearch</mark> a cue on how to build the buckets for us.
+    Make it simple, the context in which we want to get back some suggestions this
+    time is based on the "brand name".
+    Then we added a nested aggregation, <mark>top hits</mark>,
+    which returns the top documents (in this case, size of 2) that composite
+    its corresponding bucket.
+    <p style="margin-top: 8px;"/>
+    Nice! Now we should be able to get back Significant Terms suggestions as well.
+    The rest is just how we display these information back to the client.
+  </div>
 
 
   <div class='sf-chapter-sub-label'>Summary</div>
   <div class='sf-paragraph-sub text-justify'>
     Cool! In this section, we have covered and run through
-    <mark><a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-bool-query.html'
-      target="_blank">Boolean Query</a></mark> and
-    <mark><a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-from-size.html'
-      target="_blank">Pagination concepts</a></mark>.
+    <mark><a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-mlt-query.html'
+      target="_blank">More Like This Query</a></mark> and
+    <mark><a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket-significantterms-aggregation.html'
+      target="_blank">Significant Terms Aggregation</a></mark>.
     <p style="margin-top: 8px;"/>
-    By now, you have experienced how to write a complex query with multiple
-    matching criteria by using a <mark>Boolean Query</mark> and also how to
-    provide <mark>pagination</mark> capability to a large result set. For
-    the next section, we would look into other kinds of <mark>"suggestions"</mark>
-    based on the selected product item.
+    By now, you should have ideas on how to provide suggestions based on a
+    given document either using <mark>More Like This Query</mark> or
+    <mark>Significant Terms Aggregation</mark>. Of course, you can also
+    run Regex Query to match a field's value against a regular expression
+    denoting your search terms. There are many other approaches to provide
+    suggestions and there is no the <mark>BEST</mark> approach, so
+    explore a little bit and pick the one that suits your business use case MOST.
   </div>
 
   <div class='sf-paragraph-sub'>
