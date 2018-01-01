@@ -30,14 +30,53 @@
           @click='handleAdvSearchClick()'
           aria-hidden="true"></i>
         <span class="header-navigator-icon-label">Advance Search</span>
-        <i class="fa fa-info-circle header-navigation-icon" style='font-size: 18px;' aria-hidden="true"></i>
+        <i class="fa fa-info-circle header-navigation-icon"
+          data-toggle='modal' data-target='#centralModalSm'
+          style='font-size: 18px;' aria-hidden="true"></i>
         <span class="header-navigator-icon-label">Info</span>
       </div>
       <div class="header-navigation-pull-right-section-min">
         <i class="fa fa-navicon header-navigation-icon" aria-hidden="true"></i>
       </div>
     </div>
-    <!--{{menuItemSelected}} -->
+
+    <!-- modal dialog for help -->
+    <div class="modal fade" id="centralModalSm" tabindex="-1"
+      role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <!--Jumbotron-->
+        <div class="jumbotron text-center blue-grey lighten-5 " style="border-radius: 3px;">
+          <!--Title-->
+          <h1 class="card-title h2-responsive font-bold mt-3">
+            <strong>Jey-mart eCommerce website
+              <i class="fa fa-copyright" aria-hidden="true"></i>
+            </strong></h1>
+          <!--Subtitle-->
+          <p class="pt-2 font-bold indigo-text">
+            <strong>Backend and UI Engineer: Jason Wong</strong></p>
+          <!--Text-->
+          <div class="d-flex justify-content-center">
+              <p class="card-text my-3" style="max-width: 43rem;">
+                <ul>
+                  <li>elasticsearch Javascript client</li>
+                  <li>chapter 04 “case study - eCommerce website"</li>
+                </ul>
+                2018, January
+              </p>
+          </div>
+          <hr class="my-4 pb-2">
+          <!--button class="btn blue-gradient btn-rounded">Buy now <i class="fa fa-diamond ml-1"></i></button>
+          <button class="btn btn-indigo btn-rounded">Download <i class="fa fa-download ml-1"></i></button-->
+        </div>
+        <!--Jumbotron-->
+
+      </div>
+    </div>
+
+
+
+
+
   </div>
 </template>
 

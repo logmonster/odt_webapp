@@ -11913,6 +11913,45 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 function _model_shop_header_navigator(_instance) {
   return {
@@ -11967,8 +12006,8 @@ module.exports = {
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"header-navigation"},[_c('div',{staticClass:"header-navigation-title pull-left",on:{"click":function($event){_vm.handleHomeClick()}}},[_vm._v("\n    Jey-mart\n    "),_c('i',{staticClass:"fa fa-shopping-cart",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('span',{class:_vm.getSearchbarVisibleClass()},[_c('shop-searchbar',{staticStyle:{"margin-top":"4px"},attrs:{"data":_vm.data,"dataSuggest":_vm.dataSuggest}})],1),_vm._v(" "),_c('span',[_vm._v(" ")]),_vm._v(" "),_c('div',{staticClass:"header-navigation-pull-right-section"},[_c('div',{staticClass:"header-navigation-pull-right-section-vis header-navigation-pull-right-section-top-padding"},[_c('i',{staticClass:"fa fa-wrench header-navigation-icon",attrs:{"aria-hidden":"true"},on:{"click":function($event){_vm.handleAdvSearchClick()}}}),_vm._v(" "),_c('span',{staticClass:"header-navigator-icon-label"},[_vm._v("Advance Search")]),_vm._v(" "),_c('i',{staticClass:"fa fa-info-circle header-navigation-icon",staticStyle:{"font-size":"18px"},attrs:{"aria-hidden":"true"}}),_vm._v(" "),_c('span',{staticClass:"header-navigator-icon-label"},[_vm._v("Info")])]),_vm._v(" "),_vm._m(0,false,false)])])}
-__vue__options__.staticRenderFns = [function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"header-navigation-pull-right-section-min"},[_c('i',{staticClass:"fa fa-navicon header-navigation-icon",attrs:{"aria-hidden":"true"}})])}]
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"header-navigation"},[_c('div',{staticClass:"header-navigation-title pull-left",on:{"click":function($event){_vm.handleHomeClick()}}},[_vm._v("\n    Jey-mart\n    "),_c('i',{staticClass:"fa fa-shopping-cart",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('span',{class:_vm.getSearchbarVisibleClass()},[_c('shop-searchbar',{staticStyle:{"margin-top":"4px"},attrs:{"data":_vm.data,"dataSuggest":_vm.dataSuggest}})],1),_vm._v(" "),_c('span',[_vm._v(" ")]),_vm._v(" "),_c('div',{staticClass:"header-navigation-pull-right-section"},[_c('div',{staticClass:"header-navigation-pull-right-section-vis header-navigation-pull-right-section-top-padding"},[_c('i',{staticClass:"fa fa-wrench header-navigation-icon",attrs:{"aria-hidden":"true"},on:{"click":function($event){_vm.handleAdvSearchClick()}}}),_vm._v(" "),_c('span',{staticClass:"header-navigator-icon-label"},[_vm._v("Advance Search")]),_vm._v(" "),_c('i',{staticClass:"fa fa-info-circle header-navigation-icon",staticStyle:{"font-size":"18px"},attrs:{"data-toggle":"modal","data-target":"#centralModalSm","aria-hidden":"true"}}),_vm._v(" "),_c('span',{staticClass:"header-navigator-icon-label"},[_vm._v("Info")])]),_vm._v(" "),_vm._m(0,false,false)]),_vm._v(" "),_vm._m(1,false,false)])}
+__vue__options__.staticRenderFns = [function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"header-navigation-pull-right-section-min"},[_c('i',{staticClass:"fa fa-navicon header-navigation-icon",attrs:{"aria-hidden":"true"}})])},function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"modal fade",attrs:{"id":"centralModalSm","tabindex":"-1","role":"dialog","aria-labelledby":"myModalLabel","aria-hidden":"true"}},[_c('div',{staticClass:"modal-dialog",attrs:{"role":"document"}},[_c('div',{staticClass:"jumbotron text-center blue-grey lighten-5 ",staticStyle:{"border-radius":"3px"}},[_c('h1',{staticClass:"card-title h2-responsive font-bold mt-3"},[_c('strong',[_vm._v("Jey-mart eCommerce website\n            "),_c('i',{staticClass:"fa fa-copyright",attrs:{"aria-hidden":"true"}})])]),_vm._v(" "),_c('p',{staticClass:"pt-2 font-bold indigo-text"},[_c('strong',[_vm._v("Backend and UI Engineer: Jason Wong")])]),_vm._v(" "),_c('div',{staticClass:"d-flex justify-content-center"},[_c('p',{staticClass:"card-text my-3",staticStyle:{"max-width":"43rem"}},[_c('ul',[_c('li',[_vm._v("elasticsearch Javascript client")]),_vm._v(" "),_c('li',[_vm._v("chapter 04 “case study - eCommerce website\"")])]),_vm._v("\n              2018, January\n            ")])]),_vm._v(" "),_c('hr',{staticClass:"my-4 pb-2"})])])])}]
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return

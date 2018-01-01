@@ -60,3 +60,13 @@
 .result-color {
   color: #007E33;
 }
+
+/* ------------------- */
+/* help dialog related */
+/* ------------------- */
+
+.help-dlg-container {
+  background: white;
+  border-radius: 2px 2px;
+  padding: 4px;
+}
