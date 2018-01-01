@@ -48,7 +48,7 @@
         <div class="jumbotron text-center blue-grey lighten-5 " style="border-radius: 3px;">
           <!--Title-->
           <h1 class="card-title h2-responsive font-bold mt-3">
-            <strong>Jey-mart eCommerce website
+            <strong>Jey-mart eCommerce
               <i class="fa fa-copyright" aria-hidden="true"></i>
             </strong></h1>
           <!--Subtitle-->

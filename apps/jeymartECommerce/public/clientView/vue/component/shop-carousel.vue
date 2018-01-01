@@ -2,7 +2,7 @@
   <!--Carousel Wrapper-->
   <!-- class="flex-center" style="max-height: 180px;" -->
   <!-- class='d-flex justify-content-center' -->
-  <div  >
+  <div style='margin: auto; width: calc(80%);' >
     <div id="carousel-example-1z" class="carousel slide carousel-fade" data-ride="carousel">
       <!--Indicators-->
       <ol class="carousel-indicators">
@@ -20,6 +20,10 @@
             <img :src='images[0]' alt="First slide" class="carousel_image_dimen">
             <div class="mask pattern-4"></div>
           </div>
+<!--div class="view _s_pointer "
+  style='height: 180px; width: 1280px; background: transparent url("/image/carousel/carousel01.jpeg"); repeat scroll 0% 0%;'>
+  <div class="mask pattern-4"></div>
+</div-->
           <!-- ### caption for the carousel -->
           <div class="carousel-caption">
             <h3 class="h3-responsive">Fashion and footwear</h3>
