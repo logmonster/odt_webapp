@@ -1,0 +1,157 @@
+{
+    "template": "jeymart_user_trx*",
+    "version": 50002,
+    "mappings": {
+      "doc": {
+        "dynamic": "true",
+        "dynamic_templates": [
+          {
+            "m_halfFloat": {
+              "match": "hf_*",
+              "mapping": {
+                "type": "half_float"
+              }
+            }
+          },
+          {
+            "m_int": {
+              "match": "i_*",
+              "mapping": {
+                "type": "integer"
+              }
+            }
+          },
+          {
+            "m_text": {
+              "match": "t_*",
+              "mapping": {
+                "type": "text"
+              }
+            }
+          },
+          {
+            "m_keyword": {
+              "match": "k_*",
+              "mapping": {
+                "type": "keyword"
+              }
+            }
+          },
+          {
+            "m_string": {
+              "match": "s_*",
+              "mapping": {
+                "fields": {
+                  "keyword": {
+                    "type": "keyword"
+                  }
+                },
+                "type": "text"
+              }
+            }
+          },
+          {
+            "m_float": {
+              "match": "f_*",
+              "mapping": {
+                "type": "float"
+              }
+            }
+          }
+        ],
+        "properties": {
+          "dt_invoice_date": {
+            "type": "date"
+          },
+          "hf_price_suggested": {
+            "type": "half_float"
+          },
+          "i_qty": {
+            "type": "integer"
+          },
+          "i_rating": {
+            "type": "integer"
+          },
+          "k_category": {
+            "type": "keyword",
+            "normalizer": "norm_lowercase"
+          },
+          "k_invoice_no": {
+            "type": "keyword"
+          },
+          "k_photo": {
+            "type": "keyword"
+          },
+          "k_stock_code": {
+            "type": "keyword"
+          },
+          "k_user_id": {
+            "type": "keyword"
+          },
+          "s_brand_name": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword"
+              }
+            },
+            "analyzer": "ana_standard_stem"
+          },
+          "t_description": {
+            "type": "text",
+            "analyzer": "ana_standard_stem"
+          },
+          "user": {
+            "properties": {
+              "k_country_reside": {
+                "type": "keyword"
+              },
+              "k_first_name": {
+                "type": "keyword"
+              },
+              "k_last_name": {
+                "type": "keyword"
+              },
+              "s_full_name": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword"
+                  }
+                },
+                "analyzer": "ana_standard_stem"
+              }
+            }
+          }
+        }
+      }
+    },
+    "settings": {
+      "index": {
+        "number_of_shards": "1",
+        "analysis": {
+          "normalizer": {
+            "norm_lowercase": {
+              "filter": [
+                "lowercase",
+                "asciifolding"
+              ],
+              "type": "custom"
+            }
+          },
+          "analyzer": {
+            "ana_standard_stem": {
+              "filter": [
+                "lowercase",
+                "snowball"
+              ],
+              "type": "custom",
+              "tokenizer": "standard"
+            }
+          }
+        },
+        "number_of_replicas": "0"
+      }
+    }
+
+}
