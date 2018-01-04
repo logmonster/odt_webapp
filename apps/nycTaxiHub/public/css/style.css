@@ -1,0 +1,72 @@
+
+.pointer {
+  cursor: pointer;
+}
+
+
+.hiding {
+  display: none;
+}
+.showing {
+  display: block;
+}
+.showing-inline {
+  display: inline-block;
+}
+
+.main-container {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  /* added for spy-panel (claim required height / room for it) */
+  margin-bottom: 250px;
+}
+
+/* ------------------------ */
+/* landing page related css */
+/* ------------------------ */
+
+.landing-main-container {
+  padding-top: 8px;
+  padding-bottom: : 8px;
+}
+
+.landing-left-panel-container {
+  max-width: 320px;
+  display: inline-block;
+
+  border: 1px solid #aaa;
+}
+.landing-right-panel-container {
+  width: 500px;
+  display: inline-block;
+  border: 1px solid #f00;
+}
+
+/* color schemes for jsCodeBeautifier */
+
+.js_code_keyword {
+  color: #9933CC;
+}
+
+.js_code_method {
+  color: #4285F4;
+}
+
+.js_code_html {
+  color: #b71c1c;
+}
+
+
+.result-color {
+  color: #007E33;
+}
+
+/* ------------------- */
+/* help dialog related */
+/* ------------------- */
+
+.help-dlg-container {
+  background: white;
+  border-radius: 2px 2px;
+  padding: 4px;
+}

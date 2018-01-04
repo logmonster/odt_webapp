@@ -1,0 +1,34 @@
+{
+  "name": "nyc_taxi_hub",
+  "version": "1.0.0",
+  "description": "based on nyc taxi (yellow) information, build a demo project integrating with Elasticsearch",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "odt",
+    "elasticsearch",
+    "demo",
+    "geo",
+    "node.js",
+    "vue.js",
+    "express.js"
+  ],
+  "author": "jason.wong@elastic.co",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "elastic-builder": "^1.1.3",
+    "elasticsearch": "^14.0.0",
+    "express": "^4.16.2",
+    "nodemon": "^1.12.5",
+    "serve-favicon": "^2.4.5",
+    "vue": "^2.5.9",
+    "vue-router": "^3.0.1"
+  },
+  "devDependencies": {
+    "vueify": "^9.4.1"
+  }
+
+}
+

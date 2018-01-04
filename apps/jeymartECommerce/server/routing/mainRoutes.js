@@ -270,7 +270,7 @@ var MainRoutes = function(_client, _router, _eBuilder, _defaultQueriesMap, _esIn
       _critMap=_buildListingDataByRouteParamsCriteria(
         _critMap, _productDesc, 'MatchQuery', 't_description');
     }
-//console.log(_critMap);
+    //console.log(_critMap);
     // pagination
     _critMap['pagination']=_req.query['pagination'];
 
