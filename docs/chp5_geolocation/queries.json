@@ -1,0 +1,125 @@
+
+GET _cat/indices?h=index&s=index
+
+# add alias to the index
+POST /_aliases
+{
+  "actions": [
+    {
+      "add": {
+        "index": "taxi_data_2011_11_excerpt_index",
+        "alias": "cuber_taxi_2016_11"
+      }
+    }
+  ]
+}
+
+# finding the cabs near me (Central Park)
+# around 9961 out of 29928 cabs available
+# score is 1... hence... no idea whether which is nearest to my location in general; time for query is around 9 - 11ms
+GET cuber_taxi_2016_11/_search
+{
+  "profile": true,
+  "size": 20,
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "geo_distance": {
+            "distance": "2miles",
+            "pickup_location.location": {
+              "lon": -73.96535510000001,
+              "lat": 40.7828647
+            }
+          }
+        }
+      ]
+    }
+  },
+  "aggs": {
+    "_locationName": {
+      "terms": {
+        "field": "pickup_location.name.keyword",
+        "size": 15
+      }
+    }
+  },
+  "sort": [
+    {
+      "_geo_distance": {
+        "pickup_location.location": {
+          "lon": -73.96535510000001,
+          "lat": 40.7828647
+        },
+        "order": "asc",
+        "unit": "km",
+        "mode": "min",
+        "distance_type": "arc"
+      }
+    }
+  ]
+}
+
+GET cuber_taxi_2016_11/_search
+{"query":{"bool":{"must":[{"range":{"trip_distance":{"lte":1}}}],"filter":[{"match":{"pickup_location.name":"central park"}}]}}}
+
+# can use the profiler to proof...
+# the same query but with a bounding box (only 233 docs involved) time for query is around 3 to 5 ms
+GET cuber_taxi_2016_11/_search
+{
+  "profile": true,
+  "size": 20,
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "geo_bounding_box": {
+            "pickup_location.location": {
+              "top_left": {
+                "lon": -73.94266170000003,
+              "lat": 40.8142585
+              },
+              "bottom_right": {
+                "lon": -72.96535510000001,
+              "lat": 40.7828647
+              }
+            }
+          }
+        },
+        {
+          "geo_distance": {
+            "distance": "2miles",
+            "pickup_location.location": {
+              "lon": -73.96535510000001,
+              "lat": 40.7828647
+            }
+          }
+        }
+      ]
+    }
+  },
+  "aggs": {
+    "_locationName": {
+      "terms": {
+        "field": "pickup_location.name.keyword",
+        "size": 15
+      }
+    }
+  },
+  "sort": [
+    {
+      "_geo_distance": {
+        "pickup_location.location": {
+          "lon": -73.96535510000001,
+          "lat": 40.7828647
+        },
+        "order": "asc",
+        "unit": "km",
+        "mode": "min",
+        "distance_type": "arc"
+      }
+    }
+  ]
+}
+
+
