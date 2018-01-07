@@ -1,31 +1,54 @@
 {
-  "shopInitGet": [
+  "nycNearbyTaxiSearchGET": [
     {
-      "id": "getAllAvailableCategories",
+      "id": "nycNearbyTaxiSearchGET",
       "meta": {
-        "index": "jeymart_item",
+        "index": "nyc_taxi_hub_2016_11",
         "type": "doc"
       },
       "steps": [
-        { "id": 1, "method": "size", "param": 0 },
-        { "id": 2, "agg": "TermsAggregation",
-          "param": [ "_cats", "k_category" ],
-          "size": 20,
-          "order": [ "_key", "asc" ]
-        }
+        { "id": 1, "method": "size", "param": 20 },
+        { "id": 2, "query": "bool" }
       ],
       "query": {
-        "aggs": {
-          "_cats": {
-            "terms": {
-              "field": "k_category",
-              "size": 20,
-              "order": {
-                "_key": "asc"
+        "size": 20,
+        "query": {
+          "bool": {
+            "filter": [
+              {
+                "geo_distance": {
+                  "distance": "2miles",
+                  "pickup_location.location": {
+                    "lon": -73.96535510000001,
+                    "lat": 40.7828647
+                  }
+                }
               }
+            ]
+          }
+        },
+        "aggs": {
+          "_locationName": {
+            "terms": {
+              "field": "pickup_location.name.keyword",
+              "size": 15
             }
           }
-        }
+        },
+        "sort": [
+          {
+            "_geo_distance": {
+              "pickup_location.location": {
+                "lon": -73.96535510000001,
+                "lat": 40.7828647
+              },
+              "order": "asc",
+              "unit": "km",
+              "mode": "min",
+              "distance_type": "arc"
+            }
+          }
+        ]
       }
     }
   ]

@@ -1,0 +1,36 @@
+
+.n-c-panel-container {
+  padding-left: 2px; padding-right: 2px;
+  padding-top: 8px; padding-bottom: 2px;
+}
+
+.n-c-panel-title {
+  color: #6a1b9a;
+  font-size: 16px;
+}
+
+.n-c-panel-location-container {
+  margin-top: 8px;
+  border: 1px solid #ccc;
+  border-radius: 2px 2px;
+  padding-top: 4px;
+  padding-bottom: 12px;
+}
+
+.n-c-panel-option-pill-header {
+  margin-bottom: 8px;
+  margin-top: 12px;
+}
+
+
+.n-c-panel-option-container {
+  border: 1px solid #ccc;
+  border-radius: 0 0 4px 4px;
+  padding: 4px;
+  padding-bottom: 8px;
+}
+
+/*      nearby     */
+.n-c-panel-nearby-info-msg {
+  color: #ff4444;
+}

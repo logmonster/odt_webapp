@@ -6,6 +6,26 @@ var Router = require('vue-router');
 
 module.exports = {
   routes: [
+    {
+      path: '/',
+      name: '/',
+      component: require('./component/nyc-nearby.vue')
+    },
+    {
+      path: '/nearby',
+      name: '/nearby',
+      component: require('./component/nyc-nearby.vue')
+    },
+    {
+      path: '/boundingBox',
+      name: '/boundingBox',
+      component: require('./component/nyc-boundingbox.vue')
+    },
+    {
+      path: '/geoShape',
+      name: '/geoShape',
+      component: require('./component/nyc-geoshape.vue')
+    }
     /*
     { path: '/',
       name: '/',
@@ -26,10 +46,6 @@ module.exports = {
         rvSpyPanel: require('./shop-help.vue')
       }*
     },*/
-    { path: '/help',
-      name: '/help',
-      component: require('./component/nyc-help.vue')
-    }
   ]
 };
 </script>

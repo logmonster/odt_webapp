@@ -2857,7 +2857,7 @@ if (inBrowser && window.Vue) {
 module.exports = VueRouter;
 
 }).call(this,require('_process'))
-},{"_process":9}],3:[function(require,module,exports){
+},{"_process":15}],3:[function(require,module,exports){
 (function (process,global){
 /*!
  * Vue.js v2.5.13
@@ -10784,13 +10784,15 @@ Vue$3.nextTick(function () {
 module.exports = Vue$3;
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":9}],4:[function(require,module,exports){
+},{"_process":15}],4:[function(require,module,exports){
 
 var Vue = require('vue')
 var NYC = require('./vue/nyc-main.vue')
 
 // registration (important)
-//Vue.component('shop-header-navigator', require('./vue/component/shop-header-navigator.vue'));
+Vue.component('nyc-header-navigator', require('./vue/component/nyc-header-navigator.vue'));
+Vue.component('nyc-control-panel', require('./vue/component/nyc-control-panel.vue'));
+Vue.component('nyc-gmap', require('./vue/component/nyc-gmap.vue'));
 
 // setup Router
 var Router = require('vue-router');
@@ -10805,6 +10807,7 @@ var router = new Router(Routes);
 window.Vue = new Vue();
 window.VueRouter = router;
 window.ajaxUtil = require('./vue/util/jQueryAjaxUtil.vue');
+window.gmapUtil = require('./vue/util/gmapUtil.vue');
 //window.windowEventUtil = require('./vue/util/windowEventUtil.vue');
 //window.collectionUtil = require('./vue/util/collectionUtil.vue');
 //window.lectureUtil = require('./vue/util/LectureUtil.vue');
@@ -10817,7 +10820,7 @@ let app = new Vue({
   }
 });
 
-},{"./vue/nyc-main.vue":6,"./vue/router.vue":7,"./vue/util/jQueryAjaxUtil.vue":8,"vue":3,"vue-router":2}],5:[function(require,module,exports){
+},{"./vue/component/nyc-control-panel.vue":6,"./vue/component/nyc-gmap.vue":8,"./vue/component/nyc-header-navigator.vue":9,"./vue/nyc-main.vue":11,"./vue/router.vue":12,"./vue/util/gmapUtil.vue":13,"./vue/util/jQueryAjaxUtil.vue":14,"vue":3,"vue-router":2}],5:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -10825,27 +10828,40 @@ let app = new Vue({
 //
 //
 //
-//
 
+function _model_n_boundingbox(_inst) {
+  return {
+    'instance': _inst
+  };
+}
 
 module.exports={
+  name: 'n_nearby',
+  data: function() {
+    return new _model_n_boundingbox(this);
+  },
+  mounted: function() {},
+  props: [],
+  watch: {},
+  methods: {
 
+  }
 };
 
 })()
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_vm._v("\n  to be coded... help page\n\n")])}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_vm._v("\n  boundingBox ~\n")])}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-9b118284", __vue__options__)
+    hotAPI.createRecord("data-v-5d083bba", __vue__options__)
   } else {
-    hotAPI.reload("data-v-9b118284", __vue__options__)
+    hotAPI.reload("data-v-5d083bba", __vue__options__)
   }
 })()}
 },{"vue":3,"vue-hot-reload-api":1}],6:[function(require,module,exports){
@@ -10857,10 +10873,649 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+function _model_n_c_panel(_inst) {
+  return {
+    'instance': _inst,
+    'location': {
+      'lat': undefined,
+      'lon': undefined,
+      'placename': undefined,
+      'gmapSuggestedPlacename': undefined
+    },
+    'pillChosen': 'nearby'
+  };
+} // end -- model
+
+
+module.exports={
+  name: 'n_c_panel',
+  data: function() {
+    return new _model_n_c_panel(this);
+  },
+  props: [],
+  mounted: function() {},
+  watch: {},
+  methods: {
+    getCssStyleForPills: function() {
+      return {
+        'border-radius': '8rem',
+        'font-size': '14px',
+        'font-weight': 300,
+        'padding-left': '12px',
+        'padding-right': '12px',
+        'padding-top': '6px',
+        'padding-bottom': '6px',
+        'margin-bottom': '2px;'
+      };
+    },
+    getCssClassForPills: function(_pill) {
+      let _css={};
+      if (this.pillChosen==_pill) {
+        _css['green']=true;
+        _css['grey']=false;
+      } else {
+        _css['green']=false;
+        _css['grey']=true;
+      }
+      return _css;
+    },
+
+    handlePillClick: function(_pill) {
+      let _needRouterViewUpdate = (this.pillChosen==_pill)?false:true;
+
+      this.pillChosen=_pill;
+      // change router view
+      if (_needRouterViewUpdate) {
+        window.VueRouter.push({
+          name: ('/'+_pill),
+          params: {}
+        });
+      }
+    },
+    handleLocationOnBlur: function() {
+      //console.log(this.location.lat +' x '+this.location.lon + ": place "+this.location.placename);
+      window.Vue.$emit('myLocationChanged', {
+        'location': this.location
+      });
+    },
+    handleLocationPlacenameOnBlur: function() {
+      /*
+       *  call handleLocationOnBlur() but before that...
+       *  do a place search for lat, lon using gmap api
+       */
+      window.gmapUtil.getLatLonByPlacename(
+        this.location.placename,
+        this.setLocationLatLonByPlacename);
+    },
+
+    setLocationLatLonByPlacename: function(_data) {
+      // update the underneath data model
+      if (_data && _data['results']) {
+        let _r=_data['results'];
+
+        if (_r.length>0) {
+          let _r0=_r[0];
+
+          if (_r0['geometry'] && _r0['geometry']['location']) {
+            let _rg=_r0['geometry']['location'];
+
+            this.location.lat=_rg['lat'];
+            this.location.lon=_rg['lng'];
+            this.location.gmapSuggestedPlacename=_r0['formatted_address'];
+
+            // invoke the generic onblur method
+            this.handleLocationOnBlur();
+          }
+        } // end -- if(length of result check)
+      } // end -- if (have results)
+    }
+
+  }
+};
+
+})()
+if (module.exports.__esModule) module.exports = module.exports.default
+var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
+if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"n-c-panel-container"},[_vm._m(0),_vm._v(" "),_c('div',{staticClass:"n-c-panel-location-container"},[_c('div',{staticClass:"container-fluid"},[_c('div',{staticClass:"row"},[_c('div',{staticClass:"col-sm-6 col-md-6"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.location.lat),expression:"location.lat"}],attrs:{"type":"text","placeholder":"latitude"},domProps:{"value":(_vm.location.lat)},on:{"blur":function($event){_vm.handleLocationOnBlur()},"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.location, "lat", $event.target.value)}}})]),_vm._v(" "),_c('div',{staticClass:"col-sm-6 col-md-6"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.location.lon),expression:"location.lon"}],attrs:{"type":"text","placeholder":"longitude"},domProps:{"value":(_vm.location.lon)},on:{"blur":function($event){_vm.handleLocationOnBlur()},"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.location, "lon", $event.target.value)}}})]),_vm._v(" "),_vm._m(1),_vm._v(" "),_c('div',{staticClass:"col-sm-12 col-md-12"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.location.placename),expression:"location.placename"}],attrs:{"type":"text","placeholder":"location name"},domProps:{"value":(_vm.location.placename)},on:{"blur":function($event){_vm.handleLocationPlacenameOnBlur()},"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.location, "placename", $event.target.value)}}})])])])]),_vm._v(" "),_c('div',{staticClass:"n-c-panel-option-pill-header"},[_c('div',{staticClass:"pointer badge badge-pill",class:_vm.getCssClassForPills("nearby"),style:(_vm.getCssStyleForPills()),on:{"click":function($event){_vm.handlePillClick("nearby")}}},[_c('i',{staticClass:"fa fa-map-marker",attrs:{"aria-hidden":"true"}}),_vm._v(" "),(_vm.pillChosen=="nearby")?_c('span',[_vm._v("\n        taxi nearby\n      ")]):_vm._e()]),_vm._v(" "),_c('div',{staticClass:"pointer badge badge-pill",class:_vm.getCssClassForPills("boundingBox"),style:(_vm.getCssStyleForPills()),on:{"click":function($event){_vm.handlePillClick("boundingBox")}}},[_c('i',{staticClass:"fa fa-map",attrs:{"aria-hidden":"true"}}),_vm._v(" "),(_vm.pillChosen=="boundingBox")?_c('span',[_vm._v("\n        bounding box search\n      ")]):_vm._e()]),_vm._v(" "),_c('div',{staticClass:"pointer badge badge-pill",class:_vm.getCssClassForPills("geoShape"),style:(_vm.getCssStyleForPills()),on:{"click":function($event){_vm.handlePillClick("geoShape")}}},[_c('i',{staticClass:"fa fa-map-signs",attrs:{"aria-hidden":"true"}}),_vm._v(" "),(_vm.pillChosen=="geoShape")?_c('span',[_vm._v("\n        geo shape search\n      ")]):_vm._e()])]),_vm._v(" "),_c('div',[_c('router-view')],1)])}
+__vue__options__.staticRenderFns = [function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"n-c-panel-title"},[_c('i',{staticClass:"fa fa-map-marker",attrs:{"aria-hidden":"true"}}),_vm._v(" Set my location\n  ")])},function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"col-sm-12 col-md-12"},[_c('div',{staticStyle:{"margin":"auto","width":"20px"}},[_vm._v("OR")])])}]
+if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-596de332", __vue__options__)
+  } else {
+    hotAPI.reload("data-v-596de332", __vue__options__)
+  }
+})()}
+},{"vue":3,"vue-hot-reload-api":1}],7:[function(require,module,exports){
+;(function(){
+//
+//
+//
+//
+//
+//
+
+function _model_n_geoshape(_inst) {
+  return {
+    'instance': _inst
+  };
+}
+
+module.exports={
+  name: 'n_nearby',
+  data: function() {
+    return new _model_n_geoshape(this);
+  },
+  mounted: function() {},
+  props: [],
+  watch: {},
+  methods: {
+
+  }
+};
+
+})()
+if (module.exports.__esModule) module.exports = module.exports.default
+var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
+if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_vm._v("\n  geoshape ~\n")])}
+__vue__options__.staticRenderFns = []
+if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-62751f26", __vue__options__)
+  } else {
+    hotAPI.reload("data-v-62751f26", __vue__options__)
+  }
+})()}
+},{"vue":3,"vue-hot-reload-api":1}],8:[function(require,module,exports){
+;(function(){
+//
+//
+//
+//
+//
+//
+//
+
+function _model_n_gmap(_inst) {
+  return {
+    'instance': _inst,
+    'nearby': {
+      'hits': undefined
+    }
+  };
+} // end -- model
+
+module.exports={
+  name: 'n_gmap',
+  data: function() {
+    return new _model_n_gmap(this);
+  },
+  mounted: function() {
+    let _instance=this;
+
+    window.Vue.$on('nearbyTaxiDataChanged', function(_eventObject) {
+      _instance.handleNearbyTaxiDataChanged(_eventObject);
+    });
+
+  },
+  props:[],
+  watch: {},
+  methods: {
+
+    handleNearbyTaxiDataChanged: function(_eventObject) {
+      //console.log(_eventObject);
+      if (_eventObject) {
+        if (_eventObject['data'] && _eventObject['data']['hits']) {
+          this.nearby.hits=_eventObject['data']['hits']['hits'];
+          window.gmapUtil.createNearbyTaxiMarkers(this.nearby.hits);
+        }
+      }
+
+    }
+
+  }
+};
+
+})()
+if (module.exports.__esModule) module.exports = module.exports.default
+var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
+if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _vm._m(0)}
+__vue__options__.staticRenderFns = [function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticStyle:{"padding-left":"2px","padding-right":"2px"}},[_c('div',{staticClass:"gmap-status-bar"},[_vm._v("status:")]),_vm._v(" "),_c('div',{staticClass:"gmap-map-container",attrs:{"id":"nyc-gmap-map"}})])}]
+if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-41fac5dc", __vue__options__)
+  } else {
+    hotAPI.reload("data-v-41fac5dc", __vue__options__)
+  }
+})()}
+},{"vue":3,"vue-hot-reload-api":1}],9:[function(require,module,exports){
+;(function(){
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+function _model_n_h_navigator(_inst) {
+  return {
+    'instance': _inst
+  };
+} // end -- model
+
+module.exports={
+  name: 'n_h_navigator',
+  data: function() {
+    return new _model_n_h_navigator(this);
+  },
+  props: [],
+  mounted: function() {
+
+  },
+  watch: {
+
+  },
+  methods: {
+    /*
+     *  return to the Main page
+     */
+    handleHomeClick: function() {
+console.log('home click');
+    }
+  }
+};
+
+})()
+if (module.exports.__esModule) module.exports = module.exports.default
+var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
+if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"header-navigation"},[_c('div',{staticClass:"header-navigation-title pull-left",on:{"click":function($event){_vm.handleHomeClick()}}},[_vm._v("\n    NYC Taxi Hub\n    "),_c('i',{staticClass:"fa fa-cab",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('span',[_vm._v(" ")]),_vm._v(" "),_vm._m(0),_vm._v(" "),_vm._m(1)])}
+__vue__options__.staticRenderFns = [function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"header-navigation-pull-right-section"},[_c('div',{staticClass:"header-navigation-pull-right-section-vis header-navigation-pull-right-section-top-padding"},[_c('i',{staticClass:"fa fa-info-circle header-navigation-icon",staticStyle:{"font-size":"18px"},attrs:{"data-toggle":"modal","data-target":"#centralModalSm","aria-hidden":"true"}}),_vm._v(" "),_c('span',{staticClass:"header-navigator-icon-label"},[_vm._v("Info")])]),_vm._v(" "),_c('div',{staticClass:"header-navigation-pull-right-section-min header-navigation-pull-right-section-top-padding"},[_c('i',{staticClass:"fa fa-navicon header-navigation-icon",attrs:{"aria-hidden":"true"}})])])},function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"modal fade",attrs:{"id":"centralModalSm","tabindex":"-1","role":"dialog","aria-labelledby":"myModalLabel","aria-hidden":"true"}},[_c('div',{staticClass:"modal-dialog",attrs:{"role":"document"}},[_c('div',{staticClass:"jumbotron text-center blue-grey lighten-5 ",staticStyle:{"border-radius":"3px"}},[_c('h1',{staticClass:"card-title h2-responsive font-bold mt-3"},[_c('strong',[_vm._v("NYC Taxi Hub\n            "),_c('i',{staticClass:"fa fa-copyright",attrs:{"aria-hidden":"true"}})])]),_vm._v(" "),_c('p',{staticClass:"pt-2 font-bold indigo-text"},[_c('strong',[_vm._v("Backend and UI Engineer: Jason Wong")])]),_vm._v(" "),_c('div',{staticClass:"d-flex justify-content-center"},[_c('p',{staticClass:"card-text my-3",staticStyle:{"max-width":"43rem"}},[_c('ul',[_c('li',[_vm._v("elasticsearch Javascript client")]),_vm._v(" "),_c('li',[_vm._v("chapter 05 “case study: geo-location\"")])]),_vm._v("\n              2018, January\n            ")])]),_vm._v(" "),_c('hr',{staticClass:"my-4 pb-2"})])])])}]
+if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-b100efd8", __vue__options__)
+  } else {
+    hotAPI.reload("data-v-b100efd8", __vue__options__)
+  }
+})()}
+},{"vue":3,"vue-hot-reload-api":1}],10:[function(require,module,exports){
+;(function(){
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+function _model_n_nearby(_inst) {
+  return {
+    'instance': _inst,
+    'location': {
+      'lat': undefined,
+      'lon': undefined,
+      'placename': undefined,
+      'gmapSuggestedPlacename': undefined
+    },
+    'distance': {
+      'value': undefined,
+      'unit': 'miles'
+    },
+    'info': {
+      'msg': undefined
+    }
+  };
+}
+
+module.exports={
+  name: 'n_nearby',
+  data: function() {
+    return new _model_n_nearby(this);
+  },
+  mounted: function() {
+    let _instance=this;
+
+    window.Vue.$on('myLocationChanged', function(_eventObject) {
+      _instance.handleLocationChanged(_eventObject);
+    });
+
+  },
+  props: [],
+  watch: {},
+  methods: {
+    handleLocationChanged: function(_eventObject) {
+      let _l=_eventObject['location'];
+
+      this.location.lat=_l['lat'];
+      this.location.lon=_l['lon'];
+      this.location.placename=_l['placename'];
+      this.location.gmapSuggestedPlacename=_l['gmapSuggestedPlacename'];
+
+      // reset
+      this.info.msg=undefined;
+    },
+    handleClick: function() {
+      // validate if the lat,lon has values
+      if (this.validation()) {
+        // reset
+        this.info.msg=undefined;
+        window.ajaxUtil.GET(
+          '/api/nycNearbyTaxiSearchGET',
+          {
+            'lat': this.location.lat,
+            'lon': this.location.lon,
+            'distance': this.distance.value,
+            'distance_unit': this.distance.unit
+          },
+          this.cbGetNycNearbyTaxiSearchResult,
+          function(_jqXHR, _status, _err) {
+            console.log('* something wrong happened ~ ');
+            console.log(_err);
+          }, // _failCallback
+          null  // _finallyCallback
+        );
+      }
+    },
+
+    cbGetNycNearbyTaxiSearchResult: function(_data) {
+      // emit event to gmap component
+      //console.log(_data);
+      window.Vue.$emit('nearbyTaxiDataChanged', {
+        'data': _data['data']['responses'][0],
+        'dsl': _data['dsl']
+      });
+    },
+
+    validation: function() {
+      let _valid=true;
+
+      if (!this.location.lat || !this.location.lon) {
+        this.info.msg='either latitude or longitude is not provided !!!';
+        _valid=false;
+      }
+      if (_valid && (!this.distance.value || isNaN(this.distance.value))) {
+        this.info.msg='the distance must be provided !!!';
+        _valid=false;
+      }
+      return _valid;
+    },
+
+    getInfoMsgVisibilityClass: function() {
+      let _css={};
+      if (this.info.msg && this.info.msg!='') {
+        _css['showing']=true;
+        _css['hiding']=false;
+      } else {
+        _css['showing']=false;
+        _css['hiding']=true;
+      }
+      return _css;
+    }
+
+  }
+};
+
+})()
+if (module.exports.__esModule) module.exports = module.exports.default
+var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
+if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"container-fluid",staticStyle:{"margin-top":"12px"}},[_c('div',{staticClass:"row"},[_c('div',{staticClass:"col-sm-12, col-md-12"},[_c('div',{staticClass:"n-c-panel-nearby-info-msg",class:_vm.getInfoMsgVisibilityClass()},[_c('i',{staticClass:"fa fa-warning",attrs:{"aria-hidden":"true"}}),_vm._v("\n        "+_vm._s(_vm.info.msg))])])]),_vm._v(" "),_c('div',{staticClass:"row"},[_c('div',{staticClass:"col-sm-12 col-md-12",staticStyle:{"margin-bottom":"8px"}},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.distance.value),expression:"distance.value"}],attrs:{"type":"text","placeholder":"search taxi within a distance"},domProps:{"value":(_vm.distance.value)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.distance, "value", $event.target.value)}}})]),_vm._v(" "),_c('div',{staticClass:"col-sm-12 col-md-6"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.distance.unit),expression:"distance.unit"}],attrs:{"type":"radio","name":"radDistanceUnit","value":"miles"},domProps:{"checked":_vm._q(_vm.distance.unit,"miles")},on:{"change":function($event){_vm.$set(_vm.distance, "unit", "miles")}}}),_vm._v("\n           miles")]),_vm._v(" "),_c('div',{staticClass:"col-sm-12 col-md-6"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.distance.unit),expression:"distance.unit"}],attrs:{"type":"radio","name":"radDistanceUnit","value":"km"},domProps:{"checked":_vm._q(_vm.distance.unit,"km")},on:{"change":function($event){_vm.$set(_vm.distance, "unit", "km")}}}),_vm._v("\n           km")]),_vm._v(" "),_c('div',{staticClass:"col-sm-12 col-md-12",staticStyle:{"margin-top":"8px"}},[_c('button',{staticClass:"btn btn-primary",staticStyle:{"margin-left":"0px"},on:{"click":function($event){_vm.handleClick()}}},[_vm._v("go")])])])])}
+__vue__options__.staticRenderFns = []
+if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-117df488", __vue__options__)
+  } else {
+    hotAPI.reload("data-v-117df488", __vue__options__)
+  }
+})()}
+},{"vue":3,"vue-hot-reload-api":1}],11:[function(require,module,exports){
+;(function(){
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 function _model_n_main(_instance) {
   return {
-    _inst: _instance
+    'instance': _instance,
+    'gmap': {
+      'nokeyfile': false,
+      'msg': undefined,
+      'key': undefined
+    }
   };
 } // end model
 
@@ -10870,9 +11525,125 @@ module.exports={
     return new _model_n_main(this);
   },
   props: [],
-  mounted: function() {},
+  mounted: function() {
+    let _instance=this;
+
+    // check if the gmap api available or not
+    window.gmap={
+      key: undefined,
+      init: '_initMap',
+      lazyLoadApi: '_lazyLoadApi'
+    };
+    setTimeout(function() {
+      window.ajaxUtil.GET(
+        '/api/nycGMapApiKeyGET',
+        {},
+        _instance.handleGMapApiKeyGet,
+        function(_jqXHR, _status, _err) {
+          console.log('* something wrong happened ~ ');
+          console.log(_err);
+        }, // _failCallback
+        null  // _finallyCallback
+      );
+    }, 100);
+
+
+  },
   watch: {},
   methods: {
+    /*
+     *  either have or NOT have the gmap api key
+     */
+    handleGMapApiKeyGet: function(_data) {
+      if (_data && _data['exists']==true && _data['key']) {
+        // send the key to gmapUtil object too
+        window.gmapUtil.setApiKey(_data['key']);
+        // extract the key
+        window.gmap.key=_data['key'];
+        // make the lazyLoadApi call...
+        if (window.gmap.lazyLoadApi) {
+          let _fxLazy=window[window.gmap.lazyLoadApi];
+
+          if (_fxLazy) {
+            _fxLazy.call();
+          }
+        }
+      } else {
+        window.gmap.nokeyfile=true;
+        // update the model data and force a dialog to ask for api key
+        this.gmap.nokeyfile=true;
+
+        if (window.jQuery) {
+          window.jQuery('#dlgGMapApiKey').modal();
+        }
+      }
+      //console.log(_data);
+    },
+
+    /* ---------------------- */
+    /*    dialogue related    */
+    /* ---------------------- */
+    handleApiKeyCancel: function() {
+      if (window.jQuery) {
+        window.jQuery('#dlgGMapApiKey').modal('hide');
+      }
+    },
+    handleSaveApiKey: function() {
+      // reset
+      this.gmap.msg=undefined;
+
+      if (this.gmap.key) {
+        window.ajaxUtil.POST(
+          '/api/nycGMapApiKeyPOST',
+          {
+            'key': this.gmap.key
+          },
+          this.handleServerSaveApiKey,
+          function(_jqXHR, _status, _err) {
+            console.log('* something wrong happened ~ ');
+            console.log(_err);
+          }, // _failCallback
+          null  // _finallyCallback);
+        );
+
+      } else {
+        this.gmap.msg='the API key must be provided !';
+      }
+    },
+
+    /*
+     *  api key saved, now refresh
+     */
+    handleServerSaveApiKey: function(_data) {
+      let _done=(_data && _data['done'])?_data['done']:false;
+      if ( _done ) {
+        if (window.jQuery) {
+          setTimeout(function() {
+            // CAVEAT, the nodemon module would need to refresh the server; hence might take around 1sec to reload
+            window.jQuery('#dlgGMapApiKey').modal('hide');
+            window.location.href='/clientView/view/nycTaxiHub.html';
+          }, 800);
+        }
+      } else {
+        gmap.msg='something wrong on server side, could not save the api key file';
+      }
+    },
+
+    /* ------------------ */
+    /*    css related     */
+    /* ------------------ */
+    getCssClassForApiKeyDlg: function() {
+      let _css={};
+
+      if (this.gmap.msg) {
+        _css['show']=true;
+        _css['hide']=false;
+      } else {
+        _css['show']=false;
+        _css['hide']=true;
+      }
+      return _css;
+    }
 
   }
 };
@@ -10882,8 +11653,8 @@ module.exports={
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_vm._v("\n  toBeCoded ... nyc-main\n\n")])}
-__vue__options__.staticRenderFns = []
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('nyc-header-navigator'),_vm._v(" "),_c('div',{staticClass:"container-fluid"},[_c('div',{staticClass:"row n-main-container"},[_c('div',{staticClass:"col-sm-6 col-md-5",staticStyle:{"padding":"0px"}},[_c('nyc-control-panel')],1),_vm._v(" "),_c('div',{staticClass:"col-sm-6 col-md-7",staticStyle:{"padding":"0px"}},[_c('nyc-gmap')],1)])]),_vm._v(" "),_c('div',{staticClass:"modal fade",attrs:{"id":"dlgGMapApiKey","tabindex":"-1","role":"dialog","aria-labelledby":"myModalLabel","aria-hidden":"true"}},[_c('div',{staticClass:"modal-dialog",attrs:{"role":"document"}},[_c('div',{staticClass:"jumbotron text-center blue-grey lighten-5 ",staticStyle:{"border-radius":"3px"}},[_vm._m(0),_vm._v(" "),_c('p',{staticClass:"pt-2 font-bold indigo-text"},[_c('strong',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.gmap.key),expression:"gmap.key"}],attrs:{"type":"text","placeholder":"enter the api key here"},domProps:{"value":(_vm.gmap.key)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.gmap, "key", $event.target.value)}}})])]),_vm._v(" "),_c('p',{staticClass:"pt-2 font-bold pink-text",class:_vm.getCssClassForApiKeyDlg()},[_c('strong',[_vm._v(_vm._s(_vm.gmap.msg))])]),_vm._v(" "),_vm._m(1),_vm._v(" "),_c('hr',{}),_vm._v(" "),_c('button',{staticClass:"btn btn-primary btn-rounded",on:{"click":function($event){_vm.handleSaveApiKey()}}},[_vm._v("\n          save "),_c('i',{staticClass:"fa fa-check",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('button',{staticClass:"btn btn-info btn-rounded",on:{"click":function($event){_vm.handleApiKeyCancel()}}},[_vm._v("\n          cancel "),_c('i',{staticClass:"fa fa-close",attrs:{"aria-hidden":"true"}})])])])])],1)}
+__vue__options__.staticRenderFns = [function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('h1',{staticClass:"card-title h2-responsive font-bold mt-3 indigo-text"},[_c('strong',[_vm._v("please enter the Google Map API key here\n          ")])])},function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"d-flex justify-content-center"},[_c('p',{staticClass:"card-text my-3",staticStyle:{"max-width":"43rem"}},[_vm._v("\n              if you don't have one yet, apply for the\n              "),_c('br'),_c('span',{staticClass:"blue-text"},[_vm._v("Google Map API key")]),_vm._v(" "),_c('br'),_vm._v(" at the following\n              "),_c('a',{attrs:{"href":"https://developers.google.com/maps/documentation/javascript/get-api-key?hl=en","target":"_blank"}},[_vm._v("\n                link")])])])}]
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
@@ -10894,7 +11665,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-202c9ee4", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],7:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],12:[function(require,module,exports){
 ;(function(){
 
 /* ------------------------------------------------------------------------
@@ -10904,6 +11675,26 @@ var Router = require('vue-router');
 
 module.exports = {
   routes: [
+    {
+      path: '/',
+      name: '/',
+      component: require('./component/nyc-nearby.vue')
+    },
+    {
+      path: '/nearby',
+      name: '/nearby',
+      component: require('./component/nyc-nearby.vue')
+    },
+    {
+      path: '/boundingBox',
+      name: '/boundingBox',
+      component: require('./component/nyc-boundingbox.vue')
+    },
+    {
+      path: '/geoShape',
+      name: '/geoShape',
+      component: require('./component/nyc-geoshape.vue')
+    }
     /*
     { path: '/',
       name: '/',
@@ -10924,10 +11715,6 @@ module.exports = {
         rvSpyPanel: require('./shop-help.vue')
       }*
     },*/
-    { path: '/help',
-      name: '/help',
-      component: require('./component/nyc-help.vue')
-    }
   ]
 };
 
@@ -10944,7 +11731,88 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-6053b9bf", __vue__options__)
   }
 })()}
-},{"./component/nyc-help.vue":5,"vue":3,"vue-hot-reload-api":1,"vue-router":2}],8:[function(require,module,exports){
+},{"./component/nyc-boundingbox.vue":5,"./component/nyc-geoshape.vue":7,"./component/nyc-nearby.vue":10,"vue":3,"vue-hot-reload-api":1,"vue-router":2}],13:[function(require,module,exports){
+;(function(){
+
+
+const GMAP_GEOCODE_API_ENTRY_POINT='https://maps.googleapis.com/maps/api/geocode/json?language=en&';
+
+let _apiKey=undefined;
+
+module.exports={
+
+  /*
+   *  retreive the geocode information based on the given place name
+   * API: google geocode
+   */
+  getLatLonByPlacename: function(_placename, _cb) {
+    // https://maps.googleapis.com/maps/api/geocode/json?address=???
+    let _addr=null;
+    if (_placename) {
+      _addr=encodeURI(GMAP_GEOCODE_API_ENTRY_POINT+'address='+_placename);
+    }
+    if (_addr && window.ajaxUtil) {
+      // _url, _payloads, _doneCallback, _failCallback, _finallyCallback
+      window.ajaxUtil.GET(
+        _addr,
+        {},
+        _cb,
+        null,
+        null
+      );
+    }
+  },
+
+  /**
+   *  set the gmap api key
+   */
+  setApiKey: function(_key) {
+    this._apiKey=_key;
+  },
+
+  createNearbyTaxiMarkers: function(_hits) {
+    if (_hits) {
+      let _markerMap={};
+
+      _hits.forEach(function(_hit, _idx) {
+        let _src=_hit['_source'];
+        let _loc=_src['pickup_location']['location']
+        let _markerKey=_loc['lat']+','+_loc['lon'];
+
+        if (_markerMap[_markerKey]) {
+          _markerMap[_markerKey]['count']=_markerMap[_markerKey]['count']+1;
+
+        } else {
+          _markerMap[_markerKey]={
+            lat: _loc['lat'],
+            lon: _loc['lon'],
+            count: 1
+          };
+        }
+      });
+
+      console.log(_markerMap);
+
+    }
+  }
+
+
+};
+
+})()
+if (module.exports.__esModule) module.exports = module.exports.default
+var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
+if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-811449c4", __vue__options__)
+  } else {
+    hotAPI.reload("data-v-811449c4", __vue__options__)
+  }
+})()}
+},{"vue":3,"vue-hot-reload-api":1}],14:[function(require,module,exports){
 ;(function(){
 //
 
@@ -10978,6 +11846,37 @@ module.exports = {
     }).always(function(_data, _status, _err) {
       _fCb(_data, _status, _err);
     });
+  },
+
+  POST: function(_url, _payloads, _doneCallback, _failCallback, _finallyCallback) {
+    let _data ={};
+
+    if (!jQuery.ajax) {
+      console.log('** jQuery is not available~!! **');
+      return;
+    }
+
+    if (_payloads) {
+      _data = _payloads;
+    }
+
+    let _fCb = _finallyCallback;
+    if (!_fCb) {
+      // empty function
+      _fCb = function() {};
+    }
+
+    jQuery.ajax(
+      _url,
+      { 'method': 'POST',
+        'data': _data }
+    ).done(function(_data, _status, _jqXHR) {
+      _doneCallback(_data, _status, _jqXHR);
+    }).fail(function(_jqXHR, _status, _err) {
+      _failCallback(_jqXHR, _status, _err);
+    }).always(function(_data, _status, _err) {
+      _fCb(_data, _status, _err);
+    });
   }
 
 };
@@ -10995,7 +11894,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-f755b5f2", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],9:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],15:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 

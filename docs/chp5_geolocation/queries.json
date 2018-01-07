@@ -8,16 +8,146 @@ POST /_aliases
     {
       "add": {
         "index": "taxi_data_2011_11_excerpt_index",
-        "alias": "cuber_taxi_2016_11"
+        "alias": "nyc_taxi_hub_2016_11"
+      }
+    }
+  ]
+}
+GET /_aliases
+
+
+# finding the cabs near me (Central Park)
+# around 4783 out of 29928 cabs available
+# score is 1... hence... no idea whether which is nearest to my location in general; time for query is around 9 - 11ms
+GET nyc_taxi_hub_2016_11/_search
+{
+  "profile": true,
+  "size": 20,
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "geo_distance": {
+            "distance": "1miles",
+            "dropoff_location.location": {
+              "lon": -73.96535510000001,
+              "lat": 40.7828647
+            }
+          }
+        }
+      ]
+    }
+  },
+  "aggs": {
+    "_locationName": {
+      "terms": {
+        "field": "pickup_location.name.keyword",
+        "size": 15
+      }
+    }
+  },
+  "sort": [
+    {
+      "_geo_distance": {
+        "dropoff_location.location": {
+          "lon": -73.96535510000001,
+          "lat": 40.7828647
+        },
+        "order": "asc",
+        "unit": "miles",
+        "mode": "min",
+        "distance_type": "arc"
       }
     }
   ]
 }
 
+GET nyc_taxi_hub_2016_11/_search
+{"query":{"bool":{"must":[{"range":{"trip_distance":{"lte":1}}}],"filter":[{"match":{"pickup_location.name":"central park"}}]}}}
+
+# can use the profiler to proof...
+# the same query but with a bounding box (only 444 docs involved) time for query is around 3 to 5 ms
+GET nyc_taxi_hub_2016_11/_search
+{
+  "_source": ["dropoff_location.location", "pickup_location.location"], 
+  "profile": true,
+  "size": 200,
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "geo_bounding_box": {
+            "dropoff_location.location": {
+              "top_left": {
+                "lon": -73.94266170000003,
+              "lat": 40.8142585
+              },
+              "bottom_right": {
+                "lon": -72.96535510000001,
+              "lat": 40.7828647
+              }
+            }
+          }
+        },
+        {
+          "geo_distance": {
+            "distance": "2miles",
+            "pickup_location.location": {
+              "lon": -73.96535510000001,
+              "lat": 40.7828647
+            }
+          }
+        }
+      ]
+    }
+  },
+  "aggs": {
+    "_locationName": {
+      "terms": {
+        "field": "dropoff_location.name.keyword",
+        "size": 15
+      }
+    }
+  },
+  "sort": [
+    {
+      "_geo_distance": {
+        "dropoff_location.location": {
+          "lon": -73.96535510000001,
+          "lat": 40.7828647
+        },
+        "order": "asc",
+        "unit": "miles",
+        "mode": "min",
+        "distance_type": "arc"
+      }
+    }
+  ]
+}
+
+# without sorting
+
+GET _cat/indices?h=index&s=index
+
+# add alias to the index
+POST /_aliases
+{
+  "actions": [
+    {
+      "add": {
+        "index": "taxi_data_2011_11_excerpt_index",
+        "alias": "nyc_taxi_hub_2016_11"
+      }
+    }
+  ]
+}
+GET /_aliases
+
+
 # finding the cabs near me (Central Park)
 # around 9961 out of 29928 cabs available
 # score is 1... hence... no idea whether which is nearest to my location in general; time for query is around 9 - 11ms
-GET cuber_taxi_2016_11/_search
+GET nyc_taxi_hub_2016_11/_search
 {
   "profile": true,
   "size": 20,
@@ -43,32 +173,19 @@ GET cuber_taxi_2016_11/_search
         "size": 15
       }
     }
-  },
-  "sort": [
-    {
-      "_geo_distance": {
-        "pickup_location.location": {
-          "lon": -73.96535510000001,
-          "lat": 40.7828647
-        },
-        "order": "asc",
-        "unit": "km",
-        "mode": "min",
-        "distance_type": "arc"
-      }
-    }
-  ]
+  }
 }
 
-GET cuber_taxi_2016_11/_search
+GET nyc_taxi_hub_2016_11/_search
 {"query":{"bool":{"must":[{"range":{"trip_distance":{"lte":1}}}],"filter":[{"match":{"pickup_location.name":"central park"}}]}}}
 
 # can use the profiler to proof...
 # the same query but with a bounding box (only 233 docs involved) time for query is around 3 to 5 ms
-GET cuber_taxi_2016_11/_search
+GET nyc_taxi_hub_2016_11/_search
 {
+  "_source": ["dropoff_location.location", "pickup_location.location"], 
   "profile": true,
-  "size": 20,
+  "size": 200,
   "query": {
     "bool": {
       "filter": [
@@ -101,25 +218,98 @@ GET cuber_taxi_2016_11/_search
   "aggs": {
     "_locationName": {
       "terms": {
-        "field": "pickup_location.name.keyword",
+        "field": "dropoff_location.name.keyword",
         "size": 15
       }
     }
-  },
-  "sort": [
-    {
-      "_geo_distance": {
-        "pickup_location.location": {
-          "lon": -73.96535510000001,
-          "lat": 40.7828647
-        },
-        "order": "asc",
-        "unit": "km",
-        "mode": "min",
-        "distance_type": "arc"
-      }
-    }
-  ]
+  }
 }
 
+
+GET _cat/indices?h=index&s=index
+GET hsi_special/_search
+
+# by pe
+GET hsi_special/_search
+{
+  "size": 0,
+  "aggs": {
+    "_1": {
+      "terms": {
+        "field": "hf_pe",
+        "size": 10,
+        "order": {
+          "_key": "asc"
+        }
+      },
+      "aggs": {
+        "_2": {
+          "top_hits": {
+            "_source": [
+              "k_stock_code",
+              "stock_name.s_chi",
+              "hf_price",
+              "hand_per_trade.hf_investment_per_hand",
+              "hf_pe"
+            ],
+            "size": 1
+          }
+        }
+      }
+    }
+  }
+}
+# by price per hand
+GET hsi_special/_search
+{
+  "size": 0,
+  "aggs": {
+    "_1": {
+      "terms": {
+        "field": "hand_per_trade.hf_investment_per_hand",
+        "size": 10,
+        "order": {
+          "_key": "asc"
+        }
+      },
+      "aggs": {
+        "_2": {
+          "top_hits": {
+            "_source": [
+              "k_stock_code",
+              "stock_name.s_chi",
+              "hf_price",
+              "hand_per_trade.hf_investment_per_hand",
+              "hf_pe"
+            ],
+            "size": 1
+          }
+        }
+      }
+    }
+  }
+}
+# derivate...
+
+
+POST hsi_special/doc
+{"k_stock_code":"0020","stock_name":{"s_eng":"WHEELOCK","s_chi":"會德豐"},"dt_date":"2018-01-05","hf_price":59.35,"volume_in_trade":{"hf_value":1.68,"k_unit":"million"},"value_in_trade":{"hf_value":9.88,"k_unit":"million"},"hf_pe":7.4,"hand_per_trade":{"i_shares":1000,"hf_investment_per_hand":59350},"year_bounds":{"hf_low":44.25,"hf_high":66.5}}
+
+POST hsi_special/doc
+{"k_stock_code":"00857","stock_name":{"s_eng":"PETROCHINA","s_chi":"中國石油股份"},"dt_date":"2018-01-05","hf_price":5.8,"volume_in_trade":{"hf_value":211,"k_unit":"million"},"value_in_trade":{"hf_value":1227,"k_unit":"million"},"hf_pe":131.82,"hand_per_trade":{"i_shares":2000,"hf_investment_per_hand":11600},"year_bounds":{"hf_low":4.639,"hf_high":6.255}}
+
+POST hsi_special/doc
+{"k_stock_code":"00388","stock_name":{"s_eng":"HKEX","s_chi":"香港交易所"},"dt_date":"2018-01-05","hf_price":253.2,"volume_in_trade":{"hf_value":6.87,"k_unit":"million"},"value_in_trade":{"hf_value":1738,"k_unit":"million"},"hf_pe":53.19,"hand_per_trade":{"i_shares":100,"hf_investment_per_hand":25320},"year_bounds":{"hf_low":182.6,"hf_high":257.6}}
+
+POST hsi_special/doc
+{"k_stock_code":"01398","stock_name":{"s_eng":"ICBC","s_chi":"工商銀行"},"dt_date":"2018-01-05","hf_price":6.56,"volume_in_trade":{"hf_value":292,"k_unit":"million"},"value_in_trade":{"hf_value":1912,"k_unit":"million"},"hf_pe":7.66,"hand_per_trade":{"i_shares":1000,"hf_investment_per_hand":6560},"year_bounds":{"hf_low":4.66,"hf_high":6.66}}
+
+POST hsi_special/doc
+{"k_stock_code":"00700","stock_name":{"s_eng":"TENCENT","s_chi":"騰訊控股"},"dt_date":"2018-01-05","hf_price":433.2,"volume_in_trade":{"hf_value":20,"k_unit":"million"},"value_in_trade":{"hf_value":8614,"k_unit":"million"},"hf_pe":88.93,"hand_per_trade":{"i_shares":100,"hf_investment_per_hand":43320},"year_bounds":{"hf_low":190.7,"hf_high":439.6}}
+
+POST hsi_special/doc
+{"k_stock_code":"00016","stock_name":{"s_eng":"SHK PPT","s_chi":"新鴻基地產"},"dt_date":"2018-01-05","hf_price":134.4,"volume_in_trade":{"hf_value":5.29,"k_unit":"million"},"value_in_trade":{"hf_value":709,"k_unit":"million"},"hf_pe":9.31,"hand_per_trade":{"i_shares":1000,"hf_investment_per_hand":134400},"year_bounds":{"hf_low":101.4,"hf_high":136.9}}
+
+POST hsi_special/doc
+{"k_stock_code":"02388","stock_name":{"s_eng":"BOC HK","s_chi":"中銀香港"},"dt_date":"2018-01-05","hf_price":39.25,"volume_in_trade":{"hf_value":9.72,"k_unit":"million"},"value_in_trade":{"hf_value":383,"k_unit":"million"},"hf_pe":7.48,"hand_per_trade":{"i_shares":500,"hf_investment_per_hand":19625},"year_bounds":{"hf_low":27.56,"hf_high":40.5}}
 

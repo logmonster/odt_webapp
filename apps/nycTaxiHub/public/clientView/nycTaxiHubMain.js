@@ -3,7 +3,9 @@ var Vue = require('vue')
 var NYC = require('./vue/nyc-main.vue')
 
 // registration (important)
-//Vue.component('shop-header-navigator', require('./vue/component/shop-header-navigator.vue'));
+Vue.component('nyc-header-navigator', require('./vue/component/nyc-header-navigator.vue'));
+Vue.component('nyc-control-panel', require('./vue/component/nyc-control-panel.vue'));
+Vue.component('nyc-gmap', require('./vue/component/nyc-gmap.vue'));
 
 // setup Router
 var Router = require('vue-router');
@@ -18,6 +20,7 @@ var router = new Router(Routes);
 window.Vue = new Vue();
 window.VueRouter = router;
 window.ajaxUtil = require('./vue/util/jQueryAjaxUtil.vue');
+window.gmapUtil = require('./vue/util/gmapUtil.vue');
 //window.windowEventUtil = require('./vue/util/windowEventUtil.vue');
 //window.collectionUtil = require('./vue/util/collectionUtil.vue');
 //window.lectureUtil = require('./vue/util/LectureUtil.vue');

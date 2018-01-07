@@ -6,12 +6,20 @@ var _es = require('elasticsearch');
 var _client = null;
 var _eBuilder = require('elastic-builder');
 
+// parser(s) setup
+var _bodyParser = require('body-parser');
+
 // router setup
 var _fs = require('fs');
 var _path = require('path');
 var _mainRoutes = require('./routing/mainRoutes');
 
 _app.use(_express.static('public'));
+
+// parse application/x-www-form-urlencoded
+_app.use(_bodyParser.urlencoded({ extended: false }))
+// parse application/json
+_app.use(_bodyParser.json())
 
 // load es config and create the client object
 let _cfg = JSON.parse(

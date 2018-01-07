@@ -5,7 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <link rel='stylesheet' href='/css/style.css'>
-  <!--link rel='stylesheet' href='/css/shop-header-navigator.css'-->
+  <link rel='stylesheet' href='/css/nyc-main.css'>
+  <link rel='stylesheet' href='/css/nyc-header-navigator.css'>
+  <link rel='stylesheet' href='/css/nyc-control-panel.css'>
+  <link rel='stylesheet' href='/css/nyc-gmap.css'>
 
   <!-- ################################ -->
   <!-- using MDB (metal design bootstrap) -->
@@ -28,5 +31,52 @@
 </body>
 <!-- include the vueify js -->
 <script src="../build/build-nycTaxiHubMain.js"></script>
+
+<!-- google map init -->
+<script>
+
+  function _initMap() {
+    var _nycCenter={ lat: 40.7127753, lng: -74.0059728 };
+    let _mapE=document.getElementById('nyc-gmap-map');
+
+    if (_mapE) {
+      var _map = new google.maps.Map(document.getElementById('nyc-gmap-map'), {
+          zoom: 8,
+          center: _nycCenter
+        }
+      );
+
+      var marker = new google.maps.Marker({
+          position: _nycCenter,
+          map: _map
+        }
+      );
+      // so that other components could reference it
+      window.gmapInstance=_map;
+
+    } else {
+      alert('something wrong, nyc-gmap-map missing!!! Might need to wait for the components being loaded by vue?');
+    }
+  };
+
+  function _lazyLoadApi() {
+    if (window.gmap.key) {
+      let _gmapUrl=encodeURI('https://maps.googleapis.com/maps/api/js?language=en&callback=_initMap&key='+window.gmap.key);
+
+      // add the script element (not a good way... security issues....)
+      let _sE=document.createElement('script');
+      _sE.setAttribute('defer', true);
+      _sE.setAttribute('async', true);
+      _sE.setAttribute('src', _gmapUrl);
+
+      document.body.appendChild(_sE);
+    }
+  };
+</script>
+
+<!-- normal way to startup gmap with a known KEY -->
+<!-- script async defer
+  src="https://maps.googleapis.com/maps/api/js?callback=_initMap">
+</script -->
 
 </html>
