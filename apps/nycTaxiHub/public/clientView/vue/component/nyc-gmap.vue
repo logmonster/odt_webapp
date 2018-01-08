@@ -31,9 +31,7 @@ module.exports={
 
     // set nyc center marker
     if (window.gmapUtil) {
-      setTimeout(function() {
-        window.gmapUtil.setNycCenterMarker();
-      }, 200);
+      _instance.handleSetNycCenterMarker();
     }
 
     window.Vue.$on('nearbyTaxiDataChanged', function(_eventObject) {
@@ -48,6 +46,19 @@ module.exports={
   props:[],
   watch: {},
   methods: {
+    /*
+     *  a more robust way to set the initial NYC center pointer
+     */
+    handleSetNycCenterMarker: function() {
+      let _instance=this;
+      if (window.gmapInstance) {
+        window.gmapUtil.setNycCenterMarker();
+      } else {
+        setTimeout(function() {
+        _instance.handleSetNycCenterMarker();
+      }, 120);
+      }
+    },
 
     handleNearbyTaxiDataChanged: function(_eventObject) {
       //console.log(_eventObject);

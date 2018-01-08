@@ -78,7 +78,7 @@ module.exports={
       let _markerMap={};
 
       _setCenterMarker(_centerLat, _centerLon);
-
+      // create a map to filter out duplicated entries
       _hits.forEach(function(_hit, _idx) {
         let _src=_hit['_source'];
         let _loc=_src['pickup_location']['location']
@@ -95,18 +95,29 @@ module.exports={
           };
         }
       });
-      //console.log(_markerMap);
+
       if (window.gmapInstance) {
         let _keys=Object.keys(_markerMap);
+        // icon image
+        let _icon='/image/taxi_map.png';
+        // bounds object
+        let _mapBounds=new google.maps.LatLngBounds();
 
         _keys.forEach(function(_key, _idx) {
           let _marker=_markerMap[_key];
           let _gMarker= new google.maps.Marker({
             position: { lat: _marker['lat'], lng: _marker['lon'] },
-            map: window.gmapInstance
+            map: window.gmapInstance,
+            title: (_marker['count']+' taxis at this point'),
+            icon: _icon
           });
           _nearbyMarkers.push(_gMarker);
+          // update the bounds
+          _mapBounds.extend(_gMarker.position);
         });
+        // add bounds to the centerMarker too
+        _mapBounds.extend(_centerMarker.position);
+        window.gmapInstance.fitBounds(_mapBounds);
 
       } else {
         console.log('something wrong, the GMap instance is not available');
