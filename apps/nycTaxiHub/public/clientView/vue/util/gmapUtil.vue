@@ -4,6 +4,27 @@ const GMAP_GEOCODE_API_ENTRY_POINT='https://maps.googleapis.com/maps/api/geocode
 
 let _apiKey=undefined;
 
+// array of Marker(s) for display
+let _nearbyMarkers=[];
+let _nycCenterMarker=undefined;
+let _centerMarker=undefined;
+
+let _setCenterMarker=function(_lat, _lon) {
+  // remove the nyc center marker (keep it there still, don't remove it from mem)
+  _nycCenterMarker.setMap(null);
+  // reset previous set center marker if any
+  if (_centerMarker) {
+    _centerMarker.setMap(null);
+  }
+  if (window.gmapInstance) {
+    _centerMarker= new google.maps.Marker({
+      position: { lat: _lat, lng: _lon },
+      map: window.gmapInstance,
+      animation: google.maps.Animation.BOUNCE
+    });
+  }
+}
+
 module.exports={
 
   /*
@@ -35,9 +56,28 @@ module.exports={
     this._apiKey=_key;
   },
 
-  createNearbyTaxiMarkers: function(_hits) {
+  setNycCenterMarker: function() {
+    if (window.gmapInstance) {
+      _nycCenterMarker= new google.maps.Marker({
+        position: { lat: 40.7127753, lng: -74.0059728 },
+        map: window.gmapInstance,
+        animation: google.maps.Animation.BOUNCE
+      });
+    }
+  },
+
+  setCenterMarker: function(_lat, _lon) {
+    _setCenterMarker(_lat, _lon);
+  },
+
+  /**
+   *  create and add markers on the gmap
+   */
+  createNearbyTaxiMarkers: function(_hits, _centerLat, _centerLon) {
     if (_hits) {
       let _markerMap={};
+
+      _setCenterMarker(_centerLat, _centerLon);
 
       _hits.forEach(function(_hit, _idx) {
         let _src=_hit['_source'];
@@ -55,9 +95,31 @@ module.exports={
           };
         }
       });
+      //console.log(_markerMap);
+      if (window.gmapInstance) {
+        let _keys=Object.keys(_markerMap);
 
-      console.log(_markerMap);
+        _keys.forEach(function(_key, _idx) {
+          let _marker=_markerMap[_key];
+          let _gMarker= new google.maps.Marker({
+            position: { lat: _marker['lat'], lng: _marker['lon'] },
+            map: window.gmapInstance
+          });
+          _nearbyMarkers.push(_gMarker);
+        });
 
+      } else {
+        console.log('something wrong, the GMap instance is not available');
+      } // end -- if (gmapInstance)
+    } // end -- if (_hits) valid
+  },
+
+  resetAllMarkersOnMap: function() {
+    if (_nearbyMarkers && _nearbyMarkers.length>0) {
+      _nearbyMarkers.forEach(function(_marker, _idx) {
+        _marker.setMap(null);
+      });
+      _nearbyMarkers=[];
     }
   }
 

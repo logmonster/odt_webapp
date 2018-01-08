@@ -11,6 +11,12 @@ function _model_n_gmap(_inst) {
     'instance': _inst,
     'nearby': {
       'hits': undefined
+    },
+    'location': {
+      'lat': undefined,
+      'lon': undefined,
+      'placename': undefined,
+      'gmapSuggestedPlacename': undefined
     }
   };
 } // end -- model
@@ -23,8 +29,19 @@ module.exports={
   mounted: function() {
     let _instance=this;
 
+    // set nyc center marker
+    if (window.gmapUtil) {
+      setTimeout(function() {
+        window.gmapUtil.setNycCenterMarker();
+      }, 200);
+    }
+
     window.Vue.$on('nearbyTaxiDataChanged', function(_eventObject) {
       _instance.handleNearbyTaxiDataChanged(_eventObject);
+    });
+
+    window.Vue.$on('myLocationChanged', function(_eventObject) {
+      _instance.handleLocationChanged(_eventObject);
     });
 
   },
@@ -37,10 +54,20 @@ module.exports={
       if (_eventObject) {
         if (_eventObject['data'] && _eventObject['data']['hits']) {
           this.nearby.hits=_eventObject['data']['hits']['hits'];
-          window.gmapUtil.createNearbyTaxiMarkers(this.nearby.hits);
+          // reset markers first
+          window.gmapUtil.resetAllMarkersOnMap();
+          window.gmapUtil.createNearbyTaxiMarkers(
+            this.nearby.hits, this.location.lat, this.location.lon);
         }
       }
+    },
+    handleLocationChanged: function(_eventObject) {
+      let _l=_eventObject['location'];
 
+      this.location.lat=_l['lat'];
+      this.location.lon=_l['lon'];
+      this.location.placename=_l['placename'];
+      this.location.gmapSuggestedPlacename=_l['gmapSuggestedPlacename'];
     }
 
   }

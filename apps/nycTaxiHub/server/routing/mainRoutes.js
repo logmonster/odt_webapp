@@ -13,7 +13,7 @@ var MainRoutes= function(
   let handleNycNearbyTaxiSearchGET = function(_req, _resp) {
     let _queryObj=new _eb.RequestBodySearch();
     let _r=_req.query;
-    let _size=20;
+    let _size=100;
     let _distance=undefined;
 
     if (_r['size']) {

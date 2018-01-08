@@ -41,14 +41,8 @@
 
     if (_mapE) {
       var _map = new google.maps.Map(document.getElementById('nyc-gmap-map'), {
-          zoom: 8,
+          zoom: 12,
           center: _nycCenter
-        }
-      );
-
-      var marker = new google.maps.Marker({
-          position: _nycCenter,
-          map: _map
         }
       );
       // so that other components could reference it
