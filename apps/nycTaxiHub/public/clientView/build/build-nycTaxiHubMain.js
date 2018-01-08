@@ -11122,7 +11122,8 @@ function _model_n_gmap(_inst) {
       'lon': undefined,
       'placename': undefined,
       'gmapSuggestedPlacename': undefined
-    }
+    },
+    'statusInfo': undefined
   };
 } // end -- model
 
@@ -11134,8 +11135,9 @@ module.exports={
   mounted: function() {
     let _instance=this;
 
-    // set nyc center marker
     if (window.gmapUtil) {
+      window.gmapUtil.setStatusUpdateCb(_instance.handleStatusInfoUpdate);
+      // set nyc center marker
       _instance.handleSetNycCenterMarker();
     }
 
@@ -11162,6 +11164,12 @@ module.exports={
         setTimeout(function() {
         _instance.handleSetNycCenterMarker();
       }, 120);
+      }
+    },
+
+    handleStatusInfoUpdate: function(_updateType, _info) {
+      if ('nearbyTaxi' == _updateType && _info) {
+        this.statusInfo='lat: '+_info['lat']+' ; lon: '+_info['lon'];
       }
     },
 
@@ -11193,8 +11201,8 @@ module.exports={
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _vm._m(0)}
-__vue__options__.staticRenderFns = [function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticStyle:{"padding-left":"2px","padding-right":"2px"}},[_c('div',{staticClass:"gmap-status-bar"},[_vm._v("status:")]),_vm._v(" "),_c('div',{staticClass:"gmap-map-container",attrs:{"id":"nyc-gmap-map"}})])}]
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticStyle:{"padding-left":"2px","padding-right":"2px"}},[_c('div',{staticClass:"gmap-status-bar"},[_vm._v("status: "+_vm._s(_vm.statusInfo))]),_vm._v(" "),_c('div',{staticClass:"gmap-map-container",attrs:{"id":"nyc-gmap-map"}})])}
+__vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
@@ -11782,6 +11790,9 @@ let _nearbyMarkers=[];
 let _nycCenterMarker=undefined;
 let _centerMarker=undefined;
 
+// setStatusInfoCb
+let _statusInfoCb=undefined;
+
 let _setCenterMarker=function(_lat, _lon) {
   // remove the nyc center marker (keep it there still, don't remove it from mem)
   _nycCenterMarker.setMap(null);
@@ -11796,7 +11807,13 @@ let _setCenterMarker=function(_lat, _lon) {
       animation: google.maps.Animation.BOUNCE
     });
   }
-}
+};
+
+let _invokeStatusUpdateCb=function(_updateType, _info) {
+  if (_statusInfoCb) {
+    _statusInfoCb.call(null, _updateType, _info);
+  }
+};
 
 module.exports={
 
@@ -11826,9 +11843,27 @@ module.exports={
    *  set the gmap api key
    */
   setApiKey: function(_key) {
-    this._apiKey=_key;
+    _apiKey=_key;
+  },
+  /*
+   *  set the status info update callback
+   */
+  setStatusUpdateCb: function(_cb) {
+    if (_cb) {
+      _statusInfoCb = _cb;
+    }
+  },
+  /*
+   *  invoke the callback with the given params
+   */
+  invokeStatusUpdateCb: function(_updateType, _info) {
+    _invokeStatusUpdateCb(_updateType, _info);
   },
 
+
+  /*
+   *  set the NYC center marker
+   */
   setNycCenterMarker: function() {
     if (window.gmapInstance) {
       _nycCenterMarker= new google.maps.Marker({
@@ -11838,7 +11873,9 @@ module.exports={
       });
     }
   },
-
+  /*
+   *  set the chosen center marker based on user input
+   */
   setCenterMarker: function(_lat, _lon) {
     _setCenterMarker(_lat, _lon);
   },
@@ -11881,14 +11918,22 @@ module.exports={
           let _gMarker= new google.maps.Marker({
             position: { lat: _marker['lat'], lng: _marker['lon'] },
             map: window.gmapInstance,
+            animation: google.maps.Animation.DROP,
             title: (_marker['count']+' taxis at this point'),
             icon: _icon
+          });
+          // add info to status bar
+          _gMarker.addListener('click', function() {
+            let _pos=_gMarker.getPosition();
+            _invokeStatusUpdateCb('nearbyTaxi', {
+              'lat': _pos.lat(),
+              'lon': _pos.lng()
+            });
           });
           _nearbyMarkers.push(_gMarker);
           // update the bounds
           _mapBounds.extend(_gMarker.position);
         });
-
         // add bounds to the centerMarker too
         _mapBounds.extend(_centerMarker.position);
         window.gmapInstance.fitBounds(_mapBounds);

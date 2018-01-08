@@ -9,6 +9,9 @@ let _nearbyMarkers=[];
 let _nycCenterMarker=undefined;
 let _centerMarker=undefined;
 
+// setStatusInfoCb
+let _statusInfoCb=undefined;
+
 let _setCenterMarker=function(_lat, _lon) {
   // remove the nyc center marker (keep it there still, don't remove it from mem)
   _nycCenterMarker.setMap(null);
@@ -23,7 +26,13 @@ let _setCenterMarker=function(_lat, _lon) {
       animation: google.maps.Animation.BOUNCE
     });
   }
-}
+};
+
+let _invokeStatusUpdateCb=function(_updateType, _info) {
+  if (_statusInfoCb) {
+    _statusInfoCb.call(null, _updateType, _info);
+  }
+};
 
 module.exports={
 
@@ -53,9 +62,27 @@ module.exports={
    *  set the gmap api key
    */
   setApiKey: function(_key) {
-    this._apiKey=_key;
+    _apiKey=_key;
+  },
+  /*
+   *  set the status info update callback
+   */
+  setStatusUpdateCb: function(_cb) {
+    if (_cb) {
+      _statusInfoCb = _cb;
+    }
+  },
+  /*
+   *  invoke the callback with the given params
+   */
+  invokeStatusUpdateCb: function(_updateType, _info) {
+    _invokeStatusUpdateCb(_updateType, _info);
   },
 
+
+  /*
+   *  set the NYC center marker
+   */
   setNycCenterMarker: function() {
     if (window.gmapInstance) {
       _nycCenterMarker= new google.maps.Marker({
@@ -65,7 +92,9 @@ module.exports={
       });
     }
   },
-
+  /*
+   *  set the chosen center marker based on user input
+   */
   setCenterMarker: function(_lat, _lon) {
     _setCenterMarker(_lat, _lon);
   },
@@ -108,8 +137,17 @@ module.exports={
           let _gMarker= new google.maps.Marker({
             position: { lat: _marker['lat'], lng: _marker['lon'] },
             map: window.gmapInstance,
+            animation: google.maps.Animation.DROP,
             title: (_marker['count']+' taxis at this point'),
             icon: _icon
+          });
+          // add info to status bar
+          _gMarker.addListener('click', function() {
+            let _pos=_gMarker.getPosition();
+            _invokeStatusUpdateCb('nearbyTaxi', {
+              'lat': _pos.lat(),
+              'lon': _pos.lng()
+            });
           });
           _nearbyMarkers.push(_gMarker);
           // update the bounds

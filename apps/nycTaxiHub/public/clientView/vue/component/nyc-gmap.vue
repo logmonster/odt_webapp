@@ -1,6 +1,6 @@
 <template>
   <div style="padding-left: 2px; padding-right: 2px;">
-    <div class='gmap-status-bar'>status:</div>
+    <div class='gmap-status-bar'>status: {{statusInfo}}</div>
     <div id='nyc-gmap-map' class='gmap-map-container' ></div>
   </div>
 </template>
@@ -17,7 +17,8 @@ function _model_n_gmap(_inst) {
       'lon': undefined,
       'placename': undefined,
       'gmapSuggestedPlacename': undefined
-    }
+    },
+    'statusInfo': undefined
   };
 } // end -- model
 
@@ -29,8 +30,9 @@ module.exports={
   mounted: function() {
     let _instance=this;
 
-    // set nyc center marker
     if (window.gmapUtil) {
+      window.gmapUtil.setStatusUpdateCb(_instance.handleStatusInfoUpdate);
+      // set nyc center marker
       _instance.handleSetNycCenterMarker();
     }
 
@@ -57,6 +59,12 @@ module.exports={
         setTimeout(function() {
         _instance.handleSetNycCenterMarker();
       }, 120);
+      }
+    },
+
+    handleStatusInfoUpdate: function(_updateType, _info) {
+      if ('nearbyTaxi' == _updateType && _info) {
+        this.statusInfo='lat: '+_info['lat']+' ; lon: '+_info['lon'];
       }
     },
 
