@@ -8,6 +8,9 @@
           class="fa fa-object-ungroup pointer gmap-status-bounds-icon"
           @click='toggleBoundingboxMode()'
           aria-hidden="true"></i>
+        <i title='remove the boundary created'
+        @click='removeBoundingbox()'
+          class="fa fa-trash gmap-status-bounds-icon pointer" aria-hidden="true"></i>
       </span>
       <span class='gmap-status-bounds-help-msg'
         :class='getCssClassForStatusBoundsIconMsg()'>
@@ -56,6 +59,9 @@ module.exports={
     window.Vue.$on('nearbyTaxiDataChanged', function(_eventObject) {
       _instance.handleNearbyTaxiDataChanged(_eventObject);
     });
+    window.Vue.$on('boundingboxTaxiDataChanged', function(_eventObject) {
+      _instance.HandleBoundingboxTaxiDataChanged(_eventObject);
+    });
 
     window.Vue.$on('myLocationChanged', function(_eventObject) {
       _instance.handleLocationChanged(_eventObject);
@@ -102,6 +108,19 @@ module.exports={
         //console.log(_eventObject['dsl']); // debug queryDSL
       }
     },
+    HandleBoundingboxTaxiDataChanged: function(_eventObject) {
+      if (_eventObject) {
+        if (_eventObject['data'] && _eventObject['data']['hits']) {
+          let _hits=_eventObject['data']['hits']['hits'];
+          // reset markers first
+          window.gmapUtil.resetAllMarkersOnMap();
+          window.gmapUtil.createBoundingboxTaxiMarkers(
+            _hits, this.location.lat, this.location.lon);
+        }
+      }
+    },
+
+
     handleLocationChanged: function(_eventObject) {
       let _l=_eventObject['location'];
 
@@ -121,6 +140,7 @@ module.exports={
 
     resetStatusInfo: function() {
       this.statusInfo=undefined;
+      this.removeBoundingbox();
     },
 
     /*
@@ -196,6 +216,12 @@ module.exports={
           bottom: _sw.lat(),
           right: _ne.lng()
         });
+      }
+    },
+    removeBoundingbox: function() {
+      if (this.boundingbox) {
+        this.boundingbox.setMap(null);
+        this.boundingbox=undefined;
       }
     },
 

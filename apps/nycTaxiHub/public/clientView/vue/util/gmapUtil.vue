@@ -34,6 +34,44 @@ let _invokeStatusUpdateCb=function(_updateType, _info) {
   }
 };
 
+let _createMarkers=function(_markerMap) {
+  if (window.gmapInstance) {
+    let _keys=Object.keys(_markerMap);
+    // icon image
+    let _icon='/image/taxi_map.png';
+    // bounds object
+    let _mapBounds=new google.maps.LatLngBounds();
+
+    _keys.forEach(function(_key, _idx) {
+      let _marker=_markerMap[_key];
+      let _gMarker= new google.maps.Marker({
+        position: { lat: _marker['lat'], lng: _marker['lon'] },
+        map: window.gmapInstance,
+        animation: google.maps.Animation.DROP,
+        title: (_marker['count']+' taxis at this point'),
+        icon: _icon
+      });
+      // add info to status bar
+      _gMarker.addListener('click', function() {
+        let _pos=_gMarker.getPosition();
+        _invokeStatusUpdateCb('nearbyTaxi', {
+          'lat': _pos.lat(),
+          'lon': _pos.lng()
+        });
+      });
+      _nearbyMarkers.push(_gMarker);
+      // update the bounds
+      _mapBounds.extend(_gMarker.position);
+    });
+    // add bounds to the centerMarker too
+    _mapBounds.extend(_centerMarker.position);
+    window.gmapInstance.fitBounds(_mapBounds);
+
+  } else {
+    console.log('something wrong, the GMap instance is not available');
+  } // end -- if (gmapInstance)
+};
+
 module.exports={
 
   /*
@@ -125,42 +163,33 @@ module.exports={
           };
         }
       });
+      _createMarkers(_markerMap);
+    } // end -- if (_hits) valid
+  },
+  createBoundingboxTaxiMarkers: function(_hits, _centerLat, _centerLon) {
+    if (_hits) {
+      let _markerMap={};
 
-      if (window.gmapInstance) {
-        let _keys=Object.keys(_markerMap);
-        // icon image
-        let _icon='/image/taxi_map.png';
-        // bounds object
-        let _mapBounds=new google.maps.LatLngBounds();
+      _setCenterMarker(_centerLat, _centerLon);
+      // create a map to filter out duplicated entries
+      let _geoField='pickup_location';
+      _hits.forEach(function(_hit, _idx) {
+        let _src=_hit['_source'];
+        let _loc=_src[_geoField]['location']
+        let _markerKey=_loc['lat']+','+_loc['lon'];
 
-        _keys.forEach(function(_key, _idx) {
-          let _marker=_markerMap[_key];
-          let _gMarker= new google.maps.Marker({
-            position: { lat: _marker['lat'], lng: _marker['lon'] },
-            map: window.gmapInstance,
-            animation: google.maps.Animation.DROP,
-            title: (_marker['count']+' taxis at this point'),
-            icon: _icon
-          });
-          // add info to status bar
-          _gMarker.addListener('click', function() {
-            let _pos=_gMarker.getPosition();
-            _invokeStatusUpdateCb('nearbyTaxi', {
-              'lat': _pos.lat(),
-              'lon': _pos.lng()
-            });
-          });
-          _nearbyMarkers.push(_gMarker);
-          // update the bounds
-          _mapBounds.extend(_gMarker.position);
-        });
-        // add bounds to the centerMarker too
-        _mapBounds.extend(_centerMarker.position);
-        window.gmapInstance.fitBounds(_mapBounds);
+        if (_markerMap[_markerKey]) {
+          _markerMap[_markerKey]['count']=_markerMap[_markerKey]['count']+1;
 
-      } else {
-        console.log('something wrong, the GMap instance is not available');
-      } // end -- if (gmapInstance)
+        } else {
+          _markerMap[_markerKey]={
+            lat: _loc['lat'],
+            lon: _loc['lon'],
+            count: 1
+          };
+        }
+      });
+      _createMarkers(_markerMap);
     } // end -- if (_hits) valid
   },
 

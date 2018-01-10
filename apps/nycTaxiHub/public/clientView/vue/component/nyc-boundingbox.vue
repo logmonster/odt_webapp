@@ -212,11 +212,12 @@ module.exports={
 
     cbGetNycBoundingboxSearchResult: function(_data) {
       if (_data && _data['data']) {
-        let _hits=_data['data']['responses'][0];
-
         // call gmapUtil to add the points + reset existing points
-
-        console.log(_data['dsl']);
+        window.Vue.$emit('boundingboxTaxiDataChanged', {
+          'data': _data['data']['responses'][0],
+          'dsl': _data['dsl']
+        });
+        //console.log(_data['dsl']);
       }
     }
 
