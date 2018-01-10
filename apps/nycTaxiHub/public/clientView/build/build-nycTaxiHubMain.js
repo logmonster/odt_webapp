@@ -10828,10 +10828,87 @@ let app = new Vue({
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 function _model_n_boundingbox(_inst) {
   return {
-    'instance': _inst
+    'instance': _inst,
+    'location': {
+      'lat': undefined,
+      'lon': undefined,
+      'placename': undefined,
+      'gmapSuggestedPlacename': undefined
+    },
+    'distance': {
+      'value': undefined,
+      'unit': 'miles'
+    },
+    'boundingbox': {
+      'top': undefined,
+      'left': undefined,
+      'bottom': undefined,
+      'right': undefined
+    },
+    'info': {
+      'msg': undefined
+    },
+    'datum': undefined
   };
 }
 
@@ -10840,10 +10917,134 @@ module.exports={
   data: function() {
     return new _model_n_boundingbox(this);
   },
-  mounted: function() {},
+  mounted: function() {
+    let _instance=this;
+
+    window.Vue.$on('myLocationChanged', function(_eventObject) {
+      _instance.handleLocationChanged(_eventObject);
+    });
+
+    // actively get the location from the nyc-control-panel
+    window.Vue.$emit('getLocation', {
+      'callback': _instance.getLocationCallback
+    });
+
+    // let nyc-gmap.vue knows boundingbox has been chosen
+    window.Vue.$emit('controlPanelViewChanged', { 'control': 'nyc-boundingbox' });
+
+    // handle the boundingBox bounds change
+    window.Vue.$on('boundingboxBoundsChanged', function(_eventObject) {
+      _instance.handleBoundingboxBoundsChange(_eventObject);
+    });
+  },
   props: [],
   watch: {},
   methods: {
+    getLocationCallback: function(_loc) {
+      let _data={ 'location': _loc };
+      this.handleLocationChanged(_data);
+    },
+    handleLocationChanged: function(_eventObject) {
+      let _l=_eventObject['location'];
+
+      this.location.lat=_l['lat'];
+      this.location.lon=_l['lon'];
+      this.location.placename=_l['placename'];
+      this.location.gmapSuggestedPlacename=_l['gmapSuggestedPlacename'];
+
+      // reset
+      this.info.msg=undefined;
+    },
+
+    getInfoMsgVisibilityClass: function() {
+      let _css={};
+      if (this.info.msg && this.info.msg!='') {
+        _css['showing']=true;
+        _css['hiding']=false;
+      } else {
+        _css['showing']=false;
+        _css['hiding']=true;
+      }
+      return _css;
+    },
+
+    handleBoundingboxBoundsChange: function(_eventObject) {
+      if (_eventObject) {
+        this.boundingbox.top = _eventObject['top'];
+        this.boundingbox.left = _eventObject['left'];
+        this.boundingbox.bottom = _eventObject['bottom'];
+        this.boundingbox.right = _eventObject['right'];
+      }
+    },
+
+    /*
+     *  validation
+     */
+    validation: function() {
+      let _valid=true;
+
+      if (!this.location.lat || !this.location.lon) {
+        this.info.msg='either latitude or longitude is not provided !!!';
+        _valid=false;
+      }
+      if (_valid && (!this.distance.value || isNaN(this.distance.value))) {
+        this.info.msg='the distance must be provided !!!';
+        _valid=false;
+      }
+
+      // bounds
+      if (_valid) {
+        if (!this.boundingbox.top || isNaN(this.boundingbox.top)) {
+          _valid=false;
+        }
+        if (!this.boundingbox.left || isNaN(this.boundingbox.left)) {
+          _valid=false;
+        }
+        if (!this.boundingbox.bottom || isNaN(this.boundingbox.bottom)) {
+          _valid=false;
+        }
+        if (!this.boundingbox.right || isNaN(this.boundingbox.right)) {
+          _valid=false;
+        }
+
+        if (!_valid) {
+          this.info.msg='the bounding box\'s TOP, LEFT, BOTTOM, RIGHT geoPoint is required!';
+        }
+      }
+      return _valid;
+    },
+
+    handleClick: function() {
+      if (this.validation()) {
+        // reset
+        this.info.msg=undefined;
+        window.ajaxUtil.GET(
+          '/api/nycBoundingboxSearchGET',
+          {
+            'lat': this.location.lat,
+            'lon': this.location.lon,
+            'distance': this.distance.value,
+            'distance_unit': this.distance.unit,
+            'boundingbox': this.boundingbox
+          },
+          this.cbGetNycBoundingboxSearchResult,
+          function(_jqXHR, _status, _err) {
+            console.log('* something wrong happened ~ ');
+            console.log(_err);
+          }, // _failCallback
+          null  // _finallyCallback
+        );
+      }
+    },
+
+    cbGetNycBoundingboxSearchResult: function(_data) {
+      if (_data && _data['data']) {
+        let _hits=_data['data']['responses'][0];
+
+        this.datum=_hits;
+        console.log(_data['dsl']);
+      }
+    }
 
   }
 };
@@ -10852,7 +11053,7 @@ module.exports={
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_vm._v("\n  boundingBox ~\n")])}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_vm._v("\n  data =>\n  "+_vm._s(_vm._datum)+"\n  "),_c('div',{staticClass:"container-fluid",staticStyle:{"margin-top":"12px"}},[_c('div',{staticClass:"row"},[_c('div',{staticClass:"col-sm-12, col-md-12"},[_c('div',{staticClass:"n-c-panel-nearby-info-msg",class:_vm.getInfoMsgVisibilityClass()},[_c('i',{staticClass:"fa fa-warning",attrs:{"aria-hidden":"true"}}),_vm._v("\n          "+_vm._s(_vm.info.msg))])])]),_vm._v(" "),_c('div',{staticClass:"row"},[_c('div',{staticClass:"col-sm-12 col-md-6",staticStyle:{"margin-bottom":"8px"}},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.boundingbox.top),expression:"boundingbox.top"}],attrs:{"type":"text","placeholder":"top geoPoint"},domProps:{"value":(_vm.boundingbox.top)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.boundingbox, "top", $event.target.value)}}})]),_vm._v(" "),_c('div',{staticClass:"col-sm-12 col-md-6",staticStyle:{"margin-bottom":"8px"}},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.boundingbox.left),expression:"boundingbox.left"}],attrs:{"type":"text","placeholder":"left geoPoint"},domProps:{"value":(_vm.boundingbox.left)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.boundingbox, "left", $event.target.value)}}})]),_vm._v(" "),_c('div',{staticClass:"col-sm-12 col-md-6",staticStyle:{"margin-bottom":"8px"}},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.boundingbox.bottom),expression:"boundingbox.bottom"}],attrs:{"type":"text","placeholder":"bottom geoPoint"},domProps:{"value":(_vm.boundingbox.bottom)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.boundingbox, "bottom", $event.target.value)}}})]),_vm._v(" "),_c('div',{staticClass:"col-sm-12 col-md-6",staticStyle:{"margin-bottom":"16px"}},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.boundingbox.right),expression:"boundingbox.right"}],attrs:{"type":"text","placeholder":"right geoPoint"},domProps:{"value":(_vm.boundingbox.right)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.boundingbox, "right", $event.target.value)}}})]),_vm._v(" "),_c('div',{staticClass:"col-sm-12 col-md-12",staticStyle:{"margin-bottom":"8px"}},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.distance.value),expression:"distance.value"}],attrs:{"type":"text","placeholder":"search taxi within a distance"},domProps:{"value":(_vm.distance.value)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.distance, "value", $event.target.value)}}})]),_vm._v(" "),_c('div',{staticClass:"col-sm-12 col-md-6"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.distance.unit),expression:"distance.unit"}],attrs:{"type":"radio","name":"radDistanceUnit","value":"miles"},domProps:{"checked":_vm._q(_vm.distance.unit,"miles")},on:{"change":function($event){_vm.$set(_vm.distance, "unit", "miles")}}}),_vm._v("\n             miles")]),_vm._v(" "),_c('div',{staticClass:"col-sm-12 col-md-6"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.distance.unit),expression:"distance.unit"}],attrs:{"type":"radio","name":"radDistanceUnit","value":"km"},domProps:{"checked":_vm._q(_vm.distance.unit,"km")},on:{"change":function($event){_vm.$set(_vm.distance, "unit", "km")}}}),_vm._v("\n             km")]),_vm._v(" "),_c('div',{staticClass:"col-sm-12 col-md-12",staticStyle:{"margin-top":"8px"}},[_c('button',{staticClass:"btn btn-primary",staticStyle:{"margin-left":"0px"},on:{"click":function($event){_vm.handleClick()}}},[_vm._v("go")])])])])])}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -10961,7 +11162,16 @@ module.exports={
     return new _model_n_c_panel(this);
   },
   props: [],
-  mounted: function() {},
+  mounted: function() {
+    let _instance=this;
+
+    window.Vue.$on('getLocation', function(_eventObject) {
+      if (_eventObject && _eventObject['callback']) {
+        _instance.getLocation(_eventObject['callback']);
+      }
+    });
+
+  },
   watch: {},
   methods: {
     getCssStyleForPills: function() {
@@ -11014,6 +11224,19 @@ module.exports={
       window.gmapUtil.getLatLonByPlacename(
         this.location.placename,
         this.setLocationLatLonByPlacename);
+    },
+
+    getLocation: function(_callback) {
+      if (_callback && this.location) {
+        // clone the location information and send to callback
+        let _loc={
+          'lat': this.location.lat,
+          'lon': this.location.lon,
+          'placename': this.location.placename,
+          'gmapSuggestedPlacename': this.location.gmapSuggestedPlacename
+        };
+        _callback.call(null, _loc );
+      }
     },
 
     setLocationLatLonByPlacename: function(_data) {
@@ -11110,6 +11333,18 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 function _model_n_gmap(_inst) {
   return {
@@ -11123,7 +11358,12 @@ function _model_n_gmap(_inst) {
       'placename': undefined,
       'gmapSuggestedPlacename': undefined
     },
-    'statusInfo': undefined
+    'statusInfo': undefined,
+    'controlView': undefined,
+
+    'boundingboxMode': false,
+    'boundingbox': undefined
+
   };
 } // end -- model
 
@@ -11147,6 +11387,10 @@ module.exports={
 
     window.Vue.$on('myLocationChanged', function(_eventObject) {
       _instance.handleLocationChanged(_eventObject);
+    });
+
+    window.Vue.$on('controlPanelViewChanged', function(_eventObject) {
+      _instance.handleControlPanelViewChanged(_eventObject);
     });
 
   },
@@ -11183,6 +11427,7 @@ module.exports={
           window.gmapUtil.createNearbyTaxiMarkers(
             this.nearby.hits, this.location.lat, this.location.lon);
         }
+        //console.log(_eventObject['dsl']); // debug queryDSL
       }
     },
     handleLocationChanged: function(_eventObject) {
@@ -11192,6 +11437,118 @@ module.exports={
       this.location.lon=_l['lon'];
       this.location.placename=_l['placename'];
       this.location.gmapSuggestedPlacename=_l['gmapSuggestedPlacename'];
+    },
+
+    handleControlPanelViewChanged: function(_eventObject) {
+      if (_eventObject) {
+        //'control': 'nyc-nearby'
+        this.controlView=_eventObject['control'];
+      }
+      this.resetStatusInfo();
+    },
+
+    resetStatusInfo: function() {
+      this.statusInfo=undefined;
+    },
+
+    /*
+     *  toggle the boundingbox mode; can drag a bounds when mouse
+     */
+    toggleBoundingboxMode: function() {
+      this.boundingboxMode=!this.boundingboxMode;
+      if (window.gmapInstance) {
+        if (this.boundingboxMode) {
+          window.gmapInstance.setOptions({
+            draggable: false
+          });
+          // calculate the bounds diff based on zoom value
+          let _mapZoom=window.gmapInstance.getZoom();
+          let _boundsDiff=0;
+          switch (_mapZoom) {
+            case 13:
+              _boundsDiff=0.005;
+              break;
+            case 11:
+              _boundsDiff=0.05;
+              break;
+            default:
+             _boundsDiff=0.1;
+          }
+          let _bounds={
+            north: (this.location.lat + _boundsDiff),
+            south: (this.location.lat - _boundsDiff),
+            east: (this.location.lon + _boundsDiff),
+            west: (this.location.lon - _boundsDiff)
+            /*north: 44.599,
+            south: 44.490,
+            east: -78.443,
+            west: -78.649
+            0.005*/
+          };
+          if (this.boundingbox) {
+            this.boundingbox.setDraggable(true);
+            this.boundingbox.setEditable(true);
+
+          } else {
+            this.boundingbox=new google.maps.Rectangle({
+              bounds: _bounds,
+              editable: true,
+              draggable: true
+            });
+            // add event listener too
+            this.boundingbox.addListener('bounds_changed', this.updateBoundingboxGeopoints);
+            this.boundingbox.setMap(window.gmapInstance);
+          }
+
+        } else {
+          window.gmapInstance.setOptions({
+            draggable: true
+          });
+          //this.boundingbox.setMap(null);
+          //this.boundingbox=undefined;
+          this.boundingbox.setDraggable(false);
+          this.boundingbox.setEditable(false);
+
+        }
+      } // end -- gmapInstance valid
+    },
+    updateBoundingboxGeopoints: function() {
+      if (this.boundingbox) {
+        let _ne=this.boundingbox.getBounds().getNorthEast();
+        let _sw=this.boundingbox.getBounds().getSouthWest();
+
+        // emit the bounds changed geoPoint(s)
+        window.Vue.$emit('boundingboxBoundsChanged', {
+          top: _ne.lat(),
+          left: _sw.lng(),
+          bottom: _sw.lat(),
+          right: _ne.lng()
+        });
+      }
+    },
+
+    getCssClassForStatusBoundsIcon: function() {
+      let _css={};
+      if ('nyc-boundingbox' != this.controlView) {
+        _css['showing-inline']=false;
+        _css['hiding']=true;
+      } else {
+        // bounding box add the boundary button
+        _css['showing-inline']=true;
+        _css['hiding']=false;
+      }
+      return _css;
+    },
+    getCssClassForStatusBoundsIconMsg: function() {
+      let _css={};
+      if ('nyc-boundingbox' == this.controlView && this.boundingboxMode) {
+        _css['showing-inline']=true;
+        _css['hiding']=false;
+      } else {
+        _css['showing-inline']=false;
+        _css['hiding']=true;
+      }
+      return _css;
     }
 
   }
@@ -11201,7 +11558,7 @@ module.exports={
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticStyle:{"padding-left":"2px","padding-right":"2px"}},[_c('div',{staticClass:"gmap-status-bar"},[_vm._v("status: "+_vm._s(_vm.statusInfo))]),_vm._v(" "),_c('div',{staticClass:"gmap-map-container",attrs:{"id":"nyc-gmap-map"}})])}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticStyle:{"padding-left":"2px","padding-right":"2px"}},[_c('div',{staticClass:"gmap-status-bar"},[_vm._v("\n    status: "+_vm._s(_vm.statusInfo)+"\n    "),_c('span',{class:_vm.getCssClassForStatusBoundsIcon()},[_c('i',{staticClass:"fa fa-object-ungroup pointer gmap-status-bounds-icon",attrs:{"title":"create boundaries for filtering results","aria-hidden":"true"},on:{"click":function($event){_vm.toggleBoundingboxMode()}}})]),_vm._v(" "),_c('span',{staticClass:"gmap-status-bounds-help-msg",class:_vm.getCssClassForStatusBoundsIconMsg()},[_vm._v("\n      drag a bounding box on the map. Toggle icon to exit")])]),_vm._v(" "),_c('div',{staticClass:"gmap-map-container",attrs:{"id":"nyc-gmap-map"}})])}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -11393,10 +11750,24 @@ module.exports={
       _instance.handleLocationChanged(_eventObject);
     });
 
+    // actively get the location from the nyc-control-panel
+    window.Vue.$emit('getLocation', {
+      'callback': _instance.getLocationCallback
+    });
+
+    // let nyc-gmap.vue knows nearbyTaxi has been chosen
+    window.Vue.$emit('controlPanelViewChanged', { 'control': 'nyc-nearby' });
+
   },
   props: [],
   watch: {},
   methods: {
+
+    getLocationCallback: function(_loc) {
+      let _data={ 'location': _loc };
+      this.handleLocationChanged(_data);
+    },
+
     handleLocationChanged: function(_eventObject) {
       let _l=_eventObject['location'];
 
@@ -11889,9 +12260,10 @@ module.exports={
 
       _setCenterMarker(_centerLat, _centerLon);
       // create a map to filter out duplicated entries
+      let _geoField='pickup_location';
       _hits.forEach(function(_hit, _idx) {
         let _src=_hit['_source'];
-        let _loc=_src['pickup_location']['location']
+        let _loc=_src[_geoField]['location']
         let _markerKey=_loc['lat']+','+_loc['lon'];
 
         if (_markerMap[_markerKey]) {

@@ -93,7 +93,16 @@ module.exports={
     return new _model_n_c_panel(this);
   },
   props: [],
-  mounted: function() {},
+  mounted: function() {
+    let _instance=this;
+
+    window.Vue.$on('getLocation', function(_eventObject) {
+      if (_eventObject && _eventObject['callback']) {
+        _instance.getLocation(_eventObject['callback']);
+      }
+    });
+
+  },
   watch: {},
   methods: {
     getCssStyleForPills: function() {
@@ -146,6 +155,19 @@ module.exports={
       window.gmapUtil.getLatLonByPlacename(
         this.location.placename,
         this.setLocationLatLonByPlacename);
+    },
+
+    getLocation: function(_callback) {
+      if (_callback && this.location) {
+        // clone the location information and send to callback
+        let _loc={
+          'lat': this.location.lat,
+          'lon': this.location.lon,
+          'placename': this.location.placename,
+          'gmapSuggestedPlacename': this.location.gmapSuggestedPlacename
+        };
+        _callback.call(null, _loc );
+      }
     },
 
     setLocationLatLonByPlacename: function(_data) {

@@ -13,7 +13,7 @@ var MainRoutes= function(
   let handleNycNearbyTaxiSearchGET = function(_req, _resp) {
     let _queryObj=new _eb.RequestBodySearch();
     let _r=_req.query;
-    let _size=100;
+    let _size=1000;  // 100
     let _distance=undefined;
 
     if (_r['size']) {
@@ -48,6 +48,69 @@ var MainRoutes= function(
 
     _queryObj.sort(_sort);
     */
+    _queryObj.query(_bQ);
+
+    // msearch body
+    let _body=[];
+    let _dsl=_queryObj.toJSON();
+    _body.push({
+      "index": "nyc_taxi_hub_2016_11",
+      "type": "doc"
+    });
+    _body.push(_dsl);
+
+    // run the query
+    _client.msearch({
+      body: _body
+    }).then(function(_data) {
+      _resp.send({
+        'data': _data,
+        'dsl': _dsl
+      });
+    }, function(_err) {
+      _resp.send(_err);
+    }); // end -- msearch
+  };
+
+  /*
+   *  handle the boundingbox + geo_distance search
+   */
+  let handleNycBoundingboxSearchGET = function(_req, _resp) {
+    let _queryObj=new _eb.RequestBodySearch();
+    let _r=_req.query;
+    let _size=1000;
+    let _distance=undefined;
+
+    if (_r['size']) {
+      _size=parseInt(_r['size'], 10);
+    }
+    _queryObj.size(_size);
+
+    _distance=_r['distance']+_r['distance_unit'];
+
+    // setup bool query and filter clause
+    let _bQ=new _eb.BoolQuery();
+    let _filterLst=[];
+    let _gPt=new _eb.GeoPoint();
+    let _gDQ=null;
+
+    _gPt.lat(parseFloat(_r['lat'], 0.0));
+    _gPt.lon(parseFloat(_r['lon'], 0.0));
+
+    _gDQ=new _eb.GeoDistanceQuery('pickup_location.location', _gPt);
+    _gDQ.distance( _distance );
+    _filterLst.push(_gDQ);
+
+    // add the bounding box (geo_bounding_box)
+    let _gboundQ=new _eb.GeoBoundingBoxQuery('pickup_location.location');
+    _gboundQ.top(parseFloat(_r['boundingbox']['top'], 0.0) );
+    _gboundQ.left(parseFloat(_r['boundingbox']['left'], 0.0) );
+    _gboundQ.bottom(parseFloat(_r['boundingbox']['bottom'], 0.0) );
+    _gboundQ.right(parseFloat(_r['boundingbox']['right'], 0.0) );
+    _filterLst.push(_gboundQ);
+
+    // set the filter clause to the bool query
+    _bQ.filter(_filterLst);
     _queryObj.query(_bQ);
 
     // msearch body
@@ -157,6 +220,15 @@ var MainRoutes= function(
           handleNycGMapApiKeyPOST(_req, _resp);
         }
       );
+
+      // handle the bondingbox geo_distance search
+      _router.route('/api/nycBoundingboxSearchGET').
+        get(function(_req, _resp) {
+          handleNycBoundingboxSearchGET(_req, _resp);
+        }
+      );
+
+
 
       return _router;
     }

@@ -108,9 +108,10 @@ module.exports={
 
       _setCenterMarker(_centerLat, _centerLon);
       // create a map to filter out duplicated entries
+      let _geoField='pickup_location';
       _hits.forEach(function(_hit, _idx) {
         let _src=_hit['_source'];
-        let _loc=_src['pickup_location']['location']
+        let _loc=_src[_geoField]['location']
         let _markerKey=_loc['lat']+','+_loc['lon'];
 
         if (_markerMap[_markerKey]) {

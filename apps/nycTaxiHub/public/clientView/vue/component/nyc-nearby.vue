@@ -67,10 +67,24 @@ module.exports={
       _instance.handleLocationChanged(_eventObject);
     });
 
+    // actively get the location from the nyc-control-panel
+    window.Vue.$emit('getLocation', {
+      'callback': _instance.getLocationCallback
+    });
+
+    // let nyc-gmap.vue knows nearbyTaxi has been chosen
+    window.Vue.$emit('controlPanelViewChanged', { 'control': 'nyc-nearby' });
+
   },
   props: [],
   watch: {},
   methods: {
+
+    getLocationCallback: function(_loc) {
+      let _data={ 'location': _loc };
+      this.handleLocationChanged(_data);
+    },
+
     handleLocationChanged: function(_eventObject) {
       let _l=_eventObject['location'];
 

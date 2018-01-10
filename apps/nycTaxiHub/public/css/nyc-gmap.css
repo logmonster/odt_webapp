@@ -14,3 +14,10 @@
   width: calc(100%);
   height: calc(80%);
 }
+
+.gmap-status-bounds-icon {
+  color: #FF8800;
+}
+.gmap-status-bounds-help-msg {
+  color: #CC0000;
+}
