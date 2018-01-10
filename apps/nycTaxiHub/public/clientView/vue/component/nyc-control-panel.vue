@@ -53,13 +53,13 @@
       </div>
 
       <div
-        @click='handlePillClick("geoShape")'
+        @click='handlePillClick("geoPolygon")'
         :style='getCssStyleForPills()'
-        :class='getCssClassForPills("geoShape")'
+        :class='getCssClassForPills("geoPolygon")'
         class="pointer badge badge-pill">
         <i class="fa fa-map-signs" aria-hidden="true"></i>
-        <span v-if='pillChosen=="geoShape"'>
-          geo shape search
+        <span v-if='pillChosen=="geoPolygon"'>
+          geo polygon search
         </span>
       </div>
     </div>

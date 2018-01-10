@@ -144,6 +144,85 @@ module.exports={
     },
 
     /*
+     *  estimate the boundsDiff to form a rectangle based on the
+     *  zoom value of the map
+     */
+    _getBoundsDiffByZoom: function(_mapZoom) {
+      let _boundsDiff=-1;
+      switch (_mapZoom) {
+        case 22:
+          _boundsDiff=0.00003;
+          break;
+        case 21:
+          _boundsDiff=0.00005;
+          break;
+        case 20:
+          _boundsDiff=0.0001;
+          break;
+        case 19:
+          _boundsDiff=0.0003;
+          break;
+        case 18:
+          _boundsDiff=0.0004;
+          break;
+        case 17:
+          _boundsDiff=0.001;
+          break;
+        case 16:
+          _boundsDiff=0.001;
+          break;
+        case 15:
+          _boundsDiff=0.002;
+          break;
+        case 14:
+          _boundsDiff=0.003;
+          break;
+        case 13:
+          _boundsDiff=0.005;
+          break;
+        case 12:
+          _boundsDiff=0.025;
+          break;
+        case 11:
+          _boundsDiff=0.05;
+          break;
+        case 10:
+          _boundsDiff=0.075;
+          break;
+        case 9:
+          _boundsDiff=0.1;
+          break;
+        case 8:
+          _boundsDiff=0.125;
+          break;
+        case 7:
+          _boundsDiff=0.45;
+          break;
+        case 6:
+          _boundsDiff=1.5;
+          break;
+        case 5:
+          _boundsDiff=3.5;
+          break;
+        case 4:
+          _boundsDiff=5;
+          break;
+        case 3:
+          _boundsDiff=15;
+          break;
+        case 2:
+          _boundsDiff=15;
+          break;
+        case 1:
+          _boundsDiff=15;
+          break;
+        default:
+         _boundsDiff=0.1;
+      }
+      return _boundsDiff;
+    },
+
+    /*
      *  toggle the boundingbox mode; can drag a bounds when mouse
      */
     toggleBoundingboxMode: function() {
@@ -155,17 +234,8 @@ module.exports={
           });
           // calculate the bounds diff based on zoom value
           let _mapZoom=window.gmapInstance.getZoom();
-          let _boundsDiff=0;
-          switch (_mapZoom) {
-            case 13:
-              _boundsDiff=0.005;
-              break;
-            case 11:
-              _boundsDiff=0.05;
-              break;
-            default:
-             _boundsDiff=0.1;
-          }
+          let _boundsDiff=this._getBoundsDiffByZoom(_mapZoom);
+
           let _bounds={
             north: (this.location.lat + _boundsDiff),
             south: (this.location.lat - _boundsDiff),

@@ -22,9 +22,9 @@ module.exports = {
       component: require('./component/nyc-boundingbox.vue')
     },
     {
-      path: '/geoShape',
-      name: '/geoShape',
-      component: require('./component/nyc-geoshape.vue')
+      path: '/geoPolygon',
+      name: '/geoPolygon',
+      component: require('./component/nyc-geopolygon.vue')
     }
     /*
     { path: '/',

@@ -11267,7 +11267,7 @@ module.exports={
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"n-c-panel-container"},[_vm._m(0),_vm._v(" "),_c('div',{staticClass:"n-c-panel-location-container"},[_c('div',{staticClass:"container-fluid"},[_c('div',{staticClass:"row"},[_c('div',{staticClass:"col-sm-6 col-md-6"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.location.lat),expression:"location.lat"}],attrs:{"type":"text","placeholder":"latitude"},domProps:{"value":(_vm.location.lat)},on:{"blur":function($event){_vm.handleLocationOnBlur()},"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.location, "lat", $event.target.value)}}})]),_vm._v(" "),_c('div',{staticClass:"col-sm-6 col-md-6"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.location.lon),expression:"location.lon"}],attrs:{"type":"text","placeholder":"longitude"},domProps:{"value":(_vm.location.lon)},on:{"blur":function($event){_vm.handleLocationOnBlur()},"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.location, "lon", $event.target.value)}}})]),_vm._v(" "),_vm._m(1),_vm._v(" "),_c('div',{staticClass:"col-sm-12 col-md-12"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.location.placename),expression:"location.placename"}],attrs:{"type":"text","placeholder":"location name"},domProps:{"value":(_vm.location.placename)},on:{"blur":function($event){_vm.handleLocationPlacenameOnBlur()},"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.location, "placename", $event.target.value)}}})])])])]),_vm._v(" "),_c('div',{staticClass:"n-c-panel-option-pill-header"},[_c('div',{staticClass:"pointer badge badge-pill",class:_vm.getCssClassForPills("nearby"),style:(_vm.getCssStyleForPills()),on:{"click":function($event){_vm.handlePillClick("nearby")}}},[_c('i',{staticClass:"fa fa-map-marker",attrs:{"aria-hidden":"true"}}),_vm._v(" "),(_vm.pillChosen=="nearby")?_c('span',[_vm._v("\n        taxi nearby\n      ")]):_vm._e()]),_vm._v(" "),_c('div',{staticClass:"pointer badge badge-pill",class:_vm.getCssClassForPills("boundingBox"),style:(_vm.getCssStyleForPills()),on:{"click":function($event){_vm.handlePillClick("boundingBox")}}},[_c('i',{staticClass:"fa fa-map",attrs:{"aria-hidden":"true"}}),_vm._v(" "),(_vm.pillChosen=="boundingBox")?_c('span',[_vm._v("\n        bounding box search\n      ")]):_vm._e()]),_vm._v(" "),_c('div',{staticClass:"pointer badge badge-pill",class:_vm.getCssClassForPills("geoShape"),style:(_vm.getCssStyleForPills()),on:{"click":function($event){_vm.handlePillClick("geoShape")}}},[_c('i',{staticClass:"fa fa-map-signs",attrs:{"aria-hidden":"true"}}),_vm._v(" "),(_vm.pillChosen=="geoShape")?_c('span',[_vm._v("\n        geo shape search\n      ")]):_vm._e()])]),_vm._v(" "),_c('div',[_c('router-view')],1)])}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"n-c-panel-container"},[_vm._m(0),_vm._v(" "),_c('div',{staticClass:"n-c-panel-location-container"},[_c('div',{staticClass:"container-fluid"},[_c('div',{staticClass:"row"},[_c('div',{staticClass:"col-sm-6 col-md-6"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.location.lat),expression:"location.lat"}],attrs:{"type":"text","placeholder":"latitude"},domProps:{"value":(_vm.location.lat)},on:{"blur":function($event){_vm.handleLocationOnBlur()},"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.location, "lat", $event.target.value)}}})]),_vm._v(" "),_c('div',{staticClass:"col-sm-6 col-md-6"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.location.lon),expression:"location.lon"}],attrs:{"type":"text","placeholder":"longitude"},domProps:{"value":(_vm.location.lon)},on:{"blur":function($event){_vm.handleLocationOnBlur()},"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.location, "lon", $event.target.value)}}})]),_vm._v(" "),_vm._m(1),_vm._v(" "),_c('div',{staticClass:"col-sm-12 col-md-12"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.location.placename),expression:"location.placename"}],attrs:{"type":"text","placeholder":"location name"},domProps:{"value":(_vm.location.placename)},on:{"blur":function($event){_vm.handleLocationPlacenameOnBlur()},"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.location, "placename", $event.target.value)}}})])])])]),_vm._v(" "),_c('div',{staticClass:"n-c-panel-option-pill-header"},[_c('div',{staticClass:"pointer badge badge-pill",class:_vm.getCssClassForPills("nearby"),style:(_vm.getCssStyleForPills()),on:{"click":function($event){_vm.handlePillClick("nearby")}}},[_c('i',{staticClass:"fa fa-map-marker",attrs:{"aria-hidden":"true"}}),_vm._v(" "),(_vm.pillChosen=="nearby")?_c('span',[_vm._v("\n        taxi nearby\n      ")]):_vm._e()]),_vm._v(" "),_c('div',{staticClass:"pointer badge badge-pill",class:_vm.getCssClassForPills("boundingBox"),style:(_vm.getCssStyleForPills()),on:{"click":function($event){_vm.handlePillClick("boundingBox")}}},[_c('i',{staticClass:"fa fa-map",attrs:{"aria-hidden":"true"}}),_vm._v(" "),(_vm.pillChosen=="boundingBox")?_c('span',[_vm._v("\n        bounding box search\n      ")]):_vm._e()]),_vm._v(" "),_c('div',{staticClass:"pointer badge badge-pill",class:_vm.getCssClassForPills("geoPolygon"),style:(_vm.getCssStyleForPills()),on:{"click":function($event){_vm.handlePillClick("geoPolygon")}}},[_c('i',{staticClass:"fa fa-map-signs",attrs:{"aria-hidden":"true"}}),_vm._v(" "),(_vm.pillChosen=="geoPolygon")?_c('span',[_vm._v("\n        geo polygon search\n      ")]):_vm._e()])]),_vm._v(" "),_c('div',[_c('router-view')],1)])}
 __vue__options__.staticRenderFns = [function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"n-c-panel-title"},[_c('i',{staticClass:"fa fa-map-marker",attrs:{"aria-hidden":"true"}}),_vm._v(" Set my location\n  ")])},function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"col-sm-12 col-md-12"},[_c('div',{staticStyle:{"margin":"auto","width":"20px"}},[_vm._v("OR")])])}]
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -11287,10 +11287,35 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 function _model_n_geoshape(_inst) {
   return {
-    'instance': _inst
+    'instance': _inst,
+    'location': {
+      'lat': undefined,
+      'lon': undefined,
+      'placename': undefined,
+      'gmapSuggestedPlacename': undefined
+    },
+    'info': {
+      'msg': undefined
+    }
   };
 }
 
@@ -11299,10 +11324,56 @@ module.exports={
   data: function() {
     return new _model_n_geoshape(this);
   },
-  mounted: function() {},
+  mounted: function() {
+    let _instance=this;
+
+    window.Vue.$on('myLocationChanged', function(_eventObject) {
+      _instance.handleLocationChanged(_eventObject);
+    });
+
+    // actively get the location from the nyc-control-panel
+    window.Vue.$emit('getLocation', {
+      'callback': _instance.getLocationCallback
+    });
+
+    // let nyc-gmap.vue knows nearbyTaxi has been chosen
+    window.Vue.$emit('controlPanelViewChanged', { 'control': 'nyc-geopolygon' });
+  },
   props: [],
   watch: {},
   methods: {
+    getLocationCallback: function(_loc) {
+      let _data={ 'location': _loc };
+      this.handleLocationChanged(_data);
+    },
+
+    handleLocationChanged: function(_eventObject) {
+      let _l=_eventObject['location'];
+
+      this.location.lat=_l['lat'];
+      this.location.lon=_l['lon'];
+      this.location.placename=_l['placename'];
+      this.location.gmapSuggestedPlacename=_l['gmapSuggestedPlacename'];
+
+      // reset
+      this.info.msg=undefined;
+    },
+
+    handleClick: function() {
+      console.log('* inside click');
+    },
+
+    getInfoMsgVisibilityClass: function() {
+      let _css={};
+      if (this.info.msg && this.info.msg!='') {
+        _css['showing']=true;
+        _css['hiding']=false;
+      } else {
+        _css['showing']=false;
+        _css['hiding']=true;
+      }
+      return _css;
+    }
 
   }
 };
@@ -11311,16 +11382,16 @@ module.exports={
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_vm._v("\n  geoshape ~\n")])}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"container-fluid",staticStyle:{"margin-top":"12px"}},[_c('div',{staticClass:"row"},[_c('div',{staticClass:"col-sm-12, col-md-12"},[_c('div',{staticClass:"n-c-panel-nearby-info-msg",class:_vm.getInfoMsgVisibilityClass()},[_c('i',{staticClass:"fa fa-warning",attrs:{"aria-hidden":"true"}}),_vm._v("\n        "+_vm._s(_vm.info.msg))])])]),_vm._v(" "),_c('div',{staticClass:"row"},[_c('div',{staticClass:"col-sm-12 col-md-12",staticStyle:{"margin-top":"8px"}},[_c('button',{staticClass:"btn btn-primary",staticStyle:{"margin-left":"0px"},on:{"click":function($event){_vm.handleClick()}}},[_vm._v("go")])])])])}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-62751f26", __vue__options__)
+    hotAPI.createRecord("data-v-00812486", __vue__options__)
   } else {
-    hotAPI.reload("data-v-62751f26", __vue__options__)
+    hotAPI.reload("data-v-00812486", __vue__options__)
   }
 })()}
 },{"vue":3,"vue-hot-reload-api":1}],8:[function(require,module,exports){
@@ -11471,6 +11542,85 @@ module.exports={
     },
 
     /*
+     *  estimate the boundsDiff to form a rectangle based on the
+     *  zoom value of the map
+     */
+    _getBoundsDiffByZoom: function(_mapZoom) {
+      let _boundsDiff=-1;
+      switch (_mapZoom) {
+        case 22:
+          _boundsDiff=0.00003;
+          break;
+        case 21:
+          _boundsDiff=0.00005;
+          break;
+        case 20:
+          _boundsDiff=0.0001;
+          break;
+        case 19:
+          _boundsDiff=0.0003;
+          break;
+        case 18:
+          _boundsDiff=0.0004;
+          break;
+        case 17:
+          _boundsDiff=0.001;
+          break;
+        case 16:
+          _boundsDiff=0.001;
+          break;
+        case 15:
+          _boundsDiff=0.002;
+          break;
+        case 14:
+          _boundsDiff=0.003;
+          break;
+        case 13:
+          _boundsDiff=0.005;
+          break;
+        case 12:
+          _boundsDiff=0.025;
+          break;
+        case 11:
+          _boundsDiff=0.05;
+          break;
+        case 10:
+          _boundsDiff=0.075;
+          break;
+        case 9:
+          _boundsDiff=0.1;
+          break;
+        case 8:
+          _boundsDiff=0.125;
+          break;
+        case 7:
+          _boundsDiff=0.45;
+          break;
+        case 6:
+          _boundsDiff=1.5;
+          break;
+        case 5:
+          _boundsDiff=3.5;
+          break;
+        case 4:
+          _boundsDiff=5;
+          break;
+        case 3:
+          _boundsDiff=15;
+          break;
+        case 2:
+          _boundsDiff=15;
+          break;
+        case 1:
+          _boundsDiff=15;
+          break;
+        default:
+         _boundsDiff=0.1;
+      }
+      return _boundsDiff;
+    },
+
+    /*
      *  toggle the boundingbox mode; can drag a bounds when mouse
      */
     toggleBoundingboxMode: function() {
@@ -11482,17 +11632,8 @@ module.exports={
           });
           // calculate the bounds diff based on zoom value
           let _mapZoom=window.gmapInstance.getZoom();
-          let _boundsDiff=0;
-          switch (_mapZoom) {
-            case 13:
-              _boundsDiff=0.005;
-              break;
-            case 11:
-              _boundsDiff=0.05;
-              break;
-            default:
-             _boundsDiff=0.1;
-          }
+          let _boundsDiff=this._getBoundsDiffByZoom(_mapZoom);
+
           let _bounds={
             north: (this.location.lat + _boundsDiff),
             south: (this.location.lat - _boundsDiff),
@@ -12133,9 +12274,9 @@ module.exports = {
       component: require('./component/nyc-boundingbox.vue')
     },
     {
-      path: '/geoShape',
-      name: '/geoShape',
-      component: require('./component/nyc-geoshape.vue')
+      path: '/geoPolygon',
+      name: '/geoPolygon',
+      component: require('./component/nyc-geopolygon.vue')
     }
     /*
     { path: '/',
@@ -12173,7 +12314,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-6053b9bf", __vue__options__)
   }
 })()}
-},{"./component/nyc-boundingbox.vue":5,"./component/nyc-geoshape.vue":7,"./component/nyc-nearby.vue":10,"vue":3,"vue-hot-reload-api":1,"vue-router":2}],13:[function(require,module,exports){
+},{"./component/nyc-boundingbox.vue":5,"./component/nyc-geopolygon.vue":7,"./component/nyc-nearby.vue":10,"vue":3,"vue-hot-reload-api":1,"vue-router":2}],13:[function(require,module,exports){
 ;(function(){
 
 
