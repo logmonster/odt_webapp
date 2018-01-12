@@ -135,6 +135,63 @@ var MainRoutes= function(
     }); // end -- msearch
   };
 
+  /*
+   *  handle the geopolygon search
+   */
+  let handleNycGeopolygonTaxiSearchGET = function(_req, _resp) {
+    let _queryObj=new _eb.RequestBodySearch();
+    let _r=_req.query;
+    let _size=1000;
+
+    if (_r['size']) {
+      _size=parseInt(_r['size'], 10);
+    }
+    _queryObj.size(_size);
+
+    // setup bool query and filter clause
+    let _bQ=new _eb.BoolQuery();
+    let _filterLst=[];
+
+    // geoPoints
+    let _gPoints=_r['geopolygonPoints'];
+    let _gPointsArr=[];
+    if (_gPoints) {
+      _gPoints.forEach(function(_pt, _idx) {
+        _gPointsArr.push({
+          'lat': (parseFloat(_pt['lat'], 0.0)),
+          'lon': (parseFloat(_pt['lon'], 0.0))
+        });
+      });
+    }
+    let _gPolygonQ=new _eb.GeoPolygonQuery('pickup_location.location');
+    _gPolygonQ.points(_gPointsArr);
+
+    _filterLst.push(_gPolygonQ);
+    _bQ.filter(_filterLst);
+    _queryObj.query(_bQ);
+
+    // msearch body
+    let _body=[];
+    let _dsl=_queryObj.toJSON();
+    _body.push({
+      "index": "nyc_taxi_hub_2016_11",
+      "type": "doc"
+    });
+    _body.push(_dsl);
+
+    // run the query
+    _client.msearch({
+      body: _body
+    }).then(function(_data) {
+      _resp.send({
+        'data': _data,
+        'dsl': _dsl
+      });
+    }, function(_err) {
+      _resp.send(_err);
+    }); // end -- msearch
+  };
+
   /**
    *  handle the save GMap api key to the key file
    */
@@ -227,6 +284,12 @@ var MainRoutes= function(
           handleNycBoundingboxSearchGET(_req, _resp);
         }
       );
+      _router.route('/api/nycGeopolygonTaxiSearchGET').
+        get(function(_req, _resp) {
+          handleNycGeopolygonTaxiSearchGET(_req, _resp);
+        }
+      );
+
 
 
 

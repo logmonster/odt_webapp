@@ -192,6 +192,78 @@ module.exports={
       _createMarkers(_markerMap);
     } // end -- if (_hits) valid
   },
+  createGeopolygonTaxiMarkers: function(_hits, _centerLat, _centerLon) {
+    if (_hits) {
+      let _markerMap={};
+
+      _setCenterMarker(_centerLat, _centerLon);
+      // create a map to filter out duplicated entries
+      let _geoField='pickup_location';
+      _hits.forEach(function(_hit, _idx) {
+        let _src=_hit['_source'];
+        let _loc=_src[_geoField]['location']
+        let _markerKey=_loc['lat']+','+_loc['lon'];
+
+        if (_markerMap[_markerKey]) {
+          _markerMap[_markerKey]['count']=_markerMap[_markerKey]['count']+1;
+
+        } else {
+          _markerMap[_markerKey]={
+            lat: _loc['lat'],
+            lon: _loc['lon'],
+            count: 1
+          };
+        }
+      });
+      _createMarkers(_markerMap);
+    } // end -- if (_hits) valid
+  },
+
+  /*
+   *  geopolygon =>
+   */
+  showGeopolygon: function(_locationObject, _boundsDiff) {
+    // get the center marker for polygon reference
+    let _gPolygon=undefined;
+    let _realCenter=undefined;
+    if (_locationObject &&
+      !isNaN(_locationObject.lat) &&
+      !isNaN(_locationObject.lon)) {
+      _realCenter={ lat: _locationObject.lat, lon: _locationObject.lon };
+
+    } else if (_centerMarker) {
+      _realCenter={
+        lat: _centerMarker.getPosition().lat(),
+        lon: _centerMarker.getPosition().lng() };
+
+    } else if (_nycCenterMarker) {
+      _realCenter={
+        lat: _nycCenterMarker.getPosition().lat(),
+        lon: _nycCenterMarker.getPosition().lng() };
+    }
+    // reset the center marker
+    _setCenterMarker(_realCenter.lat, _realCenter.lon);
+
+    // create the geopolygon (lat = height, lon = width from origin)
+    let _polygonPaths=[
+      { lat: (_realCenter.lat+_boundsDiff), lng: (_realCenter.lon+_boundsDiff) },
+      { lat: (_realCenter.lat+_boundsDiff), lng: (_realCenter.lon-_boundsDiff) },
+      { lat: (_realCenter.lat-_boundsDiff), lng: (_realCenter.lon-_boundsDiff) },
+      { lat: (_realCenter.lat-_boundsDiff), lng: (_realCenter.lon+_boundsDiff) }
+    ];
+    _gPolygon=new google.maps.Polygon({
+      // map is not set for the moment; let the caller handle
+      paths: _polygonPaths,
+      strokeColor: '#FF0000',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#FF0000',
+      fillOpacity: 0.35,
+      draggable: true,
+      editable: true
+    });
+    return _gPolygon;
+  },
 
   resetAllMarkersOnMap: function() {
     if (_nearbyMarkers && _nearbyMarkers.length>0) {

@@ -11303,6 +11303,19 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 function _model_n_geoshape(_inst) {
   return {
@@ -11315,7 +11328,8 @@ function _model_n_geoshape(_inst) {
     },
     'info': {
       'msg': undefined
-    }
+    },
+    'geopolygonPoints': []
   };
 }
 
@@ -11338,10 +11352,23 @@ module.exports={
 
     // let nyc-gmap.vue knows nearbyTaxi has been chosen
     window.Vue.$emit('controlPanelViewChanged', { 'control': 'nyc-geopolygon' });
+
+    // geoploygonPointsChanged
+    window.Vue.$on('geopolygonPointsChanged', function(_eventObject) {
+      _instance.geopolygonPoints = _eventObject['geopolygonPoints'];
+    });
   },
   props: [],
   watch: {},
   methods: {
+    getGeopolygonPoints: function() {
+      if (this.geopolygonPoints) {
+        return this.geopolygonPoints;
+      } else {
+        return [];
+      }
+    },
+
     getLocationCallback: function(_loc) {
       let _data={ 'location': _loc };
       this.handleLocationChanged(_data);
@@ -11360,7 +11387,52 @@ module.exports={
     },
 
     handleClick: function() {
-      console.log('* inside click');
+      // validate if the lat,lon has values
+      if (this.validation()) {
+        // reset
+        this.info.msg=undefined;
+        window.ajaxUtil.GET(
+          '/api/nycGeopolygonTaxiSearchGET',
+          {
+            /*
+            'lat': this.location.lat,
+            'lon': this.location.lon,
+            'distance': this.distance.value,
+            'distance_unit': this.distance.unit,
+            */
+            'geopolygonPoints': this.geopolygonPoints
+          },
+          this.cbGetNycGeopolygonTaxiSearchResult,
+          function(_jqXHR, _status, _err) {
+            console.log('* something wrong happened ~ ');
+            console.log(_err);
+          }, // _failCallback
+          null  // _finallyCallback
+        );
+      }
+    },
+    cbGetNycGeopolygonTaxiSearchResult: function(_data) {
+      if (_data && _data['data']) {
+        // call gmapUtil to add the points + reset existing points
+        window.Vue.$emit('geopolygonTaxiDataChanged', {
+          'data': _data['data']['responses'][0],
+          'dsl': _data['dsl']
+        });
+        //console.log(_data['dsl']);
+      }
+    },
+    validation: function() {
+      let _valid=true;
+
+      /*if (!this.location.lat || !this.location.lon) {
+        this.info.msg='either latitude or longitude is not provided !!!';
+        _valid=false;
+      }
+      if (_valid && (!this.distance.value || isNaN(this.distance.value))) {
+        this.info.msg='the distance must be provided !!!';
+        _valid=false;
+      }*/
+      return _valid;
     },
 
     getInfoMsgVisibilityClass: function() {
@@ -11382,7 +11454,7 @@ module.exports={
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"container-fluid",staticStyle:{"margin-top":"12px"}},[_c('div',{staticClass:"row"},[_c('div',{staticClass:"col-sm-12, col-md-12"},[_c('div',{staticClass:"n-c-panel-nearby-info-msg",class:_vm.getInfoMsgVisibilityClass()},[_c('i',{staticClass:"fa fa-warning",attrs:{"aria-hidden":"true"}}),_vm._v("\n        "+_vm._s(_vm.info.msg))])])]),_vm._v(" "),_c('div',{staticClass:"row"},[_c('div',{staticClass:"col-sm-12 col-md-12",staticStyle:{"margin-top":"8px"}},[_c('button',{staticClass:"btn btn-primary",staticStyle:{"margin-left":"0px"},on:{"click":function($event){_vm.handleClick()}}},[_vm._v("go")])])])])}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"container-fluid",staticStyle:{"margin-top":"12px"}},[_c('div',{staticClass:"row"},[_c('div',{staticClass:"col-sm-12, col-md-12"},[_c('div',{staticClass:"n-c-panel-nearby-info-msg",class:_vm.getInfoMsgVisibilityClass()},[_c('i',{staticClass:"fa fa-warning",attrs:{"aria-hidden":"true"}}),_vm._v("\n        "+_vm._s(_vm.info.msg))])])]),_vm._v(" "),_c('div',{staticClass:"row"},[_c('div',{staticClass:"n-c-panel-geopolyon-title"},[_vm._v("polygon geoPoint(s)")]),_vm._v(" "),_c('div',{staticClass:"container-fluid"},[_c('div',{staticClass:"row"},_vm._l((_vm.getGeopolygonPoints()),function(_gPoint,_idx){return _c('div',{staticClass:"col-sm-12 col-md-12"},[_c('div',{staticStyle:{"margin-top":"4px","margin-bottom":"4px"}},[_c('span',{staticClass:"n-c-panel-geopolyon-points-lat"},[_vm._v("\n              "+_vm._s(_gPoint['lat'])+"\n            ")]),_vm._v(" x "),_c('span',{staticClass:"n-c-panel-geopolyon-points-lon"},[_vm._v("\n              "+_vm._s(_gPoint['lon'])+"\n            ")])])])}))]),_vm._v(" "),_c('div',{staticClass:"col-sm-12 col-md-12",staticStyle:{"margin-top":"12px"}},[_c('button',{staticClass:"btn btn-primary",staticStyle:{"margin-left":"0px"},on:{"click":function($event){_vm.handleClick()}}},[_vm._v("go")])])])])}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -11435,7 +11507,10 @@ function _model_n_gmap(_inst) {
     'controlView': undefined,
 
     'boundingboxMode': false,
-    'boundingbox': undefined
+    'boundingbox': undefined,
+
+    'geopolygon': undefined,
+    'geopolygonPoints': []
 
   };
 } // end -- model
@@ -11460,6 +11535,10 @@ module.exports={
     window.Vue.$on('boundingboxTaxiDataChanged', function(_eventObject) {
       _instance.HandleBoundingboxTaxiDataChanged(_eventObject);
     });
+    window.Vue.$on('geopolygonTaxiDataChanged', function(_eventObject) {
+      _instance.handleGeopolygonTaxiDataChanged(_eventObject);
+    });
+
 
     window.Vue.$on('myLocationChanged', function(_eventObject) {
       _instance.handleLocationChanged(_eventObject);
@@ -11517,7 +11596,17 @@ module.exports={
         }
       }
     },
-
+    handleGeopolygonTaxiDataChanged: function(_eventObject) {
+      if (_eventObject) {
+        if (_eventObject['data'] && _eventObject['data']['hits']) {
+          let _hits=_eventObject['data']['hits']['hits'];
+          // reset markers first
+          window.gmapUtil.resetAllMarkersOnMap();
+          window.gmapUtil.createGeopolygonTaxiMarkers(
+            _hits, this.location.lat, this.location.lon);
+        }
+      }
+    },
 
     handleLocationChanged: function(_eventObject) {
       let _l=_eventObject['location'];
@@ -11529,17 +11618,106 @@ module.exports={
     },
 
     handleControlPanelViewChanged: function(_eventObject) {
+      // reset status info and polygons and boundingbox
+      this.resetStatusInfo();
+
       if (_eventObject) {
         //'control': 'nyc-nearby'
         this.controlView=_eventObject['control'];
+        if ('nyc-geopolygon'==this.controlView) {
+          this._showGeopolygon();
+        }
       }
-      this.resetStatusInfo();
     },
 
     resetStatusInfo: function() {
       this.statusInfo=undefined;
       this.removeBoundingbox();
+      this._removeGeopolygon();
     },
+
+    _showGeopolygon: function() {
+      let _instance = this;
+
+      if (window.gmapInstance) {
+        let _boundsDiff=this._getBoundsDiffByZoom(
+          window.gmapInstance.getZoom());
+        let _gPolygon=window.gmapUtil.showGeopolygon(
+          this.location, _boundsDiff);
+
+        if (_gPolygon) {
+          this.geopolygon=_gPolygon;
+          this.geopolygon.setMap(window.gmapInstance);
+          // add event listener
+          google.maps.event.addListener(
+            this.geopolygon.getPath(), 'insert_at',
+            function(_idx) {
+              _instance._geopolygonInsertAt(_idx);
+            }
+          );
+          google.maps.event.addListener(
+            this.geopolygon.getPath(), 'set_at',
+            function(_idx, _obj) {
+              _instance._geopolygonSetAt(_idx, _obj);
+            }
+          );
+          // get the first geopolygon co-ord(s)
+          setTimeout(function() {
+            _instance._getGeoploygonPoints();
+          }, 200);
+        }
+      }
+    },
+    _removeGeopolygon: function() {
+      if (this.geopolygon) {
+        // remove event listeners
+        google.maps.event.clearListeners(
+          this.geopolygon.getPath(), 'insert_at');
+        google.maps.event.clearListeners(
+          this.geopolygon.getPath(), 'set_at');
+
+        // setMap
+        this.geopolygon.setMap(null);
+        this.geopolygon=undefined;
+      }
+    },
+
+    _geopolygonInsertAt: function(_idx) {
+      //console.log('insert-at: '+_idx);
+      this._getGeoploygonPoints();
+    },
+    _geopolygonSetAt: function(_idx, _obj) {
+      //console.log('set-at: '+_idx);
+      // update the polygon co-ordinates
+      this._getGeoploygonPoints();
+    },
+
+    _getGeoploygonPoints: function() {
+      let _pointsArray=undefined;
+      if (this.geopolygon.getPaths()) {
+        /*
+         *  the data structure for getPaths() =>
+         *  MVCArray< MVCArray< LatLng > >
+         */
+        _pointsArray=this.geopolygon.getPaths().getArray();
+        if (_pointsArray) {
+          _pointsArray=_pointsArray[0].getArray();
+        }
+        if (_pointsArray) {
+          // reset
+          this.geopolygonPoints=[];
+
+          let _gPoints=this.geopolygonPoints;
+          _pointsArray.forEach(function(_point, _idx) {
+            _gPoints.push({ lat: _point.lat(), lon: _point.lng() });
+          });
+          window.Vue.$emit('geopolygonPointsChanged', {
+            geopolygonPoints: this.geopolygonPoints
+          });
+        } // end -- if pointsArray is valid
+      }
+    },
+
 
     /*
      *  estimate the boundsDiff to form a rectangle based on the
@@ -11690,6 +11868,8 @@ module.exports={
       if (this.boundingbox) {
         this.boundingbox.setMap(null);
         this.boundingbox=undefined;
+
+        this.boundingboxMode=false;
       }
     },
 
@@ -12509,6 +12689,78 @@ module.exports={
       });
       _createMarkers(_markerMap);
     } // end -- if (_hits) valid
+  },
+  createGeopolygonTaxiMarkers: function(_hits, _centerLat, _centerLon) {
+    if (_hits) {
+      let _markerMap={};
+
+      _setCenterMarker(_centerLat, _centerLon);
+      // create a map to filter out duplicated entries
+      let _geoField='pickup_location';
+      _hits.forEach(function(_hit, _idx) {
+        let _src=_hit['_source'];
+        let _loc=_src[_geoField]['location']
+        let _markerKey=_loc['lat']+','+_loc['lon'];
+
+        if (_markerMap[_markerKey]) {
+          _markerMap[_markerKey]['count']=_markerMap[_markerKey]['count']+1;
+
+        } else {
+          _markerMap[_markerKey]={
+            lat: _loc['lat'],
+            lon: _loc['lon'],
+            count: 1
+          };
+        }
+      });
+      _createMarkers(_markerMap);
+    } // end -- if (_hits) valid
+  },
+
+  /*
+   *  geopolygon =>
+   */
+  showGeopolygon: function(_locationObject, _boundsDiff) {
+    // get the center marker for polygon reference
+    let _gPolygon=undefined;
+    let _realCenter=undefined;
+    if (_locationObject &&
+      !isNaN(_locationObject.lat) &&
+      !isNaN(_locationObject.lon)) {
+      _realCenter={ lat: _locationObject.lat, lon: _locationObject.lon };
+
+    } else if (_centerMarker) {
+      _realCenter={
+        lat: _centerMarker.getPosition().lat(),
+        lon: _centerMarker.getPosition().lng() };
+
+    } else if (_nycCenterMarker) {
+      _realCenter={
+        lat: _nycCenterMarker.getPosition().lat(),
+        lon: _nycCenterMarker.getPosition().lng() };
+    }
+    // reset the center marker
+    _setCenterMarker(_realCenter.lat, _realCenter.lon);
+
+    // create the geopolygon (lat = height, lon = width from origin)
+    let _polygonPaths=[
+      { lat: (_realCenter.lat+_boundsDiff), lng: (_realCenter.lon+_boundsDiff) },
+      { lat: (_realCenter.lat+_boundsDiff), lng: (_realCenter.lon-_boundsDiff) },
+      { lat: (_realCenter.lat-_boundsDiff), lng: (_realCenter.lon-_boundsDiff) },
+      { lat: (_realCenter.lat-_boundsDiff), lng: (_realCenter.lon+_boundsDiff) }
+    ];
+    _gPolygon=new google.maps.Polygon({
+      // map is not set for the moment; let the caller handle
+      paths: _polygonPaths,
+      strokeColor: '#FF0000',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#FF0000',
+      fillOpacity: 0.35,
+      draggable: true,
+      editable: true
+    });
+    return _gPolygon;
   },
 
   resetAllMarkersOnMap: function() {

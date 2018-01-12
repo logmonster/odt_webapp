@@ -10,9 +10,22 @@
     </div>
     <div class='row'>
       <!-- polygon -->
-
+      <div class="n-c-panel-geopolyon-title">polygon geoPoint(s)</div>
+      <div class='container-fluid'>
+        <div class='row'>
+          <div v-for="(_gPoint, _idx) in getGeopolygonPoints()" class='col-sm-12 col-md-12'>
+            <div style="margin-top: 4px; margin-bottom: 4px;">
+              <span class='n-c-panel-geopolyon-points-lat'>
+                {{_gPoint['lat']}}
+              </span>&nbsp;x&nbsp;<span class='n-c-panel-geopolyon-points-lon'>
+                {{_gPoint['lon']}}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
       <!-- button -->
-      <div class='col-sm-12 col-md-12' style="margin-top: 8px;">
+      <div class='col-sm-12 col-md-12' style="margin-top: 12px;">
         <button @click='handleClick()'
           class="btn btn-primary" style="margin-left: 0px;">go</button>
       </div>
@@ -32,7 +45,8 @@ function _model_n_geoshape(_inst) {
     },
     'info': {
       'msg': undefined
-    }
+    },
+    'geopolygonPoints': []
   };
 }
 
@@ -55,10 +69,23 @@ module.exports={
 
     // let nyc-gmap.vue knows nearbyTaxi has been chosen
     window.Vue.$emit('controlPanelViewChanged', { 'control': 'nyc-geopolygon' });
+
+    // geoploygonPointsChanged
+    window.Vue.$on('geopolygonPointsChanged', function(_eventObject) {
+      _instance.geopolygonPoints = _eventObject['geopolygonPoints'];
+    });
   },
   props: [],
   watch: {},
   methods: {
+    getGeopolygonPoints: function() {
+      if (this.geopolygonPoints) {
+        return this.geopolygonPoints;
+      } else {
+        return [];
+      }
+    },
+
     getLocationCallback: function(_loc) {
       let _data={ 'location': _loc };
       this.handleLocationChanged(_data);
@@ -77,7 +104,52 @@ module.exports={
     },
 
     handleClick: function() {
-      console.log('* inside click');
+      // validate if the lat,lon has values
+      if (this.validation()) {
+        // reset
+        this.info.msg=undefined;
+        window.ajaxUtil.GET(
+          '/api/nycGeopolygonTaxiSearchGET',
+          {
+            /*
+            'lat': this.location.lat,
+            'lon': this.location.lon,
+            'distance': this.distance.value,
+            'distance_unit': this.distance.unit,
+            */
+            'geopolygonPoints': this.geopolygonPoints
+          },
+          this.cbGetNycGeopolygonTaxiSearchResult,
+          function(_jqXHR, _status, _err) {
+            console.log('* something wrong happened ~ ');
+            console.log(_err);
+          }, // _failCallback
+          null  // _finallyCallback
+        );
+      }
+    },
+    cbGetNycGeopolygonTaxiSearchResult: function(_data) {
+      if (_data && _data['data']) {
+        // call gmapUtil to add the points + reset existing points
+        window.Vue.$emit('geopolygonTaxiDataChanged', {
+          'data': _data['data']['responses'][0],
+          'dsl': _data['dsl']
+        });
+        //console.log(_data['dsl']);
+      }
+    },
+    validation: function() {
+      let _valid=true;
+
+      /*if (!this.location.lat || !this.location.lon) {
+        this.info.msg='either latitude or longitude is not provided !!!';
+        _valid=false;
+      }
+      if (_valid && (!this.distance.value || isNaN(this.distance.value))) {
+        this.info.msg='the distance must be provided !!!';
+        _valid=false;
+      }*/
+      return _valid;
     },
 
     getInfoMsgVisibilityClass: function() {

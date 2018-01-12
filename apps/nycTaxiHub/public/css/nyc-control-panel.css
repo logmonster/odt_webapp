@@ -34,3 +34,21 @@
 .n-c-panel-nearby-info-msg {
   color: #ff4444;
 }
+
+/*    geopolygon    */
+.n-c-panel-geopolyon-title {
+  padding-left: 12px; padding-right: 12px;
+  color: #aaa;
+}
+.n-c-panel-geopolyon-points-lat {
+  border: 1px solid #00897b;
+  border-radius: 4px;
+  padding: 4px;
+  color: #4B515D;
+}
+.n-c-panel-geopolyon-points-lon {
+  border: 1px solid #03a9f4;
+  border-radius: 4px;
+  padding: 4px;
+  color: #4B515D;
+}

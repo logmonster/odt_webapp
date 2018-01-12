@@ -37,7 +37,10 @@ function _model_n_gmap(_inst) {
     'controlView': undefined,
 
     'boundingboxMode': false,
-    'boundingbox': undefined
+    'boundingbox': undefined,
+
+    'geopolygon': undefined,
+    'geopolygonPoints': []
 
   };
 } // end -- model
@@ -62,6 +65,10 @@ module.exports={
     window.Vue.$on('boundingboxTaxiDataChanged', function(_eventObject) {
       _instance.HandleBoundingboxTaxiDataChanged(_eventObject);
     });
+    window.Vue.$on('geopolygonTaxiDataChanged', function(_eventObject) {
+      _instance.handleGeopolygonTaxiDataChanged(_eventObject);
+    });
+
 
     window.Vue.$on('myLocationChanged', function(_eventObject) {
       _instance.handleLocationChanged(_eventObject);
@@ -119,7 +126,17 @@ module.exports={
         }
       }
     },
-
+    handleGeopolygonTaxiDataChanged: function(_eventObject) {
+      if (_eventObject) {
+        if (_eventObject['data'] && _eventObject['data']['hits']) {
+          let _hits=_eventObject['data']['hits']['hits'];
+          // reset markers first
+          window.gmapUtil.resetAllMarkersOnMap();
+          window.gmapUtil.createGeopolygonTaxiMarkers(
+            _hits, this.location.lat, this.location.lon);
+        }
+      }
+    },
 
     handleLocationChanged: function(_eventObject) {
       let _l=_eventObject['location'];
@@ -131,17 +148,106 @@ module.exports={
     },
 
     handleControlPanelViewChanged: function(_eventObject) {
+      // reset status info and polygons and boundingbox
+      this.resetStatusInfo();
+
       if (_eventObject) {
         //'control': 'nyc-nearby'
         this.controlView=_eventObject['control'];
+        if ('nyc-geopolygon'==this.controlView) {
+          this._showGeopolygon();
+        }
       }
-      this.resetStatusInfo();
     },
 
     resetStatusInfo: function() {
       this.statusInfo=undefined;
       this.removeBoundingbox();
+      this._removeGeopolygon();
     },
+
+    _showGeopolygon: function() {
+      let _instance = this;
+
+      if (window.gmapInstance) {
+        let _boundsDiff=this._getBoundsDiffByZoom(
+          window.gmapInstance.getZoom());
+        let _gPolygon=window.gmapUtil.showGeopolygon(
+          this.location, _boundsDiff);
+
+        if (_gPolygon) {
+          this.geopolygon=_gPolygon;
+          this.geopolygon.setMap(window.gmapInstance);
+          // add event listener
+          google.maps.event.addListener(
+            this.geopolygon.getPath(), 'insert_at',
+            function(_idx) {
+              _instance._geopolygonInsertAt(_idx);
+            }
+          );
+          google.maps.event.addListener(
+            this.geopolygon.getPath(), 'set_at',
+            function(_idx, _obj) {
+              _instance._geopolygonSetAt(_idx, _obj);
+            }
+          );
+          // get the first geopolygon co-ord(s)
+          setTimeout(function() {
+            _instance._getGeoploygonPoints();
+          }, 200);
+        }
+      }
+    },
+    _removeGeopolygon: function() {
+      if (this.geopolygon) {
+        // remove event listeners
+        google.maps.event.clearListeners(
+          this.geopolygon.getPath(), 'insert_at');
+        google.maps.event.clearListeners(
+          this.geopolygon.getPath(), 'set_at');
+
+        // setMap
+        this.geopolygon.setMap(null);
+        this.geopolygon=undefined;
+      }
+    },
+
+    _geopolygonInsertAt: function(_idx) {
+      //console.log('insert-at: '+_idx);
+      this._getGeoploygonPoints();
+    },
+    _geopolygonSetAt: function(_idx, _obj) {
+      //console.log('set-at: '+_idx);
+      // update the polygon co-ordinates
+      this._getGeoploygonPoints();
+    },
+
+    _getGeoploygonPoints: function() {
+      let _pointsArray=undefined;
+      if (this.geopolygon.getPaths()) {
+        /*
+         *  the data structure for getPaths() =>
+         *  MVCArray< MVCArray< LatLng > >
+         */
+        _pointsArray=this.geopolygon.getPaths().getArray();
+        if (_pointsArray) {
+          _pointsArray=_pointsArray[0].getArray();
+        }
+        if (_pointsArray) {
+          // reset
+          this.geopolygonPoints=[];
+
+          let _gPoints=this.geopolygonPoints;
+          _pointsArray.forEach(function(_point, _idx) {
+            _gPoints.push({ lat: _point.lat(), lon: _point.lng() });
+          });
+          window.Vue.$emit('geopolygonPointsChanged', {
+            geopolygonPoints: this.geopolygonPoints
+          });
+        } // end -- if pointsArray is valid
+      }
+    },
+
 
     /*
      *  estimate the boundsDiff to form a rectangle based on the
@@ -292,6 +398,8 @@ module.exports={
       if (this.boundingbox) {
         this.boundingbox.setMap(null);
         this.boundingbox=undefined;
+
+        this.boundingboxMode=false;
       }
     },
 
