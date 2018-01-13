@@ -15,8 +15,6 @@
 }
 
 .main-container {
-  padding-top: 4px;
-  padding-bottom: 4px;
   /* added for spy-panel (claim required height / room for it) */
   margin-bottom: 250px;
 }

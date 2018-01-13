@@ -2857,7 +2857,7 @@ if (inBrowser && window.Vue) {
 module.exports = VueRouter;
 
 }).call(this,require('_process'))
-},{"_process":15}],3:[function(require,module,exports){
+},{"_process":16}],3:[function(require,module,exports){
 (function (process,global){
 /*!
  * Vue.js v2.5.13
@@ -10784,7 +10784,7 @@ Vue$3.nextTick(function () {
 module.exports = Vue$3;
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":15}],4:[function(require,module,exports){
+},{"_process":16}],4:[function(require,module,exports){
 
 var Vue = require('vue')
 var NYC = require('./vue/nyc-main.vue')
@@ -10793,6 +10793,7 @@ var NYC = require('./vue/nyc-main.vue')
 Vue.component('nyc-header-navigator', require('./vue/component/nyc-header-navigator.vue'));
 Vue.component('nyc-control-panel', require('./vue/component/nyc-control-panel.vue'));
 Vue.component('nyc-gmap', require('./vue/component/nyc-gmap.vue'));
+Vue.component('nyc-spy-panel', require('./vue/component/spy-panel.vue'));
 
 // setup Router
 var Router = require('vue-router');
@@ -10820,7 +10821,7 @@ let app = new Vue({
   }
 });
 
-},{"./vue/component/nyc-control-panel.vue":6,"./vue/component/nyc-gmap.vue":8,"./vue/component/nyc-header-navigator.vue":9,"./vue/nyc-main.vue":11,"./vue/router.vue":12,"./vue/util/gmapUtil.vue":13,"./vue/util/jQueryAjaxUtil.vue":14,"vue":3,"vue-router":2}],5:[function(require,module,exports){
+},{"./vue/component/nyc-control-panel.vue":6,"./vue/component/nyc-gmap.vue":8,"./vue/component/nyc-header-navigator.vue":9,"./vue/component/spy-panel.vue":11,"./vue/nyc-main.vue":12,"./vue/router.vue":13,"./vue/util/gmapUtil.vue":14,"./vue/util/jQueryAjaxUtil.vue":15,"vue":3,"vue-router":2}],5:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -12241,6 +12242,122 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 //
 //
 //
+
+// model
+function _model_spy_panel(_instance) {
+  return {
+    'instance': _instance,
+    'isPanelShown': false,
+    'viewFileContent': ''
+  };
+}
+
+module.exports = {
+  'name': 'spy-panel',
+  data: function() {
+    return new _model_spy_panel(this);
+  },
+  watch: {
+    viewFile: function(_newValue) {
+      let _instance=this;
+      window.ajaxUtil.GET(
+        _newValue,
+        {},
+        function(_data, _status, _jqXHR) {
+          _instance.viewFileContent=_data;
+        },
+        function(_jqXHR, _status, _err) {
+          _instance.viewFileContent=_err;
+        }
+      );
+    }
+  },
+  mounted: function() {
+    let _instance = this;
+    // endable tooltip (need to uncomment the shop.html entry for popper.js)
+    //$('.spy-panel-icon').tooltip();
+
+    // load the given viewFile (containing the code samples for the relevant page)
+    window.ajaxUtil.GET(
+      this.viewFile,
+      {},
+      function(_data, _status, _jqXHR) {
+        _instance.viewFileContent=_data;
+      },
+      function(_jqXHR, _status, _err) {
+        _instance.viewFileContent=_err;
+      }
+    );
+
+  },
+  props: [ 'viewFile' ],
+  methods: {
+    /*
+     *  toggle the visibility of the spy panel
+     */
+    togglePanelVisibility: function() {
+      this.isPanelShown = !this.isPanelShown;
+      window.Vue.$emit('spyPanelViewToggled', { 'visibility': this.isPanelShown });
+    }
+  }
+};
+
+})()
+if (module.exports.__esModule) module.exports = module.exports.default
+var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
+if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"fixed-bottom"},[_c('span',{staticClass:"spy-panel-icon",class:{ 'showing-inline': !_vm.isPanelShown, 'hiding': _vm.isPanelShown },attrs:{"data-toggle":"tooltip","data-placement":"top","title":"\"spy panel\" - toggle to see the various queries on this page"},on:{"click":function($event){_vm.togglePanelVisibility()}}},[_c('i',{staticClass:"fa fa-arrow-circle-up pointer",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('span',{staticClass:"spy-panel-icon",class:{ 'showing-inline': _vm.isPanelShown, 'hiding': !_vm.isPanelShown },attrs:{"data-toggle":"tooltip","data-placement":"top","title":"\"spy panel\" - toggle to see the various queries on this page"},on:{"click":function($event){_vm.togglePanelVisibility()}}},[_c('i',{staticClass:"fa fa-arrow-circle-down pointer",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('span',{staticClass:"pointer",staticStyle:{"padding-left":"6px","background-color":"white"},on:{"click":function($event){_vm.togglePanelVisibility()}}},[_vm._v("\n    \"spy panel\" - toggle to see the various queries on this page")]),_vm._v(" "),_c('div',{staticClass:"spy-panel-container",class:{ 'showing': _vm.isPanelShown, 'hiding': !_vm.isPanelShown }},[_c('div',{staticClass:"spy-panel-inner-container"},[_c('div',{domProps:{"innerHTML":_vm._s(_vm.viewFileContent)}})])])])}
+__vue__options__.staticRenderFns = []
+if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-28572e9b", __vue__options__)
+  } else {
+    hotAPI.reload("data-v-28572e9b", __vue__options__)
+  }
+})()}
+},{"vue":3,"vue-hot-reload-api":1}],12:[function(require,module,exports){
+;(function(){
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -12278,7 +12395,9 @@ function _model_n_main(_instance) {
       'nokeyfile': false,
       'msg': undefined,
       'key': undefined
-    }
+    },
+    'spyPanelViewFile': '/clientView/code/taxiNearbySpy.html',
+    'isSpyPanelViewVisible': false
   };
 } // end model
 
@@ -12310,6 +12429,9 @@ module.exports={
       );
     }, 100);
 
+    window.Vue.$on('spyPanelViewToggled', function(_eventObject) {
+      _instance.isSpyPanelViewVisible=_eventObject['visibility'];
+    });
 
   },
   watch: {},
@@ -12406,6 +12528,17 @@ module.exports={
         _css['hide']=true;
       }
       return _css;
+    },
+
+    getCssClassForMainContainer: function() {
+      let _css={};
+
+      if (this.isSpyPanelViewVisible) {
+        _css['main-container']=true;
+      } else {
+        _css['main-container']=false;
+      }
+      return _css;
     }
 
   }
@@ -12416,7 +12549,7 @@ module.exports={
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('nyc-header-navigator'),_vm._v(" "),_c('div',{staticClass:"container-fluid"},[_c('div',{staticClass:"row n-main-container"},[_c('div',{staticClass:"col-sm-6 col-md-5",staticStyle:{"padding":"0px"}},[_c('nyc-control-panel')],1),_vm._v(" "),_c('div',{staticClass:"col-sm-6 col-md-7",staticStyle:{"padding":"0px"}},[_c('nyc-gmap')],1)])]),_vm._v(" "),_c('div',{staticClass:"modal fade",attrs:{"id":"dlgGMapApiKey","tabindex":"-1","role":"dialog","aria-labelledby":"myModalLabel","aria-hidden":"true"}},[_c('div',{staticClass:"modal-dialog",attrs:{"role":"document"}},[_c('div',{staticClass:"jumbotron text-center blue-grey lighten-5 ",staticStyle:{"border-radius":"3px"}},[_vm._m(0),_vm._v(" "),_c('p',{staticClass:"pt-2 font-bold indigo-text"},[_c('strong',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.gmap.key),expression:"gmap.key"}],attrs:{"type":"text","placeholder":"enter the api key here"},domProps:{"value":(_vm.gmap.key)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.gmap, "key", $event.target.value)}}})])]),_vm._v(" "),_c('p',{staticClass:"pt-2 font-bold pink-text",class:_vm.getCssClassForApiKeyDlg()},[_c('strong',[_vm._v(_vm._s(_vm.gmap.msg))])]),_vm._v(" "),_vm._m(1),_vm._v(" "),_c('hr',{}),_vm._v(" "),_c('button',{staticClass:"btn btn-primary btn-rounded",on:{"click":function($event){_vm.handleSaveApiKey()}}},[_vm._v("\n          save "),_c('i',{staticClass:"fa fa-check",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('button',{staticClass:"btn btn-info btn-rounded",on:{"click":function($event){_vm.handleApiKeyCancel()}}},[_vm._v("\n          cancel "),_c('i',{staticClass:"fa fa-close",attrs:{"aria-hidden":"true"}})])])])])],1)}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{class:_vm.getCssClassForMainContainer(),staticStyle:{"padding-top":"4px","padding-bottom":"4px"}},[_c('nyc-header-navigator'),_vm._v(" "),_c('div',{staticClass:"container-fluid"},[_c('div',{staticClass:"row n-main-container"},[_c('div',{staticClass:"col-sm-6 col-md-5",staticStyle:{"padding":"0px"}},[_c('nyc-control-panel')],1),_vm._v(" "),_c('div',{staticClass:"col-sm-6 col-md-7",staticStyle:{"padding":"0px"}},[_c('nyc-gmap')],1)])]),_vm._v(" "),_c('div',{staticClass:"modal fade",attrs:{"id":"dlgGMapApiKey","tabindex":"-1","role":"dialog","aria-labelledby":"myModalLabel","aria-hidden":"true"}},[_c('div',{staticClass:"modal-dialog",attrs:{"role":"document"}},[_c('div',{staticClass:"jumbotron text-center blue-grey lighten-5 ",staticStyle:{"border-radius":"3px"}},[_vm._m(0),_vm._v(" "),_c('p',{staticClass:"pt-2 font-bold indigo-text"},[_c('strong',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.gmap.key),expression:"gmap.key"}],attrs:{"type":"text","placeholder":"enter the api key here"},domProps:{"value":(_vm.gmap.key)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.gmap, "key", $event.target.value)}}})])]),_vm._v(" "),_c('p',{staticClass:"pt-2 font-bold pink-text",class:_vm.getCssClassForApiKeyDlg()},[_c('strong',[_vm._v(_vm._s(_vm.gmap.msg))])]),_vm._v(" "),_vm._m(1),_vm._v(" "),_c('hr',{}),_vm._v(" "),_c('button',{staticClass:"btn btn-primary btn-rounded",on:{"click":function($event){_vm.handleSaveApiKey()}}},[_vm._v("\n          save "),_c('i',{staticClass:"fa fa-check",attrs:{"aria-hidden":"true"}})]),_vm._v(" "),_c('button',{staticClass:"btn btn-info btn-rounded",on:{"click":function($event){_vm.handleApiKeyCancel()}}},[_vm._v("\n          cancel "),_c('i',{staticClass:"fa fa-close",attrs:{"aria-hidden":"true"}})])])])]),_vm._v(" "),_c('nyc-spy-panel',{attrs:{"viewFile":_vm.spyPanelViewFile}})],1)}
 __vue__options__.staticRenderFns = [function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('h1',{staticClass:"card-title h2-responsive font-bold mt-3 indigo-text"},[_c('strong',[_vm._v("please enter the Google Map API key here\n          ")])])},function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"d-flex justify-content-center"},[_c('p',{staticClass:"card-text my-3",staticStyle:{"max-width":"43rem"}},[_vm._v("\n              if you don't have one yet, apply for the\n              "),_c('br'),_c('span',{staticClass:"blue-text"},[_vm._v("Google Map API key")]),_vm._v(" "),_c('br'),_vm._v(" at the following\n              "),_c('a',{attrs:{"href":"https://developers.google.com/maps/documentation/javascript/get-api-key?hl=en","target":"_blank"}},[_vm._v("\n                link")])])])}]
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -12428,7 +12561,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-202c9ee4", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],12:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],13:[function(require,module,exports){
 ;(function(){
 
 /* ------------------------------------------------------------------------
@@ -12494,7 +12627,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-6053b9bf", __vue__options__)
   }
 })()}
-},{"./component/nyc-boundingbox.vue":5,"./component/nyc-geopolygon.vue":7,"./component/nyc-nearby.vue":10,"vue":3,"vue-hot-reload-api":1,"vue-router":2}],13:[function(require,module,exports){
+},{"./component/nyc-boundingbox.vue":5,"./component/nyc-geopolygon.vue":7,"./component/nyc-nearby.vue":10,"vue":3,"vue-hot-reload-api":1,"vue-router":2}],14:[function(require,module,exports){
 ;(function(){
 
 
@@ -12788,7 +12921,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-811449c4", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],14:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],15:[function(require,module,exports){
 ;(function(){
 //
 
@@ -12870,7 +13003,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-f755b5f2", __vue__options__)
   }
 })()}
-},{"vue":3,"vue-hot-reload-api":1}],15:[function(require,module,exports){
+},{"vue":3,"vue-hot-reload-api":1}],16:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 

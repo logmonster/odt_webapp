@@ -6,6 +6,7 @@ var NYC = require('./vue/nyc-main.vue')
 Vue.component('nyc-header-navigator', require('./vue/component/nyc-header-navigator.vue'));
 Vue.component('nyc-control-panel', require('./vue/component/nyc-control-panel.vue'));
 Vue.component('nyc-gmap', require('./vue/component/nyc-gmap.vue'));
+Vue.component('nyc-spy-panel', require('./vue/component/spy-panel.vue'));
 
 // setup Router
 var Router = require('vue-router');

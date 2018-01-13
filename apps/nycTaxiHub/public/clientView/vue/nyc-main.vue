@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div :class="getCssClassForMainContainer()"
+    style="padding-top: 4px; padding-bottom: 4px;">
     <!-- header navigator -->
     <nyc-header-navigator></nyc-header-navigator>
 
@@ -59,7 +60,7 @@
     </div>
 
     <!-- spy panel -->
-
+    <nyc-spy-panel :viewFile='spyPanelViewFile'></nyc-spy-panel>
 
   </div>
 </template>
@@ -72,7 +73,9 @@ function _model_n_main(_instance) {
       'nokeyfile': false,
       'msg': undefined,
       'key': undefined
-    }
+    },
+    'spyPanelViewFile': '/clientView/code/taxiNearbySpy.html',
+    'isSpyPanelViewVisible': false
   };
 } // end model
 
@@ -104,6 +107,9 @@ module.exports={
       );
     }, 100);
 
+    window.Vue.$on('spyPanelViewToggled', function(_eventObject) {
+      _instance.isSpyPanelViewVisible=_eventObject['visibility'];
+    });
 
   },
   watch: {},
@@ -198,6 +204,17 @@ module.exports={
       } else {
         _css['show']=false;
         _css['hide']=true;
+      }
+      return _css;
+    },
+
+    getCssClassForMainContainer: function() {
+      let _css={};
+
+      if (this.isSpyPanelViewVisible) {
+        _css['main-container']=true;
+      } else {
+        _css['main-container']=false;
       }
       return _css;
     }
