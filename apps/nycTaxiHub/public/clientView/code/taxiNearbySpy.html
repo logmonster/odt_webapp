@@ -10,11 +10,19 @@
   </ul>
 
   <div class='sf-chapter-sub-label'>the NYC Taxi Hub app and its components</div>
-  <div class='sf-paragraph-sub text-justify'>
+  <div class='sf-paragraph-sub text-justify' style="overflow: auto;">
+    <img src='/image/spy/nearby00.png'
+      class="pointer"
+      onclick="window.open('/image/spy/nearby00.png', '_blank');"
+      style='width: 400px; float: left; margin-right: 4px; border: 1px solid #ddd;' />
     the NYC Taxi Hub app is built to illustrate the power of <var>Elasticsearch's</var>
     <mark>GEOLOCATION</mark> capabilities; as well as how it could integrate with 3rd party
     <var>MAP</var> libraries such as
     <var>Google Map</var>&nbsp;<i class="fa fa-copyright" aria-hidden="true"></i>.
+    One important point to note is that the dataset is based on the
+    <a href='http://www.nyc.gov/html/tlc/html/passenger/passenger.shtml' target="_blank">NYC taxi</a>
+    information; hence if you are providing a GeoPoint outside NYC, you won't
+    be able to see any search result return.
     <p style="margin-top: 8px;"/>
     PS. The view technology stack chosen for the app is
     <mark><a href='https://vuejs.org/' target="_blank">Vue.js</a></mark>.
@@ -32,6 +40,85 @@
     <i class="fa fa-smile-o" aria-hidden="true"></i>.
   </div>
 
+  <div class='sf-chapter-sub-label'>"Set my Location" component</div>
+  <div class='sf-paragraph-sub text-justify' style="overflow: auto;">
+    this component's main goal is to let you key in a valid <var>GeoPoint</var>
+    to set the <mark>center marker</mark> on the Map. Another way to set
+    the GeoPoint (the latitude and longitude pair) is by entering a place name;
+    this place name is used to retrieve the corresponding GeoPoint by the
+    <var>Google Maps Geocoding API</var>.
+    <p style="margin-top: 8px;"/>
+    PS. there are cases that the place name given might not be recognizable OR
+    it could be recognized as another place instead.
+    <p style="margin-top: 8px;"/>
+    PS. since this course is based on how to integrate Elasticsearch Geo
+    capabilities with the View stack technology; details on how to invoke
+    Google Maps API are skipped; but do feel free to read the code on how to
+    drive Google Maps to work. <i class="fa fa-smile-o" aria-hidden="true"></i>
+  </div>
+
+  <div class='sf-chapter-sub-label'>"Nearby Taxi" component</div>
+  <div class='sf-paragraph-sub text-justify' style="overflow: auto;">
+    by providing the <var>distance</var> in either <mark>miles</mark> OR
+    <mark>km</mark>; we could get back all the taxi(s) within the
+    given distance originating from the center marker indicated by the
+    "Set my Location" component.
+    <p style="margin-top: 8px;"/>
+    We are using the <mark>geo-distance</mark> query to get back the results:
+  </div>
+
+  <div class='sf-paragraph-sub text-justify' >
+    <div>
+      <code>
+        GET nyc_taxi_hub_2016_11/_search <br/>
+        { <br/>
+          <sp/>"size": 1000, <br/>
+          <sp/>"query": { <br/>
+            <sp/><sp/>"bool": { <br/>
+              <sp/><sp/><sp/>"filter": [ <br/>
+                <sp/><sp/><sp/><sp/>{ <br/>
+                  <sp/><sp/><sp/><sp/><sp/>"geo_distance": { <br/>
+                    <sp/><sp/><sp/><sp/><sp/><sp/>"distance": "2miles", <br/>
+                    <sp/><sp/><sp/><sp/><sp/><sp/>"pickup_location.location": { <br/>
+                      <sp/><sp/><sp/><sp/><sp/><sp/><sp/>"lon": -73.96535510000001, <br/>
+                      <sp/><sp/><sp/><sp/><sp/><sp/><sp/>"lat": 40.7828647 <br/>
+                    <sp/><sp/><sp/><sp/><sp/><sp/>} <br/>
+                  <sp/><sp/><sp/><sp/><sp/>} <br/>
+                <sp/><sp/><sp/><sp/>} <br/>
+              <sp/><sp/><sp/>] <br/>
+            <sp/><sp/>} <br/>
+          <sp/>} <br/>
+        } <br/>
+      </code>
+    </div>
+    Now we get back the 1st 1000 documents (taxis) based on the GeoPoint of
+    the provided center marker. The field we use to calculate the distance is
+    based on <var>pickup_location.location</var> which is a
+    <mark>geo_point</mark> data-type.
+  </div>
+
+  <div class='sf-chapter-sub-label'>Summary</div>
+  <div class='sf-paragraph-sub text-justify'>
+    Cool! In this section, we have covered and run through
+    <mark><a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-distance-query.html'
+      target="_blank">Geo-distance Query</a></mark>.
+    <p style="margin-top: 8px;"/>
+    By now, you have an idea how Geo-distance works! In real world use cases,
+    shared-economy transportation apps use similar geolocation technologies to
+    locate vehicles (automobiles, taxis or vans) for services. Basically, the
+    vehicles would update their geo-locatin through GPS; take an example, if
+    you are trying to call a vehicle (could be a taxi) at NYC Times Square, the
+    app would use Times Square's latitude and longitude pair as the origin and
+    starts to find the available vehicles within a certain distance (e.g. 2 miles).
+    Theoretically, the vehicles should be sorted or scored base on how near
+    they are to the origin point.
+    <p style="margin-top: 8px;"/>
+    There are so many applications that also make use of Geolocations technology;
+    dating apps and chat-based apps also have geo-distance features like
+    "find a person nearby". Typically if your business or app could collect
+    geolocation information, there might be a chance to add new services / features
+    based on geo-distance(s).
+  </div>
 
   <div class='sf-paragraph-sub'>
     Happy Geo-Searching <i class="fa fa-search" aria-hidden="true"></i>
