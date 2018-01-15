@@ -104,11 +104,14 @@ module.exports={
 
     // let nyc-gmap.vue knows boundingbox has been chosen
     window.Vue.$emit('controlPanelViewChanged', { 'control': 'nyc-boundingbox' });
-
+    
     // handle the boundingBox bounds change
     window.Vue.$on('boundingboxBoundsChanged', function(_eventObject) {
       _instance.handleBoundingboxBoundsChange(_eventObject);
     });
+
+    window.Vue.$emit('updateSpyPanelFile', {
+      'file': '/clientView/code/taxiBoundingBoxSpy.html' });
   },
   props: [],
   watch: {},

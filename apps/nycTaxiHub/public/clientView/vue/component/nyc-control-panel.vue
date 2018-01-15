@@ -102,6 +102,17 @@ module.exports={
       }
     });
 
+    window.Vue.$on('controlChanged', function(_eventObject) {
+      let _control=_eventObject['control'];
+      if ('nyc-nearby'==_control) {
+        _instance.pillChosen='nearby';
+      } else if ('nyc-boundingbox'==_control) {
+        _instance.pillChosen='boundingBox';
+      } else if ('nyc-geopolygon'==_control) {
+        _instance.pillChosen='geoPolygon';
+      } // end -- if (_control check)
+    });
+
   },
   watch: {},
   methods: {

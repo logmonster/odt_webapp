@@ -1,0 +1,105 @@
+<h1 class="sf-chapter-label">
+  GeoPolygon search feature
+</h1>
+
+<div class='sf-parargraph'>
+  In this section, we will cover the following topics:
+  <ul class="sf-list">
+    <li>the introduction of the areas / components of the GeoPolygon control</li>
+    <li>the query result based on a given <var>GeoPolygon</var>'s geoPoints
+  </ul>
+
+  <div class='sf-chapter-sub-label'>the GeoPolygon control</div>
+  <div class='sf-paragraph-sub text-justify' style="overflow: auto;">
+    <img src='/image/spy/geopolygon00.png'
+      class="pointer"
+      onclick="window.open('/image/spy/geopolygon00.png', '_blank');"
+      style='width: 400px; float: left; margin-right: 4px; border: 1px solid #ddd;' />
+    this control provides a mechanism to create an arbitrary shaped polygon on the
+    Google Map. Whenever you changed the polygon (adding a new node, resizing the sides,
+    relocate the polygon on the Map), the updated GeoPoints would be displayed.
+    <p style="margin-top: 8px;"/>
+    Once you have finalized the geopolygon, press the "GO" button and only
+    the documents / taxis within the polygon would be retrieved. Also do note that
+    the center point in the "Set my Location" control is not required for this case
+    as we are not performing a Geo-distance Query in general.
+  </div>
+
+  <div class='sf-chapter-sub-label'>the "geo_polygon" query</div>
+  <div class='sf-paragraph-sub text-justify' style="overflow: auto;">
+    The query for running the Geo-Polygon seaerch:
+  </div>
+
+  <div class='sf-paragraph-sub text-justify' >
+    <div>
+      <code>
+        GET nyc_taxi_hub_2016_11/_search <br/>
+        { <br/>
+          <sp/>"size": 1000, <br/>
+          <sp/>"query": { <br/>
+            <sp/><sp/>"bool": { <br/>
+              <sp/><sp/><sp/>"filter": { <br/>
+                <sp/><sp/><sp/><sp/>"geo_polygon": { <br/>
+                  <sp/><sp/><sp/><sp/><sp/>"pickup_location.location": { <br/>
+                    <sp/><sp/><sp/><sp/><sp/><sp/>"points": [ <br/>
+                      <sp/><sp/><sp/><sp/><sp/><sp/><sp/>{ <br/>
+                        <sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>"lat": 40.713912509089006, <br/>
+                        <sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>"lon": -73.96585615180663 <br/>
+                      <sp/><sp/><sp/><sp/><sp/><sp/><sp/>}, <br/>
+                      <sp/><sp/><sp/><sp/><sp/><sp/><sp/>{ <br/>
+                        <sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>"lat": 40.71443296785091, <br/>
+                        <sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>"lon": -73.97980726264649 <br/>
+                      <sp/><sp/><sp/><sp/><sp/><sp/><sp/>}, <br/>
+                      <sp/><sp/><sp/><sp/><sp/><sp/><sp/>{ <br/>
+                        <sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>"lat": 40.702771782289894, <br/>
+                        <sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>"lon": -73.98778951667481 <br/>
+                      <sp/><sp/><sp/><sp/><sp/><sp/><sp/>}, <br/>
+                      <sp/><sp/><sp/><sp/><sp/><sp/><sp/>{ <br/>
+                        <sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>"lat": 40.69345138914582, <br/>
+                        <sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>"lon": -74.0050414850586 <br/>
+                      <sp/><sp/><sp/><sp/><sp/><sp/><sp/>}, <br/>
+                      <sp/><sp/><sp/><sp/><sp/><sp/><sp/>{ <br/>
+                        <sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>"lat": 40.689676782088625, <br/>
+                        <sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>"lon": -73.98004148505856 <br/>
+                      <sp/><sp/><sp/><sp/><sp/><sp/><sp/>}, <br/>
+                      <sp/><sp/><sp/><sp/><sp/><sp/><sp/>{ <br/>
+                        <sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>"lat": 40.69410216185461, <br/>
+                        <sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>"lon": -73.96568449042968 <br/>
+                      <sp/><sp/><sp/><sp/><sp/><sp/><sp/>} <br/>
+                    <sp/><sp/><sp/><sp/><sp/><sp/>] <br/>
+                  <sp/><sp/><sp/><sp/><sp/>} <br/>
+                <sp/><sp/><sp/><sp/>} <br/>
+              <sp/><sp/><sp/>} <br/>
+            <sp/><sp/>} <br/>
+          <sp/>} <br/>
+        } <br/>
+      </code>
+    </div>
+    Now we get back the 1st 1000 documents (taxis) based on the GeoPoints of
+    the provided polygon. The field we use to calculate the distance is
+    based on <var>pickup_location.location</var> which is a
+    <mark>geo_point</mark> data-type.
+    <p style="margin-top: 8px;"/>
+    You can see that the Google Map has been expanded / shrinken to the best viewport
+    to display all documents / hits satisfied the search conditions
+    (within the polygon provided).
+  </div>
+
+  <div class='sf-chapter-sub-label'>Summary</div>
+  <div class='sf-paragraph-sub text-justify'>
+    Cool! In this section, we have covered and run through
+    <mark><a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-polygon-query.html'
+      target="_blank">Geo-Polygon Query</a></mark>.
+    <p style="margin-top: 8px;"/>
+    By now, you know how to run a Geo-Polygon Query and get back all documents /
+    taxis within an arbitrary shape on the Google Map. Again, do feel free to
+    look in the code on how to integrate with the Google Map APIs to create
+    polygon plotting features <i class="fa fa-smile-o" aria-hidden="true"></i>.
+  </div>
+
+  <div class='sf-paragraph-sub'>
+    Happy Geo-Searching <i class="fa fa-search" aria-hidden="true"></i>
+  </div>
+
+  <div class="sf-parargraph-final">&nbsp;</div>
+</div>

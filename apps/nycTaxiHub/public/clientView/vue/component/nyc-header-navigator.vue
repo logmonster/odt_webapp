@@ -84,7 +84,12 @@ module.exports={
      *  return to the Main page
      */
     handleHomeClick: function() {
-console.log('home click');
+      window.Vue.$emit('updateSpyPanelFile', {
+        'file': '/clientView/code/taxiNearbySpy.html' });
+      window.VueRouter.push({
+        name: '/',
+        params: { 'control': 'nyc-nearby' }
+      });
     }
   }
 };

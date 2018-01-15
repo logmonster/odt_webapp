@@ -74,6 +74,9 @@ module.exports={
     window.Vue.$on('geopolygonPointsChanged', function(_eventObject) {
       _instance.geopolygonPoints = _eventObject['geopolygonPoints'];
     });
+
+    window.Vue.$emit('updateSpyPanelFile', {
+      'file': '/clientView/code/taxiGeoPolygonSpy.html' });
   },
   props: [],
   watch: {},

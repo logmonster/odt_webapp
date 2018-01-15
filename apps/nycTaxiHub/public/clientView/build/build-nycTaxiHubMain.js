@@ -10929,11 +10929,14 @@ module.exports={
 
     // let nyc-gmap.vue knows boundingbox has been chosen
     window.Vue.$emit('controlPanelViewChanged', { 'control': 'nyc-boundingbox' });
-
+    
     // handle the boundingBox bounds change
     window.Vue.$on('boundingboxBoundsChanged', function(_eventObject) {
       _instance.handleBoundingboxBoundsChange(_eventObject);
     });
+
+    window.Vue.$emit('updateSpyPanelFile', {
+      'file': '/clientView/code/taxiBoundingBoxSpy.html' });
   },
   props: [],
   watch: {},
@@ -11171,6 +11174,17 @@ module.exports={
       }
     });
 
+    window.Vue.$on('controlChanged', function(_eventObject) {
+      let _control=_eventObject['control'];
+      if ('nyc-nearby'==_control) {
+        _instance.pillChosen='nearby';
+      } else if ('nyc-boundingbox'==_control) {
+        _instance.pillChosen='boundingBox';
+      } else if ('nyc-geopolygon'==_control) {
+        _instance.pillChosen='geoPolygon';
+      } // end -- if (_control check)
+    });
+
   },
   watch: {},
   methods: {
@@ -11358,6 +11372,9 @@ module.exports={
     window.Vue.$on('geopolygonPointsChanged', function(_eventObject) {
       _instance.geopolygonPoints = _eventObject['geopolygonPoints'];
     });
+
+    window.Vue.$emit('updateSpyPanelFile', {
+      'file': '/clientView/code/taxiGeoPolygonSpy.html' });
   },
   props: [],
   watch: {},
@@ -12005,7 +12022,12 @@ module.exports={
      *  return to the Main page
      */
     handleHomeClick: function() {
-console.log('home click');
+      window.Vue.$emit('updateSpyPanelFile', {
+        'file': '/clientView/code/taxiNearbySpy.html' });
+      window.VueRouter.push({
+        name: '/',
+        params: { 'control': 'nyc-nearby' }
+      });
     }
   }
 };
@@ -12105,6 +12127,8 @@ module.exports={
     // let nyc-gmap.vue knows nearbyTaxi has been chosen
     window.Vue.$emit('controlPanelViewChanged', { 'control': 'nyc-nearby' });
 
+    window.Vue.$emit('updateSpyPanelFile', {
+      'file': '/clientView/code/taxiNearbySpy.html' });
   },
   props: [],
   watch: {},
@@ -12433,8 +12457,22 @@ module.exports={
       _instance.isSpyPanelViewVisible=_eventObject['visibility'];
     });
 
+    window.Vue.$on('updateSpyPanelFile', function(_eventObject) {
+      _instance.spyPanelViewFile=_eventObject['file'];
+    });
+
   },
-  watch: {},
+  watch: {
+    $route: function(_newValue) {
+      let _control=_newValue.params['control'];
+      if (_control) {
+        window.Vue.$emit('controlChanged', {
+          'control': _control
+        });
+      } // emit event to control-panel.vue
+    }
+
+  },
   methods: {
     /*
      *  either have or NOT have the gmap api key

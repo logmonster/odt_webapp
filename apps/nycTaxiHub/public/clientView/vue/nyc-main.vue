@@ -111,8 +111,22 @@ module.exports={
       _instance.isSpyPanelViewVisible=_eventObject['visibility'];
     });
 
+    window.Vue.$on('updateSpyPanelFile', function(_eventObject) {
+      _instance.spyPanelViewFile=_eventObject['file'];
+    });
+
   },
-  watch: {},
+  watch: {
+    $route: function(_newValue) {
+      let _control=_newValue.params['control'];
+      if (_control) {
+        window.Vue.$emit('controlChanged', {
+          'control': _control
+        });
+      } // emit event to control-panel.vue
+    }
+
+  },
   methods: {
     /*
      *  either have or NOT have the gmap api key

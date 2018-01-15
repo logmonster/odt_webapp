@@ -1,0 +1,123 @@
+<h1 class="sf-chapter-label">
+  BoundingBox search feature
+</h1>
+
+<div class='sf-parargraph'>
+  In this section, we will cover the following topics:
+  <ul class="sf-list">
+    <li>the introduction of the areas / components of the BoundingBox control</li>
+    <li>the query result based on the location chosen and its distance in miles or km;
+      this time we add a <mark>boundingbox</mark> to limit the area where the documents
+      would be returned</li>
+  </ul>
+
+  <div class='sf-chapter-sub-label'>the BoundingBox control</div>
+  <div class='sf-paragraph-sub text-justify' style="overflow: auto;">
+    <img src='/image/spy/boundingbox00.png'
+      class="pointer"
+      onclick="window.open('/image/spy/boundingbox00.png', '_blank');"
+      style='width: 400px; float: left; margin-right: 4px; border: 1px solid #ddd;' />
+    this control is performing nearly the same search feature of the previous
+    "Nearby Taxi" component; the only difference is you would need to provide
+    a <var>boundingbox</var> to limit the area in which the documents / taxis
+    would be returned.
+    <p style="margin-top: 8px;"/>
+    In real world use cases, this <var>boundingbox</var> feature is very important.
+    Think about an app containing millions or billions of Geolocation documents;
+    if everytime we are going to take everything into the calculation, the
+    processing power is very heavy-duty plus the processing time increases
+    proportionally to the number of documents present. Hence, if you know that
+    you are only interested in a particular Geolocation's documents / hits
+    (e.g. 10 miles within NYC Times Square); you probably want to limit just
+    to search within that area and hence efficiently
+    using the <mark>processing power</mark> and shrinken the <mark>processing time</mark>.
+    <p style="margin-top: 8px;"/>
+    <img src='/image/spy/boundingbox01.png'
+      class="pointer"
+      onclick="window.open('/image/spy/boundingbox01.png', '_blank');"
+      style='width: 200px; float: left; margin-right: 4px; border: 1px solid #ddd;' />
+    On the status bar of the Google Map control, you can see that there are 2
+    additional icons available.
+    <i class="fa fa-object-ungroup gmap-status-bounds-icon" aria-hidden="true"></i> let
+    you create a <var>boundingbox</var>; whilst
+    <i class="fa fa-trash gmap-status-bounds-icon" aria-hidden="true"></i> let you
+    remove the <var>boundingbox</var> on the Google Map
+    (however the already populated boundingbox geopoints would not be removed,
+    you would need to manually remove them if necessary).
+  </div>
+
+  <div class='sf-chapter-sub-label'>the "geo_bounding_box" filter</div>
+  <div class='sf-paragraph-sub text-justify' style="overflow: auto;">
+    Finally, the query for running the Geo-distance feature alongside with a
+    boundingbox:
+  </div>
+
+  <div class='sf-paragraph-sub text-justify' >
+    <div>
+      <code>
+        GET nyc_taxi_hub_2016_11/_search <br/>
+        { <br/>
+          <sp/>"size": 1000, <br/>
+          <sp/>"query": { <br/>
+            <sp/><sp/>"bool": { <br/>
+              <sp/><sp/><sp/>"filter": [ <br/>
+                <sp/><sp/><sp/><sp/>{ <br/>
+                  <sp/><sp/><sp/><sp/><sp/>"geo_bounding_box": { <br/>
+                    <sp/><sp/><sp/><sp/><sp/><sp/>"pickup_location.location": { <br/>
+                      <sp/><sp/><sp/><sp/><sp/><sp/><sp/>"top_left": { <br/>
+                        <sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>"lon": -73.94266170000003, <br/>
+                        <sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>"lat": 40.8142585 <br/>
+                      <sp/><sp/><sp/><sp/><sp/><sp/><sp/>}, <br/>
+                      <sp/><sp/><sp/><sp/><sp/><sp/><sp/>"bottom_right": { <br/>
+                        <sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>"lon": -72.96535510000001, <br/>
+                        <sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>"lat": 40.7828647 <br/>
+                      <sp/><sp/><sp/><sp/><sp/><sp/><sp/>} <br/>
+                    <sp/><sp/><sp/><sp/><sp/><sp/>} <br/>
+                  <sp/><sp/><sp/><sp/><sp/>} <br/>
+                <sp/><sp/><sp/><sp/>}, <br/>
+                <sp/><sp/><sp/><sp/>{ <br/>
+                  <sp/><sp/><sp/><sp/><sp/>"geo_distance": { <br/>
+                    <sp/><sp/><sp/><sp/><sp/><sp/>"distance": "2miles", <br/>
+                    <sp/><sp/><sp/><sp/><sp/><sp/>"pickup_location.location": { <br/>
+                      <sp/><sp/><sp/><sp/><sp/><sp/><sp/>"lon": -73.96535510000001, <br/>
+                      <sp/><sp/><sp/><sp/><sp/><sp/><sp/>"lat": 40.7828647 <br/>
+                    <sp/><sp/><sp/><sp/><sp/><sp/>} <br/>
+                  <sp/><sp/><sp/><sp/><sp/>} <br/>
+                <sp/><sp/><sp/><sp/>} <br/>
+              <sp/><sp/><sp/>] <br/>
+            <sp/><sp/>} <br/>
+          <sp/>} <br/>
+        } <br/>
+      </code>
+    </div>
+    Now we get back the 1st 1000 documents (taxis) based on the GeoPoint of
+    the provided center marker <mark>PLUS</mark> within the boundingbox area provided.
+    The field we use to calculate the distance is
+    based on <var>pickup_location.location</var> which is a
+    <mark>geo_point</mark> data-type.
+    <p style="margin-top: 8px;"/>
+    You can see that the Google Map has been expanded / shrinken to the best viewport
+    to display all documents / hits satisfied the search conditions
+    (within the boundingbox area).
+  </div>
+
+
+  <div class='sf-chapter-sub-label'>Summary</div>
+  <div class='sf-paragraph-sub text-justify'>
+    Cool! In this section, we have covered and run through
+    <mark><a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-distance-query.html'
+      target="_blank">Geo-distance Query</a></mark> and
+    <mark><a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-bounding-box-query.html'
+      target="_blank">Geo-bounding-box Query</a></mark>.
+    <p style="margin-top: 8px;"/>
+    By now, you know how to run a Geo-distance Query and how to apply a filter based
+    on the Geo-bounding-box! Next, we are going to explore how to search everything within 
+    an arbitrary polygon / shape instead of a rigid boundingBox (rectangle).
+  </div>
+
+  <div class='sf-paragraph-sub'>
+    Happy Geo-Searching <i class="fa fa-search" aria-hidden="true"></i>
+  </div>
+
+  <div class="sf-parargraph-final">&nbsp;</div>
+</div>

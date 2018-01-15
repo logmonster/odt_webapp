@@ -75,6 +75,8 @@ module.exports={
     // let nyc-gmap.vue knows nearbyTaxi has been chosen
     window.Vue.$emit('controlPanelViewChanged', { 'control': 'nyc-nearby' });
 
+    window.Vue.$emit('updateSpyPanelFile', {
+      'file': '/clientView/code/taxiNearbySpy.html' });
   },
   props: [],
   watch: {},
