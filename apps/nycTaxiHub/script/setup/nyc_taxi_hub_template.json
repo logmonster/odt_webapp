@@ -1,0 +1,125 @@
+{
+    "template": "nyc_taxi_hub_*",
+    "version" : 50003,
+    "mappings": {
+      "doc": {
+        "properties": {
+          "@timestamp": {
+            "type": "date"
+          },
+          "@version": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "dropoff_datetime": {
+            "type": "date"
+          },
+          "dropoff_location": {
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "location": {
+                "type": "geo_point"
+              },
+              "name": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword"
+                  }
+                }
+              }
+            }
+          },
+          "extra": {
+            "type": "half_float"
+          },
+          "fare_amount": {
+            "type": "half_float"
+          },
+          "improvement_surcharge": {
+            "type": "half_float"
+          },
+          "mta_tax": {
+            "type": "half_float"
+          },
+          "passenger_count": {
+            "type": "integer"
+          },
+          "payment_type": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword"
+              }
+            }
+          },
+          "pickup_datetime": {
+            "type": "date"
+          },
+          "pickup_location": {
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "location": {
+                "type": "geo_point"
+              },
+              "name": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword"
+                  }
+                }
+              }
+            }
+          },
+          "ratecode": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword"
+              }
+            }
+          },
+          "tags": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "tip_amount": {
+            "type": "half_float"
+          },
+          "tolls_amount": {
+            "type": "half_float"
+          },
+          "total_amount": {
+            "type": "half_float"
+          },
+          "trip_distance": {
+            "type": "half_float"
+          },
+          "vendor_name": {
+            "type": "keyword"
+          }
+        }
+      }
+    },
+    "settings": {
+      "index": {
+        "number_of_shards": "1",
+        "number_of_replicas": "0"
+      }
+    }
+}
