@@ -1,0 +1,28 @@
+{
+  "name": "lab_engine_odt",
+  "version": "1.0.0",
+  "description": "lab engine / app for the odt javascript course",
+  "main": "engine.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "odt",
+    "javascript",
+    "elasticsearch",
+    "node",
+    "express.js",
+    "vue.js",
+    "jquery"
+  ],
+  "author": "jason.wong@elastic.co",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "elastic-builder": "^1.1.6",
+    "elasticsearch": "^14.1.0",
+    "express": "^4.16.2",
+    "nodemon": "^1.15.1",
+    "serve-favicon": "^2.4.5"
+  }
+}

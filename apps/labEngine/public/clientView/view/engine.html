@@ -1,0 +1,102 @@
+<html>
+<head>
+  <title>Lab Engine (javascript course)</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- custom css -->
+  <link rel='stylesheet' href='/clientView/css/style.css'>
+
+  <!-- ################################ -->
+  <!-- using MDB (metal design bootstrap) -->
+  <!-- ################################ -->
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css' >
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.3.1/css/mdb.css">
+  <!-- jQuery UI css -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+
+  <!-- MDB required jscript lib -->
+  <!-- JQuery -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
+  <!-- Bootstrap tooltips -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.js"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/js/bootstrap.js"></script>
+  <!-- jQuery UI -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+  <script type="text/javascript" src="/clientView/jscript/engine.js"></script>
+
+</head>
+
+<body>
+  <div class='container-fluid' style="padding: 0px; margin: 0px;">
+    <div class="row">
+      <div class="col-sm-6 col-md-6">
+        <div class="lab-instruction-view">
+          <!-- load the content dynamically -->
+          <div class="lab-instruction-inner-view" id='divInstructionView' ></div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-6" style="padding: 0px;">
+        <div class="divQueryViewContainer">
+          <div class='divQueryView'>
+            <textarea id='txtQuery' class="txtQueryContainer" placeholder="enter your query here or pick an option on the right..." ></textarea>
+          </div>
+          <div class="divQueryButtonView" style="vertical-align: top;" >
+            <div class="divQueryButtonTabView pointer" id='btnSimpleMatchQuery' title="simple match query">
+<!-- tooltip -->
+              <i class="fa fa-search" aria-hidden="true"></i>
+            </div>
+            <div class="divQueryButtonTabView pointer" id='btnSimpleTermsAggs' title="simple terms aggs">
+              <i class="fa fa-cube" aria-hidden="true"></i>
+            </div>
+            <div class="divQueryButtonTabView pointer" id='btnClear' title="clear the query">
+              <i class="fa fa-trash-o" aria-hidden="true"></i>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-amber pointer">run</button>
+
+        <!-- result div -->
+        <div style="margin-top: 8px; margin-bottom: 2px;">
+          result div - showing the result from the above query
+        </div>
+        <input type='radio' name='radResultChoice' value="0" title="table format" checked>
+          <i class="fa fa-table" aria-hidden="true"></i>
+        </input>
+        &nbsp;
+        <input type='radio' name='radResultChoice' value="1" title="plain text">
+          <i class="fa fa-file-text-o" aria-hidden="true"></i>
+        </input>
+        &nbsp;
+        <input type='radio' name='radResultChoice' value="2" title="custom">
+          <i class="fa fa-code" aria-hidden="true"></i>
+        </input>
+        <div id='divCodeView' class='hiding'>
+          <textarea id='txtCode' class='txtCodeView'
+            placeholder="enter customize code here, code be any javascript code (but NEVER provide such feature in production!)"></textarea>
+        </div>
+        <div class='divResult' ></div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- init script -->
+  <script>
+    window.jQuery(window).ready(function() {
+      window.resultFormat = 0;  // table format (default)
+
+      // load the lab instruction html
+      let _instructionView = window.jQuery('#divInstructionView');
+      _instructionView.load('/clientView/view/labInstruction.html');
+
+      initQueryButtons();
+      initResultFormatRadio();
+    });
+
+  </script>
+</body>
+</html>

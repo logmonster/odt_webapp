@@ -1,0 +1,78 @@
+
+body {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+}
+
+.hiding {
+  display: none;
+}
+.showing {
+  display: block;
+}
+.showing-inline {
+  display: inline-block;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.lab-instruction-view {
+  margin: 2px;
+  margin-top: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px 4px;
+  height: 98%;
+  overflow: auto;
+}
+.lab-instruction-inner-view {
+  margin: 3px;
+  overflow: hidden;
+}
+
+.divQueryViewContainer {
+  margin-top: 8px;
+}
+
+.divQueryView {
+  width: 300px;
+  display: inline-block;
+  overflow: auto;
+}
+.txtQueryContainer {
+  border: 1px solid #aaa;
+  border-radius: 4px 0 0 4px;
+  height: 240px;
+}
+.divQueryButtonView {
+  display: inline-block;
+}
+.divQueryButtonTabView {
+  position: relative;
+  left: -4px;
+  padding: 12px;
+  border: 1px solid #aaa;
+  border-radius: 0 3px 0 0;
+  color: #666;
+}
+.divQueryButtonTabView:last-of-type {
+  position: relative;
+  left: -4px;
+  padding: 12px;
+  border: 1px solid #aaa;
+  border-radius: 0 3px 3px 0;
+  color: #666;
+}
+
+.divResult {
+  border: 1px dashed #aaa;
+  width: 360px;
+  max-width: 2000px;
+  min-height: 200px;
+}
+
+.txtCodeView {
+  margin-bottom: 4px;
+  width: 360px;
+  height: 200px;
+}
