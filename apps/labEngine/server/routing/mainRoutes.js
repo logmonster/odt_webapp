@@ -7,6 +7,63 @@ var MainRoutes= function(
   // sort of alias
   let _eb=_eBuilder;
 
+  let _handleQuery=function(_req, _resp) {
+    let _q = _req.body['query'];
+    let _metaEndIdx = (_q)?_q.indexOf('\n'):-1;
+    let _query = (_metaEndIdx>-1)?JSON.parse(_q.substring(_metaEndIdx)):'';
+    let _meta = (_metaEndIdx>-1)?_q.substring(0, _metaEndIdx):'';
+    let _metaObj = {};
+    let _return = undefined;
+
+    if (_meta != '' && _query != '') {
+      let _index = undefined;
+      let _docType = undefined;
+
+      // parse the meta
+      let _mparts = _meta.split(' ');
+      if (_mparts.length > 1) {
+        _mparts = _mparts[1].split('/');
+        if (_mparts.length == 2) {
+          _index = _mparts[0];
+
+        } else if (_mparts.length==3) {
+          _index = _mparts[0];
+          _docType = _mparts[1];
+        }
+      } // end -- if (valid meta with ' ')
+
+      if (_index) {
+        _metaObj['index'] = _index;
+        _metaObj['body'] = _query;
+
+        if (_docType) {
+          _metaObj['type'] = _docType;
+        }
+      } // end -- if (have valid index MAY or MAY-NOT have docType)
+
+      _client.search(_metaObj).then(function(_data) {
+        _resp.send({
+          'failure': false,
+          'data': _data
+        });
+      }, function(_err) {
+        _resp.send({
+          'failure': true,
+          'msg': _err.toString(),
+          'err': _err
+        });
+      });
+
+    } else {
+      _return = {
+        'failure': true,
+        'msg': ('the query posted is invalid => '+_q)
+      };
+      _resp.send(_return);
+    }
+
+  };
+
   let _handleLookupGET=function(_req, _resp) {
     let _q=new _eb.RequestBodySearch();
     let _matchAllQuery=new _eb.MatchAllQuery();
@@ -48,14 +105,9 @@ var MainRoutes= function(
             "../../public/clientView/view/redirectToApp.html") );
         });
 
-      _router.route('/api/lookup').
-        get(function(_req, _resp) {
-          _handleLookupGET(_req, _resp);
-        }
-      );
-      _router.route('/api/saveStockEvent').
+      _router.route('/api/query').
         post(function(_req, _resp) {
-          _handleSaveStockEventPOST(_req, _resp);
+          _handleQuery(_req, _resp);
         }
       );
       // other routes

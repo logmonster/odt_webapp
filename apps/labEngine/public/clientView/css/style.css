@@ -68,11 +68,15 @@ body {
   border: 1px dashed #aaa;
   width: 360px;
   max-width: 2000px;
-  min-height: 200px;
+  height: 200px;
+  overflow: auto;
 }
 
 .txtCodeView {
   margin-bottom: 4px;
   width: 360px;
+  height: 200px;
+}
+.txtCodeView_textarea {
   height: 200px;
 }
